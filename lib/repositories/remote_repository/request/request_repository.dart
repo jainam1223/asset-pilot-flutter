@@ -23,10 +23,10 @@ class RequestRepository extends Repository {
   /// Every request raised by [CurrentUser.id], regardless of status.
   Future<ApiResult<List<RequestResDm>>> getMyRequests() async {
     // --- MOCK ---------------------------------------------------------------
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-    return ApiSuccess<List<RequestResDm>>(List.unmodifiable(_mockRequests));
+    // await Future<void>.delayed(const Duration(milliseconds: 500));
+    // return ApiSuccess<List<RequestResDm>>(List.unmodifiable(_mockRequests));
     // --- REAL (enable when backend exists) ----------------------------------
-    // return apiService.getMyRequests(CurrentUser.id);
+    return apiService.getMyRequests(CurrentUser.id);
   }
 
   /// A single request by [requestId] (Request Detail screen).

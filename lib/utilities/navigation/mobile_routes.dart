@@ -1,3 +1,4 @@
+import 'package:asset_pilot/repositories/remote_repository/common/models/request_res_dm.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../modules/mobile/device_detail/device_detail_screen.dart';
@@ -9,7 +10,6 @@ import '../../modules/mobile/login/login_screen.dart';
 import '../../modules/mobile/my_devices/cubit/my_devices_cubit.dart';
 import '../../modules/mobile/requests/create_request_screen.dart';
 import '../../modules/mobile/requests/cubit/create_request_cubit.dart';
-import '../../modules/mobile/requests/cubit/request_detail_cubit.dart';
 import '../../modules/mobile/requests/request_detail_screen.dart';
 import '../../modules/mobile/shell/mobile_shell_screen.dart';
 import '../../modules/mobile/splash/cubit/splash_cubit.dart';
@@ -60,10 +60,10 @@ GoRouter buildMobileRouter() {
         path: Routes.requestDetail.path,
         name: Routes.requestDetail.name,
         builder: (context, state) {
-          final requestId = state.pathParameters['id']!;
+          final data = state.extra as RequestResDm;
           return RequestDetailScreen(
-            requestId: requestId,
-          ).withProvider((_) => RequestDetailCubit(requestId));
+            data: data,
+          );
         },
       ),
       GoRoute(

@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../repositories/remote_repository/common/models/request_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
-import '../../../utilities/network/network_state.dart';
 import '../../../values/app_theme/app_colors.dart';
 import '../../../values/enumeration/statuses.dart';
 import '../../../widgets/widgets.dart';
-import 'cubit/request_detail_cubit.dart';
 import 'request_status_x.dart';
 
 /// Request Detail screen (mockup E07 detail) for a single request raised
 /// by the signed-in employee, fetched from `GET /me/requests/{id}`.
 class RequestDetailScreen extends StatelessWidget {
-  const RequestDetailScreen({super.key, required this.requestId});
+  const RequestDetailScreen({super.key, required this.data});
 
-  final String requestId;
+  final RequestResDm data;
 
   @override
   Widget build(BuildContext context) {
@@ -26,72 +23,7 @@ class RequestDetailScreen extends StatelessWidget {
       backgroundColor: context.appColors.scaffoldAlt,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: BlocBuilder<RequestDetailCubit, RequestDetailState>(
-          builder: (context, state) {
-            return switch (state.request) {
-              Idle() || Loading() => const SizedBox.shrink(),
-              Error(:final message) => Column(
-                children: [
-                  _DetailAppBar(requestId: requestId),
-                  Expanded(
-                    child: ErrorStateView(
-                      title: context.l10n.somethingWentWrong,
-                      message: message,
-                      onRetry: () => context
-                          .read<RequestDetailCubit>()
-                          .fetchRequestDetail(),
-                    ),
-                  ),
-                ],
-              ),
-              Success(:final data) => _DetailContent(request: data),
-            };
-          },
-        ),
-      ),
-    );
-  }
-}
-
-/// Back-button-only header shown while loading/erroring (no request data
-/// yet to render the full gradient header).
-class _DetailAppBar extends StatelessWidget {
-  const _DetailAppBar({required this.requestId});
-
-  final String requestId;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(
-        20,
-        MediaQuery.paddingOf(context).top + 12,
-        20,
-        20,
-      ),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment(-0.5, -0.87),
-          end: Alignment(0.5, 0.87),
-          colors: [AppColors.primary, AppColors.primaryDark],
-        ),
-      ),
-      child: Row(
-        children: [
-          AppIconButton(
-            icon: Icons.arrow_back,
-            variant: AppButtonVariant.primary,
-            onPressed: () => context.pop(),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            context.l10n.requestDetailAppBarTitle(requestId),
-            style: context.appTextStyles.labelXLarge.copyWith(
-              color: Colors.white,
-            ),
-          ),
-        ],
+        child: _DetailContent(request: data),
       ),
     );
   }
@@ -203,7 +135,7 @@ class _DetailContent extends StatelessWidget {
                     status == RequestStatus.cancelled ||
                     status == RequestStatus.completed
                 ? null
-                : () => context.read<RequestDetailCubit>().cancelRequest(),
+                : () => {},
           ),
         ),
       ],
@@ -250,10 +182,12 @@ class _DetailHeader extends StatelessWidget {
                 onPressed: () => context.pop(),
               ),
               const SizedBox(width: 12),
-              Text(
-                context.l10n.requestDetailAppBarTitle(request.id),
-                style: context.appTextStyles.labelXLarge.copyWith(
-                  color: Colors.white,
+              Flexible(
+                child: Text(
+                  request.id,
+                  style: context.appTextStyles.labelXLarge.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
