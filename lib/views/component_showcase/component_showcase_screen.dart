@@ -404,6 +404,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
           title: 'MacBook Air 15" M3',
           subtitle:
               'Same M-series performance, lighter and available immediately.',
+          selectLabel: 'Select',
           recommended: true,
           onSelect: () {},
         ),
@@ -412,6 +413,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
           rank: 2,
           title: 'Dell XPS 15 (2025)',
           subtitle: 'Comparable RAM & SSD if you prefer Windows.',
+          selectLabel: 'Select',
           onSelect: () {},
         ),
       ],

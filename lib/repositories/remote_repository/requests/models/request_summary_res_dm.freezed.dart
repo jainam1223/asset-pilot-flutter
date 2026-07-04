@@ -216,7 +216,7 @@ return $default(_that.id,_that.employeeName,_that.category,_that.priority,_that.
 @JsonSerializable()
 
 class _RequestSummaryResDm implements RequestSummaryResDm {
-  const _RequestSummaryResDm({this.id = '', this.employeeName = '', this.category = '', this.priority = RequestPriority.medium, this.status = RequestStatus.pendingIt, this.requestedFrom = '', this.requestedTo = '', this.managerApproved = false});
+  const _RequestSummaryResDm({this.id = '', this.employeeName = '', this.category = '', this.priority = RequestPriority.medium, this.status = RequestStatus.pendingItApproval, this.requestedFrom = '', this.requestedTo = '', this.managerApproved = false});
   factory _RequestSummaryResDm.fromJson(Map<String, dynamic> json) => _$RequestSummaryResDmFromJson(json);
 
 @override@JsonKey() final  String id;

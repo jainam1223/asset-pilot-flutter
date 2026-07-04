@@ -12,6 +12,7 @@ class SuggestionCard extends StatelessWidget {
     required this.rank,
     required this.title,
     required this.subtitle,
+    required this.selectLabel,
     required this.onSelect,
     this.recommended = false,
   });
@@ -19,6 +20,11 @@ class SuggestionCard extends StatelessWidget {
   final int rank;
   final String title;
   final String subtitle;
+
+  /// Caller-supplied label for the select button (e.g. `context.l10n.x`) —
+  /// this widget stays domain-blind and l10n-agnostic per the shared
+  /// widget library convention.
+  final String selectLabel;
   final VoidCallback onSelect;
   final bool recommended;
 
@@ -85,7 +91,7 @@ class SuggestionCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          PillActionButton(label: 'Select', onPressed: onSelect),
+          PillActionButton(label: selectLabel, onPressed: onSelect),
         ],
       ),
     );

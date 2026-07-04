@@ -219,7 +219,7 @@ return $default(_that.id,_that.employeeName,_that.employeeDepartment,_that.categ
 @JsonSerializable()
 
 class _RequestDetailResDm implements RequestDetailResDm {
-  const _RequestDetailResDm({this.id = '', this.employeeName = '', this.employeeDepartment = '', this.category = '', this.priority = RequestPriority.medium, this.status = RequestStatus.pendingIt, this.requestedFrom = '', this.requestedTo = '', this.managerApproved = false, this.workFromHome = false, this.note = ''});
+  const _RequestDetailResDm({this.id = '', this.employeeName = '', this.employeeDepartment = '', this.category = '', this.priority = RequestPriority.medium, this.status = RequestStatus.pendingItApproval, this.requestedFrom = '', this.requestedTo = '', this.managerApproved = false, this.workFromHome = false, this.note = ''});
   factory _RequestDetailResDm.fromJson(Map<String, dynamic> json) => _$RequestDetailResDmFromJson(json);
 
 @override@JsonKey() final  String id;

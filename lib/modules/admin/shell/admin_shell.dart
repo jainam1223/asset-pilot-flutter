@@ -16,6 +16,8 @@ class AdminShell extends StatelessWidget {
     required this.title,
     required this.selectedNavId,
     required this.child,
+    this.leading,
+    this.trailing,
   });
 
   final String title;
@@ -25,6 +27,14 @@ class AdminShell extends StatelessWidget {
   /// the rest are inert until their screens exist.
   final String selectedNavId;
   final Widget child;
+
+  /// Optional widget placed before [title] in the top bar (e.g. a back
+  /// button on a nested detail screen).
+  final Widget? leading;
+
+  /// Optional widget placed at the end of the top bar (e.g. a view-mode
+  /// toggle).
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +76,7 @@ class AdminShell extends StatelessWidget {
           Expanded(
             child: Column(
               children: [
-                _AdminTopBar(title: title),
+                _AdminTopBar(title: title, leading: leading, trailing: trailing),
                 Expanded(child: child),
               ],
             ),
@@ -80,6 +90,7 @@ class AdminShell extends StatelessWidget {
     final path = switch (id) {
       'dashboard' => Routes.adminDashboard.path,
       'requests' => Routes.adminRequests.path,
+      'inventory' => Routes.adminInventory.path,
       _ => null,
     };
     if (path != null) context.go(path);
@@ -87,9 +98,11 @@ class AdminShell extends StatelessWidget {
 }
 
 class _AdminTopBar extends StatelessWidget {
-  const _AdminTopBar({required this.title});
+  const _AdminTopBar({required this.title, this.leading, this.trailing});
 
   final String title;
+  final Widget? leading;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +115,14 @@ class _AdminTopBar extends StatelessWidget {
           bottom: BorderSide(color: context.appColors.borderSubtle),
         ),
       ),
-      alignment: Alignment.centerLeft,
-      child: Text(title, style: context.appTextStyles.h2),
+      child: Row(
+        children: [
+          if (leading != null) ...[leading!, const SizedBox(width: 6)],
+          Text(title, style: context.appTextStyles.h2),
+          const Spacer(),
+          ?trailing,
+        ],
+      ),
     );
   }
 }

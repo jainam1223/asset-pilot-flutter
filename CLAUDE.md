@@ -82,6 +82,7 @@ Admin desktop/web layout adapts by width via `Responsive.of(context)` (`lib/util
 - `ApiResultCallAdapter` (`lib/utilities/api_utilities/my_call_adapter.dart`) converts Retrofit calls into `ApiResult<T>` (`ApiSuccess` / `ApiFailure`); endpoints are typed as `Future<ApiResult<ResDm>>`.
 - `AuthRepository` (`lib/repositories/remote_repository/auth/auth_repository.dart`) currently returns **mocked** data — there is no live backend. The real Retrofit call is commented out inline. When a backend exists, swap the mock body for the real call; Cubit/UI layers don't change.
 - Base URL comes from `Env.current.baseUrl` (`lib/env/env.dart`), keyed by `Flavor` (`dev`/`uat`/`prod`). Flavors are not wired yet — `Env.current` always resolves to `dev`. `lib/values/flavors/flavor_config.dart` is a placeholder for when flavored `main_*` entries are introduced.
+- `Env` sources `BASE_URL` at **compile time** via `envied` (not a runtime-loaded `.env`): `_Env` in `env.dart` is `@Envied`-annotated and generates an obfuscated `lib/env/env.g.dart` from the gitignored `.env` file. Copy `.env.example` to `.env` locally, then run `dart run build_runner build --delete-conflicting-outputs` to regenerate `env.g.dart` after editing `.env`. There is no `Env.load()` call in `main_mobile.dart`/`main_admin.dart` — the value is baked in at build time.
 
 ### Routing — GoRouter
 
@@ -95,6 +96,7 @@ Admin desktop/web layout adapts by width via `Responsive.of(context)` (`lib/util
 - Fonts (Poppins headings, DM Sans body) are declared **commented-out** in `pubspec.yaml` because the `.ttf` files don't exist yet (an uncommented `fonts:` block pointing at missing files fails the build). When adding font files: drop them in `assets/fonts/`, uncomment the `fonts:` block, run `flutter pub get`. Until then `AppTextStyles` falls back to the platform default font.
 - Localization: ARB source at `lib/l10n/app_en.arb`; generated output at `lib/generated/l10n/` (gitignored — regenerate with `flutter gen-l10n`). Access via `context.l10n` (`lib/utilities/extensions/context_extensions.dart`). No hardcoded UI strings — add new keys to the ARB file.
 - Icons: `flutter_svg` + `assets/icons/`, referenced via generated `Assets.*` (`flutter_gen`, output into `lib/generated/`). No SVG files exist yet.
+- Never use hardcoded string in code — always `context.l10n.*` or `Assets.*`.
 
 ## What's deliberately not done yet
 

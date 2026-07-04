@@ -6,18 +6,22 @@ import '../../../widgets/widgets.dart';
 /// import `values/enumeration/statuses.dart`; modules own this mapping).
 extension RequestStatusX on RequestStatus {
   AppSemantic get semantic => switch (this) {
-        RequestStatus.pendingManager => AppSemantic.neutral,
-        RequestStatus.pendingIt => AppSemantic.warning,
+        RequestStatus.requested => AppSemantic.neutral,
+        RequestStatus.pendingMgrApproval => AppSemantic.neutral,
+        RequestStatus.pendingItApproval => AppSemantic.warning,
         RequestStatus.assigned => AppSemantic.success,
         RequestStatus.rejected => AppSemantic.danger,
+        RequestStatus.cancelled => AppSemantic.neutral,
         RequestStatus.completed => AppSemantic.neutral,
       };
 
   String get label => switch (this) {
-        RequestStatus.pendingManager => 'Pending RM',
-        RequestStatus.pendingIt => 'Pending IT',
+        RequestStatus.requested => 'Requested',
+        RequestStatus.pendingMgrApproval => 'Pending RM',
+        RequestStatus.pendingItApproval => 'Pending IT',
         RequestStatus.assigned => 'Assigned',
         RequestStatus.rejected => 'Rejected',
+        RequestStatus.cancelled => 'Cancelled',
         RequestStatus.completed => 'Completed',
       };
 }

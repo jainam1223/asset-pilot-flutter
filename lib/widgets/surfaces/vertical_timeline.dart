@@ -37,6 +37,7 @@ class VerticalTimeline extends StatelessWidget {
           child: Container(width: 2, color: context.appColors.borderSubtle),
         ),
         Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             for (var i = 0; i < entries.length; i++)
               Padding(

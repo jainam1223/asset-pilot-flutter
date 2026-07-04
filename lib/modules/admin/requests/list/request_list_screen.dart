@@ -72,13 +72,13 @@ class _StatusPillsRow extends StatelessWidget {
     return BlocBuilder<RequestListCubit, RequestListState>(
       builder: (context, state) {
         return FilterPillTabs(
-          tabs: const [
-            PillTab(id: 'all', label: 'All'),
-            PillTab(id: 'pendingManager', label: 'Pending RM'),
-            PillTab(id: 'pendingIt', label: 'Pending IT'),
-            PillTab(id: 'assigned', label: 'Assigned'),
-            PillTab(id: 'rejected', label: 'Rejected'),
-            PillTab(id: 'completed', label: 'Completed'),
+          tabs: [
+            PillTab(id: 'all', label: context.l10n.requestFilterAll),
+            PillTab(id: 'pendingMgrApproval', label: context.l10n.requestFilterPendingMgr),
+            PillTab(id: 'pendingItApproval', label: context.l10n.requestFilterPendingIt),
+            PillTab(id: 'assigned', label: context.l10n.requestFilterAssigned),
+            PillTab(id: 'rejected', label: context.l10n.requestFilterRejected),
+            PillTab(id: 'completed', label: context.l10n.requestFilterCompleted),
           ],
           selectedId: state.statusFilter,
           onChanged: context.read<RequestListCubit>().setStatusFilter,
@@ -102,26 +102,28 @@ class _FiltersRow extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             FilterDropdownChip(
-              label: 'Priority',
-              valueLabel: state.priorityFilter?.label ?? 'All',
+              label: context.l10n.requestFilterPriority,
+              valueLabel: state.priorityFilter?.label ?? context.l10n.requestFilterAll,
               onTap: () => _showPriorityMenu(context, cubit),
             ),
             FilterDropdownChip(
-              label: 'Category',
-              valueLabel: state.categoryFilter == 'all' ? 'All' : state.categoryFilter,
+              label: context.l10n.requestFilterCategory,
+              valueLabel: state.categoryFilter == 'all'
+                  ? context.l10n.requestFilterAll
+                  : state.categoryFilter,
               onTap: () => _showCategoryMenu(context, cubit),
             ),
             // TODO(date-range): no date-range picker widget exists yet in the
             // shared library — this trigger is a display-only stub for now.
             FilterDropdownChip(
-              label: 'Date range',
-              valueLabel: 'All',
+              label: context.l10n.requestFilterDateRange,
+              valueLabel: context.l10n.requestFilterAll,
               onTap: () => AppToast.info(context, context.l10n.comingSoon),
             ),
             SizedBox(
               width: 260,
               child: AppSearchField(
-                hintText: 'Search requests…',
+                hintText: context.l10n.requestSearchHint,
                 onChanged: cubit.setSearchQuery,
               ),
             ),
@@ -136,7 +138,7 @@ class _FiltersRow extends StatelessWidget {
       context: context,
       position: const RelativeRect.fromLTRB(200, 200, 0, 0),
       items: [
-        const PopupMenuItem(value: null, child: Text('All')),
+        PopupMenuItem(value: null, child: Text(context.l10n.requestFilterAll)),
         for (final priority in RequestPriority.values)
           PopupMenuItem(value: priority, child: Text(priority.label)),
       ],
@@ -152,7 +154,10 @@ class _FiltersRow extends StatelessWidget {
       position: const RelativeRect.fromLTRB(360, 200, 0, 0),
       items: [
         for (final category in categories)
-          PopupMenuItem(value: category, child: Text(category == 'all' ? 'All' : category)),
+          PopupMenuItem(
+            value: category,
+            child: Text(category == 'all' ? context.l10n.requestFilterAll : category),
+          ),
       ],
     ).then((value) {
       if (value != null && context.mounted) cubit.setCategoryFilter(value);
@@ -180,27 +185,27 @@ class _RequestsTable extends StatelessWidget {
           child: AppDataTable<RequestSummaryResDm>(
             columns: [
               TableColumn<RequestSummaryResDm>(
-                header: 'ID',
+                header: context.l10n.requestColumnId,
                 cellBuilder: (context, row) => Text(row.id),
               ),
               TableColumn<RequestSummaryResDm>(
-                header: 'Employee',
+                header: context.l10n.requestColumnEmployee,
                 flex: 2,
                 cellBuilder: (context, row) => Text(row.employeeName),
               ),
               TableColumn<RequestSummaryResDm>(
-                header: 'Category',
+                header: context.l10n.columnCategory,
                 cellBuilder: (context, row) => Text(row.category),
               ),
               TableColumn<RequestSummaryResDm>(
-                header: 'Priority',
+                header: context.l10n.requestColumnPriority,
                 cellBuilder: (context, row) => PriorityTag(
                   semantic: row.priority.semantic,
                   label: row.priority.label,
                 ),
               ),
               TableColumn<RequestSummaryResDm>(
-                header: 'Status',
+                header: context.l10n.columnStatus,
                 cellBuilder: (context, row) => StatusPill(
                   semantic: row.status.semantic,
                   label: row.status.label,
@@ -208,18 +213,22 @@ class _RequestsTable extends StatelessWidget {
                 ),
               ),
               TableColumn<RequestSummaryResDm>(
-                header: 'Dates',
+                header: context.l10n.requestColumnDates,
                 flex: 2,
                 cellBuilder: (context, row) => Text('${row.requestedFrom} – ${row.requestedTo}'),
               ),
               TableColumn<RequestSummaryResDm>(
-                header: 'Mgr',
-                cellBuilder: (context, row) => Text(row.managerApproved ? 'Approved' : 'Pending'),
+                header: context.l10n.requestColumnMgr,
+                cellBuilder: (context, row) => Text(
+                  row.managerApproved ? context.l10n.requestApproved : context.l10n.requestPending,
+                ),
               ),
               TableColumn<RequestSummaryResDm>(
-                header: 'Actions',
+                header: context.l10n.columnActions,
                 cellBuilder: (context, row) => PillActionButton(
-                  label: row.status == RequestStatus.pendingIt ? 'Assign' : 'View',
+                  label: row.status == RequestStatus.pendingItApproval
+                      ? context.l10n.requestActionAssign
+                      : context.l10n.requestActionView,
                   onPressed: () => context.go(
                     Routes.adminRequestDetail.path.replaceFirst(
                       ':id',

@@ -17,6 +17,12 @@ enum Routes {
   adminDashboard(path: '/dashboard', name: 'adminDashboard'),
   adminRequests(path: '/requests', name: 'adminRequests'),
   adminRequestDetail(path: '/requests/:id', name: 'adminRequestDetail'),
+  adminInventory(path: '/inventory', name: 'adminInventory'),
+  adminInventoryDetail(path: '/inventory/:id', name: 'adminInventoryDetail'),
+  adminInventoryTimeline(
+    path: '/inventory/:id/timeline',
+    name: 'adminInventoryTimeline',
+  ),
 
   // Shared (temporary, both variants — component library verification)
   componentShowcase(path: '/showcase', name: 'componentShowcase');

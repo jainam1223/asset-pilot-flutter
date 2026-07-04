@@ -8,7 +8,9 @@ import '../common/models/item_category_res_dm.dart';
 import '../common/models/request_res_dm.dart';
 import '../common/models/user_res_dm.dart';
 import '../request/models/create_request_req_dm.dart';
-import '../auth/models/user_res_dm.dart';
+import '../inventory/models/device_timeline_event_res_dm.dart';
+import '../inventory/models/inventory_detail_res_dm.dart';
+import '../inventory/models/inventory_item_res_dm.dart';
 import '../requests/models/assign_device_req_dm.dart';
 import '../requests/models/reject_request_req_dm.dart';
 import '../requests/models/request_detail_res_dm.dart';
@@ -94,5 +96,21 @@ abstract class ApiService {
   Future<ApiResult<void>> rejectRequest(
     @Path('id') String id,
     @Body() RejectRequestReqDm body,
+  );
+
+  /// List inventory devices for the admin Inventory Management table (A04).
+  @GET('/admin/inventory')
+  Future<ApiResult<List<InventoryItemResDm>>> fetchInventory();
+
+  /// Fetch full detail for a single device (A05).
+  @GET('/admin/inventory/{id}')
+  Future<ApiResult<InventoryDetailResDm>> fetchInventoryDetail(
+    @Path('id') String id,
+  );
+
+  /// Fetch the append-only audit-trail timeline for a device (A06).
+  @GET('/admin/inventory/{id}/timeline')
+  Future<ApiResult<List<DeviceTimelineEventResDm>>> fetchDeviceTimeline(
+    @Path('id') String id,
   );
 }

@@ -16,7 +16,7 @@ abstract class RequestDetailResDm with _$RequestDetailResDm {
     @Default('') String employeeDepartment,
     @Default('') String category,
     @Default(RequestPriority.medium) RequestPriority priority,
-    @Default(RequestStatus.pendingIt) RequestStatus status,
+    @Default(RequestStatus.pendingItApproval) RequestStatus status,
     @Default('') String requestedFrom,
     @Default('') String requestedTo,
     @Default(false) bool managerApproved,

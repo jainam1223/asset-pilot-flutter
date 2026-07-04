@@ -15,7 +15,7 @@ abstract class RequestSummaryResDm with _$RequestSummaryResDm {
     @Default('') String employeeName,
     @Default('') String category,
     @Default(RequestPriority.medium) RequestPriority priority,
-    @Default(RequestStatus.pendingIt) RequestStatus status,
+    @Default(RequestStatus.pendingItApproval) RequestStatus status,
     @Default('') String requestedFrom,
     @Default('') String requestedTo,
     @Default(false) bool managerApproved,

@@ -36,14 +36,16 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return AdminShell(
-      title: 'Request ${context.read<RequestDetailCubit>().requestId} · Assign Device',
+      title: context.l10n.requestDetailTitle(
+        context.read<RequestDetailCubit>().requestId,
+      ),
       selectedNavId: 'requests',
       child: BlocConsumer<RequestDetailCubit, RequestDetailState>(
         listenWhen: (previous, current) => previous.submission != current.submission,
         listener: (context, state) {
           switch (state.submission) {
             case Success():
-              AppToast.success(context, 'Request updated.');
+              AppToast.success(context, context.l10n.requestUpdatedSuccess);
               context.go(Routes.adminRequests.path);
             case Error(:final message):
               AppToast.error(context, message);
@@ -85,7 +87,7 @@ class _RequestInfoPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Request Info', style: context.appTextStyles.h3),
+          Text(context.l10n.requestInfoTitle, style: context.appTextStyles.h3),
           const Gap(14),
           Row(
             children: [
@@ -106,16 +108,19 @@ class _RequestInfoPanel extends StatelessWidget {
           const Gap(14),
           InfoRowsCard(
             rows: [
-              InfoRow(label: 'Category', value: Text(detail.category)),
               InfoRow(
-                label: 'Priority',
+                label: context.l10n.requestFieldCategory,
+                value: Text(detail.category),
+              ),
+              InfoRow(
+                label: context.l10n.requestFieldPriority,
                 value: PriorityTag(
                   semantic: detail.priority.semantic,
                   label: detail.priority.label,
                 ),
               ),
               InfoRow(
-                label: 'Status',
+                label: context.l10n.requestFieldStatus,
                 value: StatusPill(
                   semantic: detail.status.semantic,
                   label: detail.status.label,
@@ -123,20 +128,24 @@ class _RequestInfoPanel extends StatelessWidget {
                 ),
               ),
               InfoRow(
-                label: 'Mgr approval',
-                value: Text(detail.managerApproved ? 'Approved' : 'Pending'),
+                label: context.l10n.requestFieldMgrApproval,
+                value: Text(
+                  detail.managerApproved
+                      ? context.l10n.requestApproved
+                      : context.l10n.requestPending,
+                ),
               ),
             ],
           ),
           const Gap(14),
-          Text('Requested dates', style: context.appTextStyles.bodySmall),
+          Text(context.l10n.requestRequestedDates, style: context.appTextStyles.bodySmall),
           const Gap(5),
           Text(
             '${detail.requestedFrom} – ${detail.requestedTo}',
             style: context.appTextStyles.labelLarge,
           ),
           const Gap(14),
-          Text('Note', style: context.appTextStyles.bodySmall),
+          Text(context.l10n.requestNote, style: context.appTextStyles.bodySmall),
           const Gap(5),
           Text(detail.note, style: context.appTextStyles.bodyMedium),
         ],
@@ -157,10 +166,10 @@ class _SuggestionsPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Suggested Devices', style: context.appTextStyles.h3),
+          Text(context.l10n.requestSuggestedDevicesTitle, style: context.appTextStyles.h3),
           const Gap(6),
           Text(
-            'Available Laptops with no date conflict · ranked by fewest requests & longest free',
+            context.l10n.requestSuggestedDevicesSubtitle,
             style: context.appTextStyles.bodySmall,
           ),
           const Gap(14),
@@ -176,6 +185,7 @@ class _SuggestionsPanel extends StatelessWidget {
                     rank: suggestion.rank,
                     title: '${suggestion.name} · SN ${suggestion.serial}',
                     subtitle: suggestion.reason,
+                    selectLabel: context.l10n.suggestionSelect,
                     recommended: suggestion.deviceId == state.selectedDeviceId,
                     onSelect: () => cubit.selectDevice(suggestion.deviceId),
                   );
@@ -190,7 +200,7 @@ class _SuggestionsPanel extends StatelessWidget {
             children: [
               Expanded(
                 child: PickerField(
-                  label: 'Assigned from',
+                  label: context.l10n.requestAssignedFrom,
                   valueText: state.assignedFrom,
                   onTap: () {},
                 ),
@@ -198,7 +208,7 @@ class _SuggestionsPanel extends StatelessWidget {
               const Gap(12),
               Expanded(
                 child: PickerField(
-                  label: 'Assigned to',
+                  label: context.l10n.requestAssignedTo,
                   valueText: state.assignedTo,
                   onTap: () {},
                 ),
@@ -207,7 +217,7 @@ class _SuggestionsPanel extends StatelessWidget {
               AppSwitch(
                 value: state.workFromHome,
                 onChanged: cubit.toggleWorkFromHome,
-                label: 'WFH',
+                label: context.l10n.requestWfh,
               ),
             ],
           ),
@@ -216,7 +226,7 @@ class _SuggestionsPanel extends StatelessWidget {
             children: [
               Expanded(
                 child: AppButton(
-                  label: 'Assign Device',
+                  label: context.l10n.requestAssignDevice,
                   onPressed: state.selectedDeviceId == null
                       ? null
                       : (state.submission is Loading ? null : cubit.assign),
@@ -226,7 +236,7 @@ class _SuggestionsPanel extends StatelessWidget {
               ),
               const Gap(10),
               AppButton(
-                label: 'Reject',
+                label: context.l10n.requestReject,
                 variant: AppButtonVariant.secondary,
                 onPressed: state.submission is Loading ? null : () => cubit.reject(),
               ),
@@ -249,9 +259,12 @@ class _BookingCalendarPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Booking Calendar', style: context.appTextStyles.h3),
+          Text(context.l10n.requestBookingCalendarTitle, style: context.appTextStyles.h3),
           const Gap(6),
-          Text('Existing bookings · static preview', style: context.appTextStyles.bodySmall),
+          Text(
+            context.l10n.requestBookingCalendarSubtitle,
+            style: context.appTextStyles.bodySmall,
+          ),
           const Gap(14),
           const _CalendarBar(month: 'Jul', fraction: 0.4),
           const Gap(9),
@@ -263,13 +276,13 @@ class _BookingCalendarPanel extends StatelessWidget {
           const Gap(9),
           const _CalendarBar(month: 'Nov', fraction: 0.45, warning: true),
           const Gap(16),
-          const InlineAlert(
+          InlineAlert(
             semantic: AppSemantic.warning,
-            message: 'Overlaps an existing booking in Nov. Nudge the conflicting range?',
+            message: context.l10n.requestBookingConflictWarning,
           ),
           const Gap(12),
           AppButton(
-            label: 'Nudge conflicting range',
+            label: context.l10n.requestNudgeConflictingRange,
             variant: AppButtonVariant.secondary,
             expand: true,
             // TODO(nudge): no conflict-resolution flow exists yet — stubbed.

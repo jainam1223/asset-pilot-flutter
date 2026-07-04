@@ -54,6 +54,7 @@ flutter run -t lib/main_admin.dart -d macos       # IT Admin, desktop
 - `ApiResultCallAdapter` (`lib/utilities/api_utilities/my_call_adapter.dart`) converts Retrofit calls into `ApiResult<T>` (`ApiSuccess` / `ApiFailure`), so endpoints are declared as `Future<ApiResult<ResDm>>`.
 - **`AuthRepository` (`lib/repositories/remote_repository/auth/auth_repository.dart`) currently returns MOCKED data** — there is no live backend yet. The real Retrofit call is commented out inline (`apiService.login(...)`). When a backend exists, swap the mock body for the real call; the Cubit/UI layer doesn't change.
 - Base URL comes from `lib/env/env.dart` (`Env.current.baseUrl`), keyed by `Flavor` (`dev`/`uat`/`prod`). **Flavors are not wired yet** — `Env.current` defaults to `dev`. `lib/values/flavors/flavor_config.dart` is a placeholder for when flavored `main_*` entries are introduced.
+- `BASE_URL` is sourced at **compile time** via `envied` (`_Env` in `env.dart`, `@Envied(path: '.env', obfuscate: true)`), generating an obfuscated `lib/env/env.g.dart` from the gitignored `.env` file — copy `.env.example` to `.env` and run `dart run build_runner build --delete-conflicting-outputs` after editing it. This replaced `flutter_dotenv`'s runtime file loading; there is no `Env.load()` call anymore.
 
 ## Routing — GoRouter
 
