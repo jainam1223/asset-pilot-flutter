@@ -7,6 +7,7 @@ import '../../modules/mobile/handover/handover_scan_screen.dart';
 import '../../modules/mobile/handover/request_handover_screen.dart';
 import '../../modules/mobile/login/cubit/login_cubit.dart';
 import '../../modules/mobile/login/login_screen.dart';
+import '../../modules/mobile/manager/approval_detail_screen.dart';
 import '../../modules/mobile/my_devices/cubit/my_devices_cubit.dart';
 import '../../modules/mobile/requests/create_request_screen.dart';
 import '../../modules/mobile/requests/cubit/create_request_cubit.dart';
@@ -15,6 +16,7 @@ import '../../modules/mobile/shell/mobile_shell_screen.dart';
 import '../../modules/mobile/splash/cubit/splash_cubit.dart';
 import '../../modules/mobile/splash/splash_screen.dart';
 import '../../repositories/remote_repository/common/models/user_res_dm.dart';
+import '../../repositories/remote_repository/manager/models/pending_approval_res_dm.dart';
 import '../../values/app_global/app_global.dart';
 import '../../views/component_showcase/component_showcase_screen.dart';
 import '../../views/invalid_route/invalid_route_screen.dart';
@@ -94,6 +96,14 @@ GoRouter buildMobileRouter() {
           return const RequestHandoverScreen().withProvider(
             (_) => RequestHandoverCubit(itemId),
           );
+        },
+      ),
+      GoRoute(
+        path: Routes.approvalDetail.path,
+        name: Routes.approvalDetail.name,
+        builder: (context, state) {
+          final data = state.extra as PendingApprovalResDm;
+          return ApprovalDetailScreen(data: data);
         },
       ),
       GoRoute(

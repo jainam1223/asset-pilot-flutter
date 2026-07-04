@@ -71,7 +71,7 @@ class DeviceDetailScreen extends StatelessWidget {
                   AppCard(
                     child: QrDisplay(
                       qrImage: QrImageView(
-                        data: item.id,
+                        data: item.assignedItemId,
                         backgroundColor: Colors.white,
                         eyeStyle: QrEyeStyle(
                           color: context.appColors.textPrimary,

@@ -8,6 +8,7 @@ import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/navigation/app_routes.dart';
 import '../../../widgets/nav/app_bottom_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
+import '../manager/manager_home_screen.dart';
 import '../my_devices/cubit/my_devices_cubit.dart';
 import '../my_devices/my_devices_screen.dart';
 import '../profile/profile_screen.dart';
@@ -18,14 +19,14 @@ const int _devicesTabIndex = 0;
 const int _requestsTabIndex = 1;
 const int _handoverTabIndex = 2;
 const int _profileTabIndex = 3;
-// No FAB case needed for Profile/Approvals.
+const int _approvalsTabIndex = 4;
 
 /// Employee/Manager home shell with bottom navigation (mockup E02 chrome).
 ///
 /// Tab bodies are placeholders; individual feature screens are built later.
 /// [user] is the just-logged-in account (carried via the login route's
-/// `extra`); when its role is `manager`, a fifth "Approvals" tab is shown —
-/// a static placeholder until the manager screens are built.
+/// `extra`); when its role is `manager`, a fifth "Approvals" tab is shown,
+/// hosting [ManagerHomeScreen] (mockups M01/M03/M04).
 class MobileShellScreen extends StatefulWidget {
   const MobileShellScreen({this.user, super.key});
 
@@ -83,6 +84,7 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
           child: const RequestsScreen(),
         ),
         _profileTabIndex => ProfileScreen(user: widget.user),
+        _approvalsTabIndex => const ManagerHomeScreen(),
         _ => _ComingSoon(label: items[_index].label),
       },
       floatingActionButton: _buildFab(context),

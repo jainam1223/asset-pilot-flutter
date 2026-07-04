@@ -15,6 +15,7 @@ enum Routes {
   deviceDetail(path: '/devices/:id', name: 'deviceDetail'),
   handoverScan(path: '/handover/scan', name: 'handoverScan'),
   requestHandover(path: '/handover/new', name: 'requestHandover'),
+  approvalDetail(path: '/manager/approvals/:id', name: 'approvalDetail'),
 
   // Admin (IT)
   adminDashboard(path: '/dashboard', name: 'adminDashboard'),

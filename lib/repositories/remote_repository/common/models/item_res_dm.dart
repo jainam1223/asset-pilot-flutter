@@ -27,6 +27,7 @@ abstract class ItemResDm with _$ItemResDm {
     DateTime? updatedAt,
     DateTime? assignedFrom,
     DateTime? assignedTo,
+    @Default('') String assignedItemId,
     @Default(false) bool isWfh,
     String? shipTrackingUrl,
   }) = _ItemResDm;

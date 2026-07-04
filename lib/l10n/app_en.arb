@@ -533,5 +533,71 @@
   "requestHandoverSendRequest": "Send Handover Request",
   "@requestHandoverSendRequest": {},
   "requestHandoverSuccessToast": "Handover request sent successfully.",
-  "@requestHandoverSuccessToast": {}
+  "@requestHandoverSuccessToast": {},
+  "navExtensions": "Extensions",
+  "@navExtensions": {},
+  "navTeamDevices": "Team Devices",
+  "@navTeamDevices": {},
+  "managerGreeting": "Manager · {name}",
+  "@managerGreeting": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "pendingApprovalsTitle": "Pending Approvals",
+  "@pendingApprovalsTitle": {},
+  "pendingApprovalsEmptyTitle": "No pending approvals",
+  "@pendingApprovalsEmptyTitle": {},
+  "pendingApprovalsEmptyMessage": "Requests from your direct reports will show up here.",
+  "@pendingApprovalsEmptyMessage": {},
+  "approvalActionApprove": "Approve",
+  "@approvalActionApprove": {},
+  "approvalActionReject": "Reject",
+  "@approvalActionReject": {},
+  "approvalApprovedToast": "Request approved.",
+  "@approvalApprovedToast": {},
+  "approvalRejectedToast": "Request rejected.",
+  "@approvalRejectedToast": {},
+  "approvalDetailTitle": "Approval Detail",
+  "@approvalDetailTitle": {},
+  "approvalDetailRequestsCategory": "Requests a {category}",
+  "@approvalDetailRequestsCategory": {
+    "placeholders": {
+      "category": {"type": "String"}
+    }
+  },
+  "approvalDetailPriority": "Priority",
+  "@approvalDetailPriority": {},
+  "approvalDetailDates": "Dates",
+  "@approvalDetailDates": {},
+  "approvalDetailCategory": "Category",
+  "@approvalDetailCategory": {},
+  "approvalDetailEmployeeNote": "Employee note",
+  "@approvalDetailEmployeeNote": {},
+  "approvalDetailDecisionNoteLabel": "Decision note (optional)",
+  "@approvalDetailDecisionNoteLabel": {},
+  "approvalDetailDecisionNoteHint": "Approved — laptop is 4 years old…",
+  "@approvalDetailDecisionNoteHint": {},
+  "extensionApprovalsTitle": "Extension Approvals",
+  "@extensionApprovalsTitle": {},
+  "extensionApprovalsEmptyTitle": "No extension requests",
+  "@extensionApprovalsEmptyTitle": {},
+  "extensionApprovalsEmptyMessage": "Extension requests from your direct reports will show up here.",
+  "@extensionApprovalsEmptyMessage": {},
+  "extensionApprovedToast": "Extension approved.",
+  "@extensionApprovedToast": {},
+  "extensionRejectedToast": "Extension rejected.",
+  "@extensionRejectedToast": {},
+  "teamDevicesTitle": "Team Devices",
+  "@teamDevicesTitle": {},
+  "teamDevicesSubtitle": "Read-only · {count} direct reports",
+  "@teamDevicesSubtitle": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "teamDevicesEmptyTitle": "No direct reports",
+  "@teamDevicesEmptyTitle": {},
+  "teamDevicesEmptyMessage": "Devices assigned to your direct reports will show up here.",
+  "@teamDevicesEmptyMessage": {}
 }
