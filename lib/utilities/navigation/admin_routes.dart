@@ -1,5 +1,7 @@
 import 'package:go_router/go_router.dart';
 
+import '../../modules/admin/assignment/cubit/client_assignment_cubit.dart';
+import '../../modules/admin/assignment/direct_client_assignment_screen.dart';
 import '../../modules/admin/dashboard/cubit/dashboard_cubit.dart';
 import '../../modules/admin/dashboard/dashboard_screen.dart';
 import '../../modules/admin/extension_requests/list/cubit/extension_request_list_cubit.dart';
@@ -84,6 +86,12 @@ GoRouter buildAdminRouter() {
         name: Routes.adminExtensionRequests.name,
         builder: (context, state) => const ExtensionRequestListScreen()
             .withProvider((_) => ExtensionRequestListCubit()),
+      ),
+      GoRoute(
+        path: Routes.adminAssignment.path,
+        name: Routes.adminAssignment.name,
+        builder: (context, state) => const DirectClientAssignmentScreen()
+            .withProvider((_) => ClientAssignmentCubit()),
       ),
       GoRoute(
         path: Routes.componentShowcase.path,

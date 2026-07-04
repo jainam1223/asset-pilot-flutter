@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../repositories/remote_repository/requests/models/request_detail_res_dm.dart';
 import '../../../../repositories/remote_repository/requests/models/suggested_device_res_dm.dart';
@@ -154,6 +155,30 @@ class _RequestInfoPanel extends StatelessWidget {
   }
 }
 
+final _assignedDateFormat = DateFormat('dd MMM yyyy');
+
+Future<void> _pickAssignedDate({
+  required BuildContext context,
+  required String initialText,
+  required ValueChanged<String> onPicked,
+}) async {
+  final now = DateTime.now();
+  DateTime initial;
+  try {
+    initial = _assignedDateFormat.parse(initialText);
+  } on FormatException {
+    initial = now;
+  }
+  final picked = await showDatePicker(
+    context: context,
+    initialDate: initial,
+    firstDate: DateTime(now.year - 1),
+    lastDate: DateTime(now.year + 5),
+  );
+  if (picked == null) return;
+  onPicked(_assignedDateFormat.format(picked));
+}
+
 class _SuggestionsPanel extends StatelessWidget {
   const _SuggestionsPanel({required this.state});
 
@@ -202,7 +227,12 @@ class _SuggestionsPanel extends StatelessWidget {
                 child: PickerField(
                   label: context.l10n.requestAssignedFrom,
                   valueText: state.assignedFrom,
-                  onTap: () {},
+                  trailingIcon: Icons.calendar_today_outlined,
+                  onTap: () => _pickAssignedDate(
+                    context: context,
+                    initialText: state.assignedFrom,
+                    onPicked: cubit.updateAssignedFrom,
+                  ),
                 ),
               ),
               const Gap(12),
@@ -210,7 +240,12 @@ class _SuggestionsPanel extends StatelessWidget {
                 child: PickerField(
                   label: context.l10n.requestAssignedTo,
                   valueText: state.assignedTo,
-                  onTap: () {},
+                  trailingIcon: Icons.calendar_today_outlined,
+                  onTap: () => _pickAssignedDate(
+                    context: context,
+                    initialText: state.assignedTo,
+                    onPicked: cubit.updateAssignedTo,
+                  ),
                 ),
               ),
               const Gap(12),

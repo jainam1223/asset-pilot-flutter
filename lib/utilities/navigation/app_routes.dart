@@ -29,6 +29,7 @@ enum Routes {
     path: '/extension-requests',
     name: 'adminExtensionRequests',
   ),
+  adminAssignment(path: '/assignment', name: 'adminAssignment'),
 
   // Shared (temporary, both variants — component library verification)
   componentShowcase(path: '/showcase', name: 'componentShowcase');

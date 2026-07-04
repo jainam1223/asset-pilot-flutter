@@ -85,8 +85,16 @@ class _ToolbarRow extends StatelessWidget {
   }
 }
 
-class _FiltersRow extends StatelessWidget {
+class _FiltersRow extends StatefulWidget {
   const _FiltersRow();
+
+  @override
+  State<_FiltersRow> createState() => _FiltersRowState();
+}
+
+class _FiltersRowState extends State<_FiltersRow> {
+  final _statusChipKey = GlobalKey();
+  final _categoryChipKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +107,7 @@ class _FiltersRow extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             FilterDropdownChip(
+              key: _statusChipKey,
               label: context.l10n.inventoryFilterStatus,
               valueLabel: state.statusFilter == 'all'
                   ? context.l10n.inventoryFilterAll
@@ -108,6 +117,7 @@ class _FiltersRow extends StatelessWidget {
               onTap: () => _showStatusMenu(context, cubit),
             ),
             FilterDropdownChip(
+              key: _categoryChipKey,
               label: context.l10n.inventoryFilterCategory,
               valueLabel: state.categoryFilter == 'all'
                   ? context.l10n.inventoryFilterAll
@@ -127,10 +137,28 @@ class _FiltersRow extends StatelessWidget {
     );
   }
 
+  RelativeRect _menuPosition(GlobalKey chipKey) {
+    final chipBox = chipKey.currentContext!.findRenderObject()! as RenderBox;
+    final overlayBox =
+        Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
+    final topLeft = chipBox.localToGlobal(
+      Offset(0, chipBox.size.height),
+      ancestor: overlayBox,
+    );
+    final bottomRight = chipBox.localToGlobal(
+      chipBox.size.bottomRight(Offset.zero),
+      ancestor: overlayBox,
+    );
+    return RelativeRect.fromRect(
+      Rect.fromPoints(topLeft, bottomRight),
+      Offset.zero & overlayBox.size,
+    );
+  }
+
   void _showStatusMenu(BuildContext context, InventoryListCubit cubit) {
     showMenu<String>(
       context: context,
-      position: const RelativeRect.fromLTRB(200, 200, 0, 0),
+      position: _menuPosition(_statusChipKey),
       items: [
         PopupMenuItem(value: 'all', child: Text(context.l10n.inventoryFilterAll)),
         for (final status in DeviceStatus.values)
@@ -145,7 +173,7 @@ class _FiltersRow extends StatelessWidget {
     const categories = ['all', 'Laptop', 'Monitor', 'Mobile', 'Accessory'];
     showMenu<String>(
       context: context,
-      position: const RelativeRect.fromLTRB(360, 200, 0, 0),
+      position: _menuPosition(_categoryChipKey),
       items: [
         for (final category in categories)
           PopupMenuItem(

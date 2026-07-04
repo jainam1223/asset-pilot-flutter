@@ -88,8 +88,16 @@ class _StatusPillsRow extends StatelessWidget {
   }
 }
 
-class _FiltersRow extends StatelessWidget {
+class _FiltersRow extends StatefulWidget {
   const _FiltersRow();
+
+  @override
+  State<_FiltersRow> createState() => _FiltersRowState();
+}
+
+class _FiltersRowState extends State<_FiltersRow> {
+  final _priorityChipKey = GlobalKey();
+  final _categoryChipKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -102,11 +110,13 @@ class _FiltersRow extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             FilterDropdownChip(
+              key: _priorityChipKey,
               label: context.l10n.requestFilterPriority,
               valueLabel: state.priorityFilter?.label ?? context.l10n.requestFilterAll,
               onTap: () => _showPriorityMenu(context, cubit),
             ),
             FilterDropdownChip(
+              key: _categoryChipKey,
               label: context.l10n.requestFilterCategory,
               valueLabel: state.categoryFilter == 'all'
                   ? context.l10n.requestFilterAll
@@ -133,10 +143,28 @@ class _FiltersRow extends StatelessWidget {
     );
   }
 
+  RelativeRect _menuPosition(GlobalKey chipKey) {
+    final chipBox = chipKey.currentContext!.findRenderObject()! as RenderBox;
+    final overlayBox =
+        Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
+    final topLeft = chipBox.localToGlobal(
+      Offset(0, chipBox.size.height),
+      ancestor: overlayBox,
+    );
+    final bottomRight = chipBox.localToGlobal(
+      chipBox.size.bottomRight(Offset.zero),
+      ancestor: overlayBox,
+    );
+    return RelativeRect.fromRect(
+      Rect.fromPoints(topLeft, bottomRight),
+      Offset.zero & overlayBox.size,
+    );
+  }
+
   void _showPriorityMenu(BuildContext context, RequestListCubit cubit) {
     showMenu<RequestPriority?>(
       context: context,
-      position: const RelativeRect.fromLTRB(200, 200, 0, 0),
+      position: _menuPosition(_priorityChipKey),
       items: [
         PopupMenuItem(value: null, child: Text(context.l10n.requestFilterAll)),
         for (final priority in RequestPriority.values)
@@ -151,7 +179,7 @@ class _FiltersRow extends StatelessWidget {
     const categories = ['all', 'Laptop', 'Monitor', 'Mobile', 'Accessory'];
     showMenu<String>(
       context: context,
-      position: const RelativeRect.fromLTRB(360, 200, 0, 0),
+      position: _menuPosition(_categoryChipKey),
       items: [
         for (final category in categories)
           PopupMenuItem(

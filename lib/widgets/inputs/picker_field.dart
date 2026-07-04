@@ -34,6 +34,7 @@ class PickerField extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: Column(
@@ -56,7 +57,10 @@ class PickerField extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(trailingIcon, size: 18, color: context.appColors.textTertiary),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2),
+              child: Icon(trailingIcon, size: 18, color: context.appColors.textTertiary),
+            ),
           ],
         ),
       ),

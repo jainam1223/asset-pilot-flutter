@@ -20,6 +20,7 @@ export 'inputs/app_switch.dart';
 export 'inputs/filter_dropdown_chip.dart';
 export 'inputs/filter_pill_tabs.dart';
 export 'inputs/picker_field.dart';
+export 'inputs/searchable_dropdown_field.dart';
 export 'inputs/segmented_control.dart';
 
 export 'indicators/app_avatar.dart';
