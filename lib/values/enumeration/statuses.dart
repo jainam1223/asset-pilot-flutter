@@ -1,8 +1,31 @@
 /// Lifecycle status of a device/asset (from the inventory & device screens).
-enum DeviceStatus { available, assigned, shipping, underRepair, retired, lost }
+///
+/// Mirrors `device_status` in schema_v3.dbml exactly — values map 1:1 to the
+/// Postgres enum (snake_case on the wire, camelCase here).
+enum DeviceStatus {
+  available,
+  assigned,
+  shippingPending,
+  returnShippingPending,
+  underRepair,
+  maintenance,
+  lost,
+  retired,
+  returnedToClient,
+}
 
 /// Status of an employee's device request (request list & management screens).
-enum RequestStatus { pendingManager, pendingIt, assigned, rejected, completed }
+///
+/// Mirrors `request_status` in schema_v3.dbml exactly.
+enum RequestStatus {
+  requested,
+  pendingMgrApproval,
+  pendingItApproval,
+  assigned,
+  completed,
+  rejected,
+  cancelled,
+}
 
 /// Status of a support ticket.
 enum SupportStatus { open, inProgress, resolved }

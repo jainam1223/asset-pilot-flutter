@@ -33,6 +33,8 @@ dependencies:
   dio: 5.10.0
   # Type-safe REST client generator built on Dio.
   retrofit: 4.9.2
+  # Loads BASE_URL and other env config from .env.
+  flutter_dotenv: 5.2.1
 
   # State Management
   # Value equality for state/model classes.
@@ -90,6 +92,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - .env
 
 
   # Fonts from the design system (Poppins headings + DM Sans body).

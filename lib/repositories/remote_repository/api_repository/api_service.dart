@@ -5,6 +5,7 @@ import '../../../models/api_response/api_result.dart';
 import '../../../utilities/api_utilities/my_call_adapter.dart';
 import '../auth/models/login_req_dm.dart';
 import '../auth/models/user_res_dm.dart';
+import '../device/models/my_device_res_dm.dart';
 
 part 'api_service.g.dart';
 
@@ -20,4 +21,12 @@ abstract class ApiService {
   /// Authenticate a user with email + password.
   @POST('/auth/login')
   Future<ApiResult<UserResDm>> login(@Body() LoginReqDm body);
+
+  /// The signed-in employee's devices — active `request` rows (joined with
+  /// their assigned `item`). [userId] stands in for a bearer token until a
+  /// real auth session exists.
+  @GET('/me/devices')
+  Future<ApiResult<List<MyDeviceResDm>>> getMyDevices(
+    @Header('X-User-Id') String userId,
+  );
 }
