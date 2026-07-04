@@ -47,5 +47,33 @@
   "noDevicesAssigned": "Devices assigned to you will show up here.",
   "@noDevicesAssigned": {},
   "somethingWentWrong": "Something went wrong",
-  "@somethingWentWrong": {}
+  "@somethingWentWrong": {},
+  "myRequestsTitle": "My Requests",
+  "@myRequestsTitle": {},
+  "noRequestsTitle": "No requests yet",
+  "@noRequestsTitle": {},
+  "noRequestsYet": "Requests you raise will show up here.",
+  "@noRequestsYet": {},
+  "requestDetailAppBarTitle": "Request #{requestId}",
+  "@requestDetailAppBarTitle": {
+    "placeholders": {
+      "requestId": {"type": "String"}
+    }
+  },
+  "requestDetailRequested": "Requested",
+  "@requestDetailRequested": {},
+  "requestDetailManagerApproval": "Manager approval",
+  "@requestDetailManagerApproval": {},
+  "requestDetailAssignedItem": "Assigned item",
+  "@requestDetailAssignedItem": {},
+  "requestDetailAwaitingIt": "Awaiting IT…",
+  "@requestDetailAwaitingIt": {},
+  "requestDetailManagerNote": "MANAGER NOTE",
+  "@requestDetailManagerNote": {},
+  "requestDetailYourNote": "YOUR NOTE",
+  "@requestDetailYourNote": {},
+  "requestDetailCancelRequest": "Cancel Request",
+  "@requestDetailCancelRequest": {},
+  "requestDetailWfhTag": "Work from home",
+  "@requestDetailWfhTag": {}
 }

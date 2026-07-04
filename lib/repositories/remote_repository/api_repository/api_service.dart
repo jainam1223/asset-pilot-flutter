@@ -29,4 +29,18 @@ abstract class ApiService {
   Future<ApiResult<List<RequestResDm>>> getMyDevices(
     @Header('X-User-Id') String userId,
   );
+
+  /// The signed-in employee's `request` rows — every request they've raised,
+  /// regardless of status (My Requests list, mockup E07 list).
+  @GET('/me/requests')
+  Future<ApiResult<List<RequestResDm>>> getMyRequests(
+    @Header('X-User-Id') String userId,
+  );
+
+  /// A single `request` row by id (Request Detail, mockup E07).
+  @GET('/me/requests/{requestId}')
+  Future<ApiResult<RequestResDm>> getRequestDetail(
+    @Header('X-User-Id') String userId,
+    @Path('requestId') String requestId,
+  );
 }
