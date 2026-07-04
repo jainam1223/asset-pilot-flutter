@@ -2,12 +2,16 @@ import 'package:go_router/go_router.dart';
 
 import '../../modules/admin/dashboard/cubit/dashboard_cubit.dart';
 import '../../modules/admin/dashboard/dashboard_screen.dart';
+import '../../modules/admin/extension_requests/list/cubit/extension_request_list_cubit.dart';
+import '../../modules/admin/extension_requests/list/extension_request_list_screen.dart';
 import '../../modules/admin/inventory/detail/cubit/inventory_detail_cubit.dart';
 import '../../modules/admin/inventory/detail/inventory_detail_screen.dart';
 import '../../modules/admin/inventory/list/cubit/inventory_list_cubit.dart';
 import '../../modules/admin/inventory/list/inventory_list_screen.dart';
 import '../../modules/admin/inventory/timeline/cubit/inventory_timeline_cubit.dart';
 import '../../modules/admin/inventory/timeline/inventory_timeline_screen.dart';
+import '../../modules/admin/maintenance/list/cubit/maintenance_list_cubit.dart';
+import '../../modules/admin/maintenance/list/maintenance_list_screen.dart';
 import '../../modules/admin/requests/detail/cubit/request_detail_cubit.dart';
 import '../../modules/admin/requests/detail/request_detail_screen.dart';
 import '../../modules/admin/requests/list/cubit/request_list_cubit.dart';
@@ -68,6 +72,18 @@ GoRouter buildAdminRouter() {
           return InventoryTimelineScreen(deviceName: deviceName)
               .withProvider((_) => InventoryTimelineCubit(id));
         },
+      ),
+      GoRoute(
+        path: Routes.adminMaintenance.path,
+        name: Routes.adminMaintenance.name,
+        builder: (context, state) => const MaintenanceListScreen()
+            .withProvider((_) => MaintenanceListCubit()),
+      ),
+      GoRoute(
+        path: Routes.adminExtensionRequests.path,
+        name: Routes.adminExtensionRequests.name,
+        builder: (context, state) => const ExtensionRequestListScreen()
+            .withProvider((_) => ExtensionRequestListCubit()),
       ),
       GoRoute(
         path: Routes.componentShowcase.path,

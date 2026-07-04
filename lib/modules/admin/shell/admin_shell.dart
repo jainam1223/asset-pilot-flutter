@@ -57,6 +57,16 @@ class AdminShell extends StatelessWidget {
         icon: Icons.inventory_2_outlined,
       ),
       NavItem(
+        id: 'maintenance',
+        label: l10n.adminMaintenance,
+        icon: Icons.build_outlined,
+      ),
+      NavItem(
+        id: 'extensionRequests',
+        label: l10n.adminExtensionRequests,
+        icon: Icons.event_repeat_outlined,
+      ),
+      NavItem(
         id: 'settings',
         label: l10n.adminSettings,
         icon: Icons.settings_outlined,
@@ -91,6 +101,8 @@ class AdminShell extends StatelessWidget {
       'dashboard' => Routes.adminDashboard.path,
       'requests' => Routes.adminRequests.path,
       'inventory' => Routes.adminInventory.path,
+      'maintenance' => Routes.adminMaintenance.path,
+      'extensionRequests' => Routes.adminExtensionRequests.path,
       _ => null,
     };
     if (path != null) context.go(path);

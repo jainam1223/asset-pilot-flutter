@@ -24,6 +24,11 @@ enum Routes {
     path: '/inventory/:id/timeline',
     name: 'adminInventoryTimeline',
   ),
+  adminMaintenance(path: '/maintenance', name: 'adminMaintenance'),
+  adminExtensionRequests(
+    path: '/extension-requests',
+    name: 'adminExtensionRequests',
+  ),
 
   // Shared (temporary, both variants — component library verification)
   componentShowcase(path: '/showcase', name: 'componentShowcase');

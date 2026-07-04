@@ -9,9 +9,13 @@ import '../common/models/item_res_dm.dart';
 import '../common/models/request_res_dm.dart';
 import '../common/models/user_res_dm.dart';
 import '../request/models/create_request_req_dm.dart';
+import '../extension_requests/models/decide_extension_req_dm.dart';
+import '../extension_requests/models/extension_request_summary_res_dm.dart';
 import '../inventory/models/device_timeline_event_res_dm.dart';
 import '../inventory/models/inventory_detail_res_dm.dart';
 import '../inventory/models/inventory_item_res_dm.dart';
+import '../maintenance/models/maintenance_item_res_dm.dart';
+import '../maintenance/models/update_device_status_req_dm.dart';
 import '../requests/models/assign_device_req_dm.dart';
 import '../requests/models/reject_request_req_dm.dart';
 import '../requests/models/request_detail_res_dm.dart';
@@ -113,5 +117,29 @@ abstract class ApiService {
   @GET('/admin/inventory/{id}/timeline')
   Future<ApiResult<List<DeviceTimelineEventResDm>>> fetchDeviceTimeline(
     @Path('id') String id,
+  );
+
+  /// List devices under repair/maintenance for the admin Maintenance queue
+  /// (A10).
+  @GET('/admin/maintenance')
+  Future<ApiResult<List<MaintenanceItemResDm>>> fetchMaintenanceQueue();
+
+  /// Change a device's status from the Maintenance screen (A10 "Confirm").
+  @POST('/admin/maintenance/{deviceId}/status')
+  Future<ApiResult<void>> updateDeviceStatus(
+    @Path('deviceId') String deviceId,
+    @Body() UpdateDeviceStatusReqDm body,
+  );
+
+  /// List extension requests for the admin Extension Requests table (A11).
+  @GET('/admin/extension-requests')
+  Future<ApiResult<List<ExtensionRequestSummaryResDm>>>
+      fetchExtensionRequests();
+
+  /// Approve or reject an extension request (A11 "Approve"/"Reject").
+  @POST('/admin/extension-requests/{id}/decide')
+  Future<ApiResult<void>> decideExtension(
+    @Path('id') String id,
+    @Body() DecideExtensionReqDm body,
   );
 }
