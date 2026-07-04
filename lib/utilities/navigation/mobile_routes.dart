@@ -1,10 +1,15 @@
 import 'package:go_router/go_router.dart';
 
 import '../../modules/mobile/device_detail/device_detail_screen.dart';
+import '../../modules/mobile/handover/cubit/handover_scan_cubit.dart';
+import '../../modules/mobile/handover/cubit/request_handover_cubit.dart';
+import '../../modules/mobile/handover/handover_scan_screen.dart';
+import '../../modules/mobile/handover/request_handover_screen.dart';
 import '../../modules/mobile/login/cubit/login_cubit.dart';
 import '../../modules/mobile/login/login_screen.dart';
 import '../../modules/mobile/my_devices/cubit/my_devices_cubit.dart';
 import '../../modules/mobile/requests/create_request_screen.dart';
+import '../../repositories/remote_repository/common/models/device_by_qr_res_dm.dart';
 import '../../modules/mobile/requests/cubit/create_request_cubit.dart';
 import '../../modules/mobile/requests/cubit/request_detail_cubit.dart';
 import '../../modules/mobile/requests/request_detail_screen.dart';
@@ -74,6 +79,24 @@ GoRouter buildMobileRouter() {
             isWfh: device.item.isWfh,
             shipTrackingUrl: device.item.shipTrackingUrl,
           );
+        },
+      ),
+      GoRoute(
+        path: Routes.handoverScan.path,
+        name: Routes.handoverScan.name,
+        builder: (context, state) =>
+            const HandoverScanScreen().withProvider(
+              (_) => HandoverScanCubit(),
+            ),
+      ),
+      GoRoute(
+        path: Routes.requestHandover.path,
+        name: Routes.requestHandover.name,
+        builder: (context, state) {
+          final device = state.extra! as DeviceByQrResDm;
+          return RequestHandoverScreen(
+            device: device,
+          ).withProvider((_) => RequestHandoverCubit(device.itemId));
         },
       ),
       GoRoute(

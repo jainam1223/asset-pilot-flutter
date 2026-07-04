@@ -13,6 +13,8 @@ enum Routes {
   createRequest(path: '/requests/new', name: 'createRequest'),
   requestDetail(path: '/requests/:id', name: 'requestDetail'),
   deviceDetail(path: '/devices/:id', name: 'deviceDetail'),
+  handoverScan(path: '/handover/scan', name: 'handoverScan'),
+  requestHandover(path: '/handover/new', name: 'requestHandover'),
 
   // Admin (IT)
   adminDashboard(path: '/dashboard', name: 'adminDashboard'),

@@ -12,6 +12,11 @@ import '../my_devices/my_devices_screen.dart';
 import '../requests/cubit/requests_cubit.dart';
 import '../requests/requests_screen.dart';
 
+const int _devicesTabIndex = 0;
+const int _requestsTabIndex = 1;
+const int _handoverTabIndex = 2;
+// Profile is tab index 3 — no FAB case needed for it.
+
 /// Employee/Manager home shell with bottom navigation (mockup E02 chrome).
 ///
 /// Tab bodies are placeholders; individual feature screens are built later.
@@ -53,29 +58,45 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
     return Scaffold(
       backgroundColor: context.appColors.scaffoldAlt,
       body: switch (_index) {
-        0 => BlocProvider(
+        _devicesTabIndex => BlocProvider(
           create: (_) => MyDevicesCubit(),
           child: const MyDevicesScreen(),
         ),
-        1 => BlocProvider(
+        _requestsTabIndex => BlocProvider(
           create: (_) => RequestsCubit(),
           child: const RequestsScreen(),
         ),
         _ => _ComingSoon(label: items[_index].label),
       },
-      floatingActionButton: FloatingActionButton(
-        tooltip: l10n.createRequestFabTooltip,
-        onPressed: () => context.push(Routes.createRequest.path),
-        backgroundColor: context.appColors.primary,
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: _buildFab(context),
       bottomNavigationBar: AppBottomNav(
         items: items,
         selectedIndex: _index,
         onSelected: (i) => setState(() => _index = i),
       ),
     );
+  }
+
+  Widget? _buildFab(BuildContext context) {
+    final l10n = context.l10n;
+    return switch (_index) {
+      _devicesTabIndex ||
+      _requestsTabIndex => FloatingActionButton(
+        tooltip: l10n.createRequestFabTooltip,
+        onPressed: () => context.push(Routes.createRequest.path),
+        backgroundColor: context.appColors.primary,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
+      ),
+      _handoverTabIndex => FloatingActionButton(
+        tooltip: l10n.deviceDetailHandover,
+        onPressed: () => context.push(Routes.handoverScan.path),
+        backgroundColor: context.appColors.primary,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.swap_horiz),
+      ),
+      _ => null,
+    };
   }
 }
 
