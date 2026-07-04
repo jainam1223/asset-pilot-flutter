@@ -72,6 +72,11 @@ class AdminShell extends StatelessWidget {
         icon: Icons.badge_outlined,
       ),
       NavItem(
+        id: 'support',
+        label: l10n.adminSupport,
+        icon: Icons.support_agent_outlined,
+      ),
+      NavItem(
         id: 'settings',
         label: l10n.adminSettings,
         icon: Icons.settings_outlined,
@@ -113,6 +118,7 @@ class AdminShell extends StatelessWidget {
       'maintenance' => Routes.adminMaintenance.path,
       'extensionRequests' => Routes.adminExtensionRequests.path,
       'assignment' => Routes.adminAssignment.path,
+      'support' => Routes.adminSupport.path,
       _ => null,
     };
     if (path != null) context.go(path);
