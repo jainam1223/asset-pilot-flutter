@@ -1,0 +1,49 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  # Replace this with the exact name of the Azure Resource Manager service connection you create in Azure DevOps
+  azureServiceConnection: 'cicd'
+  storageAccountName: 'assetpilotwebadmin123'
+
+steps:
+- task: Bash@3
+  displayName: 'Install Flutter'
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Clones the stable channel of Flutter to avoid needing custom DevOps extensions
+      git clone https://github.com/flutter/flutter.git -b stable
+      export PATH="$PATH:`pwd`/flutter/bin"
+      flutter --version
+
+- task: Bash@3
+  displayName: 'Build Flutter Web App'
+  inputs:
+    targetType: 'inline'
+    script: |
+      export PATH="$PATH:`pwd`/flutter/bin"
+      # Generate dependencies exactly as stated in the project README
+      flutter pub get
+      flutter gen-l10n
+      dart run build_runner build --delete-conflicting-outputs
+      # Build the IT Admin web variant in release mode
+      flutter build web -t lib/main_admin.dart --release
+
+- task: AzureCLI@2
+  displayName: 'Deploy to Azure Static Website ($web)'
+  inputs:
+    azureSubscription: $(azureServiceConnection)
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      # Upload the compiled build/web directory directly to the Storage Account
+      az storage blob upload-batch \
+        --source build/web \
+        --destination "\$web" \
+        --account-name $(storageAccountName) \
+        --auth-mode login \
+        --overwrite true
