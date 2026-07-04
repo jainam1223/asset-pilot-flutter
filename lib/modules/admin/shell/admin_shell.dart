@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/helpers/responsive.dart';
+import '../../../utilities/navigation/app_routes.dart';
 import '../../../widgets/nav/app_side_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
 
@@ -9,9 +11,19 @@ import '../../../widgets/nav/nav_item.dart';
 /// (mockup A01 chrome). Collapses to icon-only on narrow widths so the same
 /// shell serves web and desktop without platform branching.
 class AdminShell extends StatelessWidget {
-  const AdminShell({super.key, required this.title, required this.child});
+  const AdminShell({
+    super.key,
+    required this.title,
+    required this.selectedNavId,
+    required this.child,
+  });
 
   final String title;
+
+  /// Which [NavItem.id] is highlighted in the side nav (e.g. `'dashboard'`,
+  /// `'requests'`). Only ids with a built screen route via [_onSelected];
+  /// the rest are inert until their screens exist.
+  final String selectedNavId;
   final Widget child;
 
   @override
@@ -46,8 +58,8 @@ class AdminShell extends StatelessWidget {
         children: [
           AppSideNav(
             items: items,
-            selectedId: 'dashboard',
-            onSelected: (_) {},
+            selectedId: selectedNavId,
+            onSelected: (id) => _onSelected(context, id),
             brandLabel: 'ASSETPILOT',
             expanded: expanded,
           ),
@@ -62,6 +74,15 @@ class AdminShell extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _onSelected(BuildContext context, String id) {
+    final path = switch (id) {
+      'dashboard' => Routes.adminDashboard.path,
+      'requests' => Routes.adminRequests.path,
+      _ => null,
+    };
+    if (path != null) context.go(path);
   }
 }
 
