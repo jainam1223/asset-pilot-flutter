@@ -36,14 +36,25 @@ No test suite exists yet.
 
 ### Variant split
 
-`lib/app.dart` builds `AssetPilotApp(variant: AppVariant.mobile|admin)`, which picks the GoRouter — and therefore the entire navigation tree — for that variant. `lib/modules/mobile/` and `lib/modules/admin/` are hard-isolated: a mobile screen must never import an admin screen or vice versa. Only `models/`, `repositories/`, `utilities/`, `values/` are shared across variants. Verify isolation anytime with:
+`lib/app.dart` builds `AssetPilotApp(variant: AppVariant.mobile|admin)`, which picks the GoRouter — and therefore the entire navigation tree — for that variant. `lib/modules/mobile/` and `lib/modules/admin/` are hard-isolated: a mobile screen must never import an admin screen or vice versa. Only `models/`, `repositories/`, `utilities/`, `values/`, `widgets/` are shared across variants. Verify isolation anytime with:
 
 ```
 grep -rn "import 'dart:io'" lib/
 grep -rn "modules/mobile" lib/modules/admin
 grep -rn "modules/admin" lib/modules/mobile
+grep -rn "^import.*statuses.dart" lib/widgets
 ```
-All three must return nothing.
+All four must return nothing.
+
+### Shared widget library (`lib/widgets/`)
+
+Flat, role-based folders (`buttons/`, `inputs/`, `indicators/`, `cards/`, `feedback/`, `data_table/`, `surfaces/`, `nav/`) — no atomic-design tiers, no domain grouping. Import the barrel via `widgets/widgets.dart`. Rules:
+
+- **Domain-blind by construction**: widgets never import `values/enumeration/statuses.dart` or any repository/DM type. Status colors are expressed via `AppSemantic` (`widgets/widget_enums.dart`); each *module* (not `lib/widgets/`) writes a small `X.semantic`/`X.label` extension mapping its own domain enum (e.g. `RequestStatus`) onto `AppSemantic`.
+- **Sizing**: leaf/content widgets (`AppButton`, `AppAvatar`, `IconBox`, `StatusPill`) take explicit size enums — their size is a design choice, not a viewport fact. Only containers that arrange multiple children (`StatTileRow`, `AppDataTable`'s column-fit logic) consult `Responsive`.
+- **Nav chrome is not unified**: `AppBottomNav` (mobile) and `AppSideNav` (admin) are structurally different widgets sharing only the `NavItem` data model (`widgets/nav/nav_item.dart`).
+- **Toasts**: call `AppToast.success/error/info/warning(context, message)` everywhere — never `ScaffoldMessenger` directly. The underlying presenter (`SnackBarToastPresenter` for mobile, `OverlayToastPresenter` for admin) is registered once in `main_mobile.dart`/`main_admin.dart` via `AppToast.configure(...)`.
+- **Tables**: use `AppDataTable<T>` for every tabular admin screen. Pass `pagination: null` for a static list (no footer); pass a `TablePagination` for the paginated footer. Cell content is always supplied by the caller via `TableColumn.cellBuilder` — the table itself has zero domain knowledge.
 
 Never import `dart:io` directly anywhere in `lib/` (breaks web builds) — use `PlatformHelper.isMobilePlatform` / `isDesktopOrWeb` (`lib/utilities/helpers/platform_helper.dart`, built on `kIsWeb` + `defaultTargetPlatform`). A genuine native-only API belongs behind a conditional-import stub pair (`export 'stub.dart' if (dart.library.html) 'web.dart'`), not a bare `dart:io` import.
 

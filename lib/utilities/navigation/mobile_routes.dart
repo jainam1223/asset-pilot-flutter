@@ -6,6 +6,7 @@ import '../../modules/mobile/shell/mobile_shell_screen.dart';
 import '../../modules/mobile/splash/cubit/splash_cubit.dart';
 import '../../modules/mobile/splash/splash_screen.dart';
 import '../../values/app_global/app_global.dart';
+import '../../views/component_showcase/component_showcase_screen.dart';
 import '../../views/invalid_route/invalid_route_screen.dart';
 import 'app_routes.dart';
 
@@ -36,6 +37,11 @@ GoRouter buildMobileRouter() {
         path: Routes.mobileShell.path,
         name: Routes.mobileShell.name,
         builder: (context, state) => const MobileShellScreen(),
+      ),
+      GoRoute(
+        path: Routes.componentShowcase.path,
+        name: Routes.componentShowcase.name,
+        builder: (context, state) => const ComponentShowcaseScreen(),
       ),
     ],
   );

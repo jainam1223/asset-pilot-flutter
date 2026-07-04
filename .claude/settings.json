@@ -11,7 +11,10 @@
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); pkgs={p['name']:p['version'] for p in d['packages']}; [print\\(f'{n}: {pkgs.get\\(n,\\\\\"?\\\\\"\\)}'\\) for n in ['flutter_bloc','equatable','dio','retrofit','json_annotation','go_router','flutter_svg','gap','cached_network_image','flutter_secure_storage','shared_preferences','intl','cupertino_icons','freezed_annotation','build_runner','freezed','json_serializable','retrofit_generator','flutter_gen_runner','flutter_lints']]\")",
       "Bash(find ~/.pub-cache -path '*retrofit-4.9.2/lib/src/*' -name '*.dart' 2>/dev/null | head; echo \"===\"; grep -rn \"class CallAdapter\" ~/.pub-cache/hosted/pub.dev/retrofit-4.9.2/lib/ 2>/dev/null)",
       "Read(//Users/janak.m/.pub-cache/**)",
-      "Read(//Users/janak.m/.pub-cache/hosted/pub.dev/retrofit-4.9.2/lib/**)"
+      "Read(//Users/janak.m/.pub-cache/hosted/pub.dev/retrofit-4.9.2/lib/**)",
+      "Bash(grep -v \"statuses.dart$\")",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --disable-gpu --screenshot=/private/tmp/claude-678861482/-Users-janak-m-StudioProjects-asset-pilot/43f43ae6-9c66-48e6-ad6a-2acff2f48db8/scratchpad/mobile_test.png --window-size=390,844 --force-device-scale-factor=1 --virtual-time-budget=8000 \"http://localhost:8770/#/showcase\")",
+      "Bash(sips -c 800 420 --cropOffset 3400 0 /private/tmp/claude-678861482/-Users-janak-m-StudioProjects-asset-pilot/43f43ae6-9c66-48e6-ad6a-2acff2f48db8/scratchpad/mobile_narrow_full.png --out /private/tmp/claude-678861482/-Users-janak-m-StudioProjects-asset-pilot/43f43ae6-9c66-48e6-ad6a-2acff2f48db8/scratchpad/mobile_narrow_crop.png)"
     ]
   },
   "hooks": {
