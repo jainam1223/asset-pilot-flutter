@@ -14,12 +14,17 @@ part 'login_state.dart';
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(const LoginState());
 
-  Future<void> login({required String email, required String password}) async {
+  Future<void> login({
+    required String email,
+    required String password,
+    bool isManager = false,
+  }) async {
     safeEmit(state.copyWith(login: const Loading()));
     try {
       final result = await AuthRepository.instance.login(
         email: email,
         password: password,
+        isManager: isManager,
       );
       result.when(
         success: (data) => safeEmit(state.copyWith(login: Success(data))),

@@ -15,9 +15,14 @@ class AuthRepository extends Repository {
   static final AuthRepository instance = AuthRepository._();
 
   /// Log in with [email] / [password]. Currently mocked.
+  ///
+  /// [isManager] is a scaffold-only toggle (picked on the login screen) that
+  /// stands in for a real backend-assigned role, so the Manager tab can be
+  /// demoed before the manager screens/API exist.
   Future<ApiResult<UserResDm>> login({
     required String email,
     required String password,
+    bool isManager = false,
   }) async {
     // --- MOCK -------------------------------------------------------------
     await Future<void>.delayed(const Duration(milliseconds: 600));
@@ -32,7 +37,7 @@ class AuthRepository extends Repository {
         id: 'u_001',
         name: 'Arjun Mehta',
         email: email,
-        role: 'employee',
+        role: isManager ? 'manager' : 'employee',
         accessToken: 'mock-token',
       ),
     );

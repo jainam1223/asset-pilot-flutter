@@ -14,6 +14,7 @@ import '../../modules/mobile/requests/request_detail_screen.dart';
 import '../../modules/mobile/shell/mobile_shell_screen.dart';
 import '../../modules/mobile/splash/cubit/splash_cubit.dart';
 import '../../modules/mobile/splash/splash_screen.dart';
+import '../../repositories/remote_repository/common/models/user_res_dm.dart';
 import '../../values/app_global/app_global.dart';
 import '../../views/component_showcase/component_showcase_screen.dart';
 import '../../views/invalid_route/invalid_route_screen.dart';
@@ -45,7 +46,8 @@ GoRouter buildMobileRouter() {
       GoRoute(
         path: Routes.mobileShell.path,
         name: Routes.mobileShell.name,
-        builder: (context, state) => const MobileShellScreen(),
+        builder: (context, state) =>
+            MobileShellScreen(user: state.extra as UserResDm?),
       ),
       GoRoute(
         path: Routes.createRequest.path,

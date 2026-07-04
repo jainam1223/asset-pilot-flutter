@@ -3,25 +3,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../repositories/remote_repository/common/models/user_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/navigation/app_routes.dart';
 import '../../../widgets/nav/app_bottom_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
 import '../my_devices/cubit/my_devices_cubit.dart';
 import '../my_devices/my_devices_screen.dart';
+import '../profile/profile_screen.dart';
 import '../requests/cubit/requests_cubit.dart';
 import '../requests/requests_screen.dart';
 
 const int _devicesTabIndex = 0;
 const int _requestsTabIndex = 1;
 const int _handoverTabIndex = 2;
-// Profile is tab index 3 — no FAB case needed for it.
+const int _profileTabIndex = 3;
+// No FAB case needed for Profile/Approvals.
 
 /// Employee/Manager home shell with bottom navigation (mockup E02 chrome).
 ///
 /// Tab bodies are placeholders; individual feature screens are built later.
+/// [user] is the just-logged-in account (carried via the login route's
+/// `extra`); when its role is `manager`, a fifth "Approvals" tab is shown —
+/// a static placeholder until the manager screens are built.
 class MobileShellScreen extends StatefulWidget {
-  const MobileShellScreen({super.key});
+  const MobileShellScreen({this.user, super.key});
+
+  final UserResDm? user;
 
   @override
   State<MobileShellScreen> createState() => _MobileShellScreenState();
@@ -29,6 +37,8 @@ class MobileShellScreen extends StatefulWidget {
 
 class _MobileShellScreenState extends State<MobileShellScreen> {
   int _index = 0;
+
+  bool get _isManager => widget.user?.role == 'manager';
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +64,12 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
         label: l10n.navProfile,
         icon: Icons.person_outline,
       ),
+      if (_isManager)
+        NavItem(
+          id: 'approvals',
+          label: l10n.navApprovals,
+          icon: Icons.fact_check_outlined,
+        ),
     ];
     return Scaffold(
       backgroundColor: context.appColors.scaffoldAlt,
@@ -66,6 +82,7 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
           create: (_) => RequestsCubit(),
           child: const RequestsScreen(),
         ),
+        _profileTabIndex => ProfileScreen(user: widget.user),
         _ => _ComingSoon(label: items[_index].label),
       },
       floatingActionButton: _buildFab(context),

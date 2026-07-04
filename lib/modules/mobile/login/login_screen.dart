@@ -3,16 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../generated/assets.gen.dart';
 import '../../../repositories/remote_repository/common/models/user_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/navigation/app_routes.dart';
 import '../../../utilities/network/network_state.dart';
+import '../../../widgets/widgets.dart';
 import 'cubit/login_cubit.dart';
 
 /// Employee/Manager sign-in screen (mockup E01).
-///
-/// Scaffold-level placeholder: real fields/validation come later. Proves the
-/// LoginCubit → mocked AuthRepository → navigation wiring end to end.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -27,6 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _password = TextEditingController(
     text: 'password',
   );
+  bool _obscurePassword = true;
+  bool _isManager = false;
 
   @override
   void dispose() {
@@ -38,69 +39,98 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.appColors.scaffoldLight,
       body: SafeArea(
         child: BlocConsumer<LoginCubit, LoginState>(
           listenWhen: (prev, curr) => prev.login != curr.login,
           listener: (context, state) {
-            if (state.login is Success<UserResDm>) {
-              context.go(Routes.mobileShell.path);
-            } else if (state.login case Error(:final message)) {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(SnackBar(content: Text(message)));
+            if (state.login case Success<UserResDm>(:final data)) {
+              context.go(Routes.mobileShell.path, extra: data);
             }
           },
           builder: (context, state) {
             final isLoading = state.login is Loading;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+            final errorMessage = switch (state.login) {
+              Error(:final message) => message,
+              _ => null,
+            };
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 28,
+                vertical: 24,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Gap(24),
+                  const _LoginLogo(),
+                  const Gap(38),
                   Text(
                     context.l10n.welcomeBack,
-                    style: context.textTheme.headlineLarge,
+                    style: context.appTextStyles.h1,
                   ),
                   const Gap(8),
                   Text(
                     context.l10n.signInSubtitle,
-                    style: context.textTheme.bodyMedium,
+                    style: context.appTextStyles.bodyMedium,
                   ),
-                  const Gap(28),
-                  TextField(
+                  const Gap(30),
+                  AppTextField(
+                    label: context.l10n.workEmail,
                     controller: _email,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: context.l10n.workEmail,
-                    ),
+                    leadingIcon: Icons.mail_outline,
                   ),
                   const Gap(16),
-                  TextField(
+                  AppTextField(
+                    label: context.l10n.password,
                     controller: _password,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: context.l10n.password,
+                    obscureText: _obscurePassword,
+                    leadingIcon: Icons.lock_outline,
+                    errorText: errorMessage,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        size: 19,
+                      ),
+                      onPressed: () => setState(
+                        () => _obscurePassword = !_obscurePassword,
+                      ),
                     ),
                   ),
-                  const Gap(28),
-                  ElevatedButton(
+                  const Gap(14),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: AppTextLink(
+                      label: context.l10n.forgotPassword,
+                      onPressed: () {},
+                    ),
+                  ),
+                  const Gap(12),
+                  _RoleSelector(
+                    isManager: _isManager,
+                    onChanged: (value) => setState(() => _isManager = value),
+                  ),
+                  const Gap(26),
+                  AppButton(
+                    label: context.l10n.signIn,
+                    expand: true,
+                    isLoading: isLoading,
                     onPressed: isLoading
                         ? null
                         : () => context.read<LoginCubit>().login(
                             email: _email.text.trim(),
                             password: _password.text,
+                            isManager: _isManager,
                           ),
-                    child: isLoading
-                        ? SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: context.appColors.surface,
-                            ),
-                          )
-                        : Text(context.l10n.signIn),
+                  ),
+                  const Gap(30),
+                  Text(
+                    context.l10n.loginContactItAdmin,
+                    textAlign: TextAlign.center,
+                    style: context.appTextStyles.bodySmall,
                   ),
                 ],
               ),
@@ -108,6 +138,53 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
       ),
+    );
+  }
+}
+
+class _LoginLogo extends StatelessWidget {
+  const _LoginLogo();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Image.asset(Assets.images.appIcon.path, width: 46, height: 46),
+        const Gap(14),
+        Text(
+          context.l10n.appName,
+          style: context.appTextStyles.h3.copyWith(letterSpacing: 3.4),
+        ),
+      ],
+    );
+  }
+}
+
+class _RoleSelector extends StatelessWidget {
+  const _RoleSelector({required this.isManager, required this.onChanged});
+
+  final bool isManager;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.loginAsLabel,
+          style: context.appTextStyles.emphasisSmall,
+        ),
+        const Gap(9),
+        SegmentedControl<bool>(
+          value: isManager,
+          onChanged: onChanged,
+          options: [
+            SegmentOption(value: false, label: context.l10n.roleEmployee),
+            SegmentOption(value: true, label: context.l10n.roleManager),
+          ],
+        ),
+      ],
     );
   }
 }
