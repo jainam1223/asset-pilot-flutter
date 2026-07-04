@@ -38,7 +38,7 @@ Ask the user for whatever is missing, as a numbered list:
 - **Expected vs actual**: what should happen, what actually happens.
 - **Scope of impact**: one user/device/environment, or all? One screen/flow, or many?
 - **First appearance**: when did it start? What changed around then (deploy, dependency bump, config, data)?
-- **Environment**: build flavor, OS/version, device, release vs debug, which package — `com.patronpay.patron` or `com.captis.captispay`.
+- **Environment**: build flavor (`dev`/`uat`/`prod` — only `dev` wired so far), OS/version, device, release vs debug, which variant entry (`main_mobile.dart` or `main_admin.dart`).
 
 ### Step 2 — Gather evidence before theorizing
 Read the actual code in the failing path and the real logs/state. State which lines you've confirmed execute vs which you're assuming. Do not theorize about code you haven't opened.
