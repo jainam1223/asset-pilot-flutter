@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
+import 'app_colors_extension.dart';
 import 'app_text_styles.dart';
+import 'app_text_styles_extension.dart';
 
 /// Central [ThemeData] for the app. Light is the primary theme; [dark] is a
 /// stub to be fleshed out later.
@@ -62,6 +64,10 @@ abstract final class AppTheme {
         ),
       ),
       dividerColor: AppColors.divider,
+      extensions: const [
+        AppColorsExtension.light,
+        AppTextStylesExtension.light,
+      ],
     );
   }
 

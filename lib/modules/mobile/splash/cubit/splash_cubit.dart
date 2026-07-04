@@ -15,10 +15,6 @@ class SplashCubit extends Cubit<SplashState> {
     }
     //TODO(Rajvi): Initialize app with user data.
     await Future<void>.delayed(const Duration(seconds: 2), () {});
-    emit(
-      state.copyWith(
-        navigateToLogin: true,
-      ),
-    );
+    emit(state.copyWith(navigateToLogin: true));
   }
 }

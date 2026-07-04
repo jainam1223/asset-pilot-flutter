@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../utilities/extensions/context_extensions.dart';
 import '../../utilities/helpers/responsive.dart';
-import '../../values/app_theme/app_colors.dart';
 
 /// One search field for all three catalogued contexts (mobile full-width,
 /// admin top-bar ~240px, admin toolbar ~280px). The three contexts aren't
@@ -26,38 +26,35 @@ class AppSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedWidth = width ?? (Responsive.isMobile(context) ? double.infinity : 240);
+    final resolvedWidth =
+        width ?? (Responsive.isMobile(context) ? double.infinity : 240);
 
     final field = Container(
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 13),
       decoration: BoxDecoration(
-        color: AppColors.scaffoldAlt,
+        color: context.appColors.scaffoldAlt,
         borderRadius: BorderRadius.circular(9),
       ),
       child: Row(
         children: [
-          const Icon(Icons.search, size: 16, color: AppColors.textHint),
+          Icon(Icons.search, size: 16, color: context.appColors.textHint),
           const SizedBox(width: 9),
           Expanded(
             child: TextField(
               controller: controller,
               onChanged: onChanged,
-              style: const TextStyle(
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w400,
-                fontSize: 13,
-                color: AppColors.textPrimary,
+              style: context.appTextStyles.bodyMedium.copyWith(
+                color: context.appColors.textPrimary,
+                height: 1,
               ),
               decoration: InputDecoration(
                 isDense: true,
                 border: InputBorder.none,
                 hintText: hintText,
-                hintStyle: const TextStyle(
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 13,
-                  color: AppColors.textHint,
+                hintStyle: context.appTextStyles.bodyMedium.copyWith(
+                  color: context.appColors.textHint,
+                  height: 1,
                 ),
               ),
             ),
@@ -66,6 +63,8 @@ class AppSearchField extends StatelessWidget {
       ),
     );
 
-    return resolvedWidth.isFinite ? SizedBox(width: resolvedWidth, child: field) : field;
+    return resolvedWidth.isFinite
+        ? SizedBox(width: resolvedWidth, child: field)
+        : field;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 
 /// Plain text link button (e.g. "Forgot password?", "View all →").
 class AppTextLink extends StatelessWidget {
@@ -9,16 +9,17 @@ class AppTextLink extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.trailingIcon,
-    this.color = AppColors.primary,
+    this.color,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final IconData? trailingIcon;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveColor = color ?? context.appColors.primary;
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(6),
@@ -29,16 +30,13 @@ class AppTextLink extends StatelessWidget {
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-                color: color,
+              style: context.appTextStyles.labelMedium.copyWith(
+                color: effectiveColor,
               ),
             ),
             if (trailingIcon != null) ...[
               const SizedBox(width: 4),
-              Icon(trailingIcon, size: 14, color: color),
+              Icon(trailingIcon, size: 14, color: effectiveColor),
             ],
           ],
         ),

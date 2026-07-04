@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import 'app_button.dart';
 
 enum AppIconButtonShape { circle, square }
@@ -29,23 +29,41 @@ class AppIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final disabled = onPressed == null;
     final (bg, fg, border) = switch (variant) {
-      AppButtonVariant.primary => (AppColors.primary, Colors.white, null),
+      AppButtonVariant.primary => (
+        context.appColors.primary,
+        Colors.white,
+        null,
+      ),
       AppButtonVariant.secondary => (
-          AppColors.surface,
-          disabled ? AppColors.textHint : AppColors.textSecondary,
-          AppColors.border,
-        ),
-      AppButtonVariant.destructive => (AppColors.surface, AppColors.errorFg, AppColors.errorFg),
-      AppButtonVariant.success => (AppColors.successFg, Colors.white, null),
+        context.appColors.surface,
+        disabled ? context.appColors.textHint : context.appColors.textSecondary,
+        context.appColors.border,
+      ),
+      AppButtonVariant.destructive => (
+        context.appColors.surface,
+        context.appColors.errorFg,
+        context.appColors.errorFg,
+      ),
+      AppButtonVariant.success => (
+        context.appColors.successFg,
+        Colors.white,
+        null,
+      ),
     };
 
     final button = Material(
       color: bg,
       shape: shape == AppIconButtonShape.circle
-          ? CircleBorder(side: border != null ? BorderSide(color: border) : BorderSide.none)
+          ? CircleBorder(
+              side: border != null
+                  ? BorderSide(color: border)
+                  : BorderSide.none,
+            )
           : RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
-              side: border != null ? BorderSide(color: border) : BorderSide.none,
+              side: border != null
+                  ? BorderSide(color: border)
+                  : BorderSide.none,
             ),
       child: InkWell(
         onTap: onPressed,

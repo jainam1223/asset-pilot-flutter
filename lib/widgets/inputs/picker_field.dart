@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 
 /// Read-only field that opens a date picker / dropdown / selector on tap
 /// (trailing chevron or calendar icon, per [trailingIcon]).
@@ -28,8 +28,8 @@ class PickerField extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         decoration: BoxDecoration(
-          color: AppColors.surface,
-          border: Border.all(color: AppColors.border, width: 1.4),
+          color: context.appColors.surface,
+          border: Border.all(color: context.appColors.border, width: 1.4),
           borderRadius: BorderRadius.circular(11),
         ),
         child: Row(
@@ -42,27 +42,21 @@ class PickerField extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 11,
-                      color: AppColors.textTertiary,
+                    style: context.appTextStyles.emphasisSmall.copyWith(
+                      color: context.appColors.textTertiary,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     valueText,
-                    style: const TextStyle(
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                      color: AppColors.textPrimary,
+                    style: context.appTextStyles.labelXLarge.copyWith(
+                      color: context.appColors.textPrimary,
                     ),
                   ),
                 ],
               ),
             ),
-            Icon(trailingIcon, size: 18, color: AppColors.textTertiary),
+            Icon(trailingIcon, size: 18, color: context.appColors.textTertiary),
           ],
         ),
       ),

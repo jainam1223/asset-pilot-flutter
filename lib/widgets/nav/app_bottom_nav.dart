@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import 'nav_item.dart';
 
 /// Mobile bottom tab bar. Thin wrapper over Material's [NavigationBar]
@@ -24,13 +24,16 @@ class AppBottomNav extends StatelessWidget {
     return NavigationBar(
       selectedIndex: selectedIndex,
       onDestinationSelected: onSelected,
-      backgroundColor: AppColors.surface,
-      indicatorColor: AppColors.surfaceMuted,
+      backgroundColor: context.appColors.surface,
+      indicatorColor: context.appColors.surfaceMuted,
       destinations: [
         for (final item in items)
           NavigationDestination(
             icon: Icon(item.icon),
-            selectedIcon: Icon(item.selectedIcon ?? item.icon, color: AppColors.primary),
+            selectedIcon: Icon(
+              item.selectedIcon ?? item.icon,
+              color: context.appColors.primary,
+            ),
             label: item.label,
           ),
       ],

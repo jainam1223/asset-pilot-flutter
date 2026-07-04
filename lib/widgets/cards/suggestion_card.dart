@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../buttons/pill_action_button.dart';
 
 /// Ranked AI-suggestion card (numbered badge + title/subtitle + select
@@ -27,9 +27,13 @@ class SuggestionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: recommended ? AppColors.surfaceMuted : AppColors.surface,
+        color: recommended
+            ? context.appColors.surfaceMuted
+            : context.appColors.surface,
         border: Border.all(
-          color: recommended ? AppColors.primary : AppColors.borderSubtle,
+          color: recommended
+              ? context.appColors.primary
+              : context.appColors.borderSubtle,
           width: recommended ? 1.5 : 1,
         ),
         borderRadius: BorderRadius.circular(12),
@@ -41,16 +45,18 @@ class SuggestionCard extends StatelessWidget {
             height: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: recommended ? AppColors.primary : AppColors.surfaceMuted,
+              color: recommended
+                  ? context.appColors.primary
+                  : context.appColors.surfaceMuted,
               borderRadius: BorderRadius.circular(9),
             ),
             child: Text(
               '$rank',
               style: TextStyle(
-                fontFamily: 'Poppins',
+                fontFamily: context.appTextStyles.headingFamily,
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
-                color: recommended ? Colors.white : AppColors.primary,
+                color: recommended ? Colors.white : context.appColors.primary,
               ),
             ),
           ),
@@ -61,22 +67,18 @@ class SuggestionCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontFamily: 'DM Sans',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                    color: AppColors.textPrimary,
+                  style: context.appTextStyles.labelMedium.copyWith(
+                    color: context.appColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    fontFamily: 'DM Sans',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 11,
+                  style: context.appTextStyles.bodySmall.copyWith(
                     height: 1.4,
-                    color: recommended ? AppColors.primary : AppColors.textTertiary,
+                    color: recommended
+                        ? context.appColors.primary
+                        : context.appColors.textTertiary,
                   ),
                 ),
               ],

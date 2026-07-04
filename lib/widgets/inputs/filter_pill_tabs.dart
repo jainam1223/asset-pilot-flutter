@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 
 class PillTab {
   const PillTab({required this.id, required this.label, this.count});
@@ -34,7 +34,11 @@ class FilterPillTabs extends StatelessWidget {
         children: [
           for (final tab in tabs) ...[
             if (tab != tabs.first) const SizedBox(width: 8),
-            _Pill(tab: tab, selected: tab.id == selectedId, onTap: () => onChanged(tab.id)),
+            _Pill(
+              tab: tab,
+              selected: tab.id == selectedId,
+              onTap: () => onChanged(tab.id),
+            ),
           ],
         ],
       ),
@@ -58,17 +62,18 @@ class _Pill extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary : AppColors.surface,
-          border: selected ? null : Border.all(color: AppColors.borderSubtle),
+          color: selected
+              ? context.appColors.primary
+              : context.appColors.surface,
+          border: selected
+              ? null
+              : Border.all(color: context.appColors.borderSubtle),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           label,
-          style: TextStyle(
-            fontFamily: 'DM Sans',
-            fontWeight: FontWeight.w600,
-            fontSize: 12,
-            color: selected ? Colors.white : AppColors.textSecondary,
+          style: context.appTextStyles.label.copyWith(
+            color: selected ? Colors.white : context.appColors.textSecondary,
           ),
         ),
       ),

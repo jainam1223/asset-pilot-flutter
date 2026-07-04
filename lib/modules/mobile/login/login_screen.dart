@@ -7,7 +7,6 @@ import '../../../repositories/remote_repository/auth/models/user_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/navigation/app_routes.dart';
 import '../../../utilities/network/network_state.dart';
-import '../../../values/app_theme/app_colors.dart';
 import 'cubit/login_cubit.dart';
 
 /// Employee/Manager sign-in screen (mockup E01).
@@ -22,10 +21,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _email =
-      TextEditingController(text: 'arjun.mehta@simform.com');
-  final TextEditingController _password =
-      TextEditingController(text: 'password');
+  final TextEditingController _email = TextEditingController(
+    text: 'arjun.mehta@simform.com',
+  );
+  final TextEditingController _password = TextEditingController(
+    text: 'password',
+  );
 
   @override
   void dispose() {
@@ -57,36 +58,46 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(context.l10n.welcomeBack, style: context.textTheme.headlineLarge),
+                  Text(
+                    context.l10n.welcomeBack,
+                    style: context.textTheme.headlineLarge,
+                  ),
                   const Gap(8),
-                  Text(context.l10n.signInSubtitle, style: context.textTheme.bodyMedium),
+                  Text(
+                    context.l10n.signInSubtitle,
+                    style: context.textTheme.bodyMedium,
+                  ),
                   const Gap(28),
                   TextField(
                     controller: _email,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(labelText: context.l10n.workEmail),
+                    decoration: InputDecoration(
+                      labelText: context.l10n.workEmail,
+                    ),
                   ),
                   const Gap(16),
                   TextField(
                     controller: _password,
                     obscureText: true,
-                    decoration: InputDecoration(labelText: context.l10n.password),
+                    decoration: InputDecoration(
+                      labelText: context.l10n.password,
+                    ),
                   ),
                   const Gap(28),
                   ElevatedButton(
                     onPressed: isLoading
                         ? null
                         : () => context.read<LoginCubit>().login(
-                              email: _email.text.trim(),
-                              password: _password.text,
-                            ),
+                            email: _email.text.trim(),
+                            password: _password.text,
+                          ),
                     child: isLoading
-                        ? const SizedBox(
+                        ? SizedBox(
                             height: 20,
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: AppColors.surface,
+                              color: context.appColors.surface,
                             ),
                           )
                         : Text(context.l10n.signIn),

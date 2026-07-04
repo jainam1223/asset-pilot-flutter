@@ -4,8 +4,6 @@ import 'package:gap/gap.dart';
 
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/network/network_state.dart';
-import '../../../values/app_theme/app_colors.dart';
-import '../../../values/app_theme/app_text_styles.dart';
 import '../../../values/constants/app_constants.dart';
 import '../shell/admin_shell.dart';
 import 'cubit/dashboard_cubit.dart';
@@ -31,18 +29,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
       title: context.l10n.adminDashboard,
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
-        child: BlocSelector<DashboardCubit, DashboardState,
-            NetworkState<DashboardKpis>>(
-          selector: (state) => state.kpis,
-          builder: (context, kpis) {
-            return switch (kpis) {
-              Idle() || Loading() =>
-                const Center(child: CircularProgressIndicator()),
-              Success(:final data) => _KpiRow(kpis: data),
-              Error(:final message) => Center(child: Text(message)),
-            };
-          },
-        ),
+        child:
+            BlocSelector<
+              DashboardCubit,
+              DashboardState,
+              NetworkState<DashboardKpis>
+            >(
+              selector: (state) => state.kpis,
+              builder: (context, kpis) {
+                return switch (kpis) {
+                  Idle() ||
+                  Loading() => const Center(child: CircularProgressIndicator()),
+                  Success(:final data) => _KpiRow(kpis: data),
+                  Error(:final message) => Center(child: Text(message)),
+                };
+              },
+            ),
       ),
     );
   }
@@ -56,10 +58,10 @@ class _KpiRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cards = <(String, int, Color)>[
-      ('Total devices', kpis.totalDevices, AppColors.textPrimary),
-      ('Assigned', kpis.assigned, AppColors.successFg),
-      ('Pending requests', kpis.pendingRequests, AppColors.warningFg),
-      ('Open support', kpis.openSupport, AppColors.errorFg),
+      ('Total devices', kpis.totalDevices, context.appColors.textPrimary),
+      ('Assigned', kpis.assigned, context.appColors.successFg),
+      ('Pending requests', kpis.pendingRequests, context.appColors.warningFg),
+      ('Open support', kpis.openSupport, context.appColors.errorFg),
     ];
     return Wrap(
       spacing: 14,
@@ -89,18 +91,21 @@ class _KpiCard extends StatelessWidget {
       width: 200,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.appColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.borderSubtle),
+        border: Border.all(color: context.appColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: AppTextStyles.bodySmall),
+          Text(label, style: context.appTextStyles.bodySmall),
           const Gap(8),
           Text(
             '$value',
-            style: AppTextStyles.h1.copyWith(color: color, fontSize: 26),
+            style: context.appTextStyles.h1.copyWith(
+              color: color,
+              fontSize: 26,
+            ),
           ),
         ],
       ),

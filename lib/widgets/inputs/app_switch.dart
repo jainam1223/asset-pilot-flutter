@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 
 /// Toggle switch (e.g. "Work from home"), styled to the app's primary color.
 class AppSwitch extends StatelessWidget {
-  const AppSwitch({super.key, required this.value, required this.onChanged, this.label});
+  const AppSwitch({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.label,
+  });
 
   final bool value;
   final ValueChanged<bool>? onChanged;
@@ -16,8 +21,8 @@ class AppSwitch extends StatelessWidget {
       value: value,
       onChanged: onChanged,
       activeThumbColor: Colors.white,
-      activeTrackColor: AppColors.primary,
-      inactiveTrackColor: AppColors.border,
+      activeTrackColor: context.appColors.primary,
+      inactiveTrackColor: context.appColors.border,
       inactiveThumbColor: Colors.white,
     );
 
@@ -28,11 +33,8 @@ class AppSwitch extends StatelessWidget {
       children: [
         Text(
           label!,
-          style: const TextStyle(
-            fontFamily: 'DM Sans',
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: AppColors.textPrimary,
+          style: context.appTextStyles.labelLarge.copyWith(
+            color: context.appColors.textPrimary,
           ),
         ),
         const SizedBox(width: 8),

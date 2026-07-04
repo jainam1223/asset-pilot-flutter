@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utilities/extensions/context_extensions.dart';
 import '../widget_enums.dart';
 
 /// Small rounded-rectangle tag for priority levels (High/Medium/Low).
@@ -16,7 +17,7 @@ class PriorityTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = semantic.colors;
+    final colors = semantic.colors(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       decoration: BoxDecoration(
@@ -25,11 +26,8 @@ class PriorityTag extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(
-          fontFamily: 'DM Sans',
-          fontWeight: FontWeight.w600,
+        style: context.appTextStyles.labelSmall.copyWith(
           fontSize: 9,
-          height: 1,
           color: colors.fg,
         ),
       ),

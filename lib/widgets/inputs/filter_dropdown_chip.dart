@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 
 /// Compact filter-dropdown chip for table toolbars, e.g. "Priority: All ▾".
 class FilterDropdownChip extends StatelessWidget {
@@ -23,8 +23,8 @@ class FilterDropdownChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
         decoration: BoxDecoration(
-          color: AppColors.surface,
-          border: Border.all(color: AppColors.borderSubtle),
+          color: context.appColors.surface,
+          border: Border.all(color: context.appColors.borderSubtle),
           borderRadius: BorderRadius.circular(9),
         ),
         child: Row(
@@ -32,15 +32,16 @@ class FilterDropdownChip extends StatelessWidget {
           children: [
             Text(
               '$label: $valueLabel',
-              style: const TextStyle(
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                color: AppColors.textSecondary,
+              style: context.appTextStyles.emphasisMedium.copyWith(
+                color: context.appColors.textSecondary,
               ),
             ),
             const SizedBox(width: 7),
-            const Icon(Icons.keyboard_arrow_down, size: 13, color: AppColors.textHint),
+            Icon(
+              Icons.keyboard_arrow_down,
+              size: 13,
+              color: context.appColors.textHint,
+            ),
           ],
         ),
       ),

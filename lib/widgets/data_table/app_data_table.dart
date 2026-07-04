@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../../values/constants/app_constants.dart';
 import 'table_column.dart';
 import 'table_pagination.dart';
@@ -43,7 +43,7 @@ class AppDataTable<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.appColors.surface,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
       ),
       clipBehavior: Clip.antiAlias,
@@ -111,7 +111,7 @@ class _HeaderRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.scaffoldLight,
+      color: context.appColors.scaffoldLight,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       child: Row(
         children: [
@@ -120,12 +120,8 @@ class _HeaderRow extends StatelessWidget {
               column: column,
               child: Text(
                 column.header.toUpperCase(),
-                style: const TextStyle(
-                  fontFamily: 'DM Sans',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 10,
-                  letterSpacing: 0.4,
-                  color: AppColors.textTertiary,
+                style: context.appTextStyles.overline.copyWith(
+                  color: context.appColors.textTertiary,
                 ),
               ),
             ),
@@ -155,8 +151,10 @@ class _BodyRow<T> extends StatelessWidget {
     final content = Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: BoxDecoration(
-        color: selected ? AppColors.surfaceMuted : null,
-        border: isFirst ? null : const Border(top: BorderSide(color: AppColors.divider)),
+        color: selected ? context.appColors.surfaceMuted : null,
+        border: isFirst
+            ? null
+            : Border(top: BorderSide(color: context.appColors.divider)),
       ),
       child: Row(
         children: [
@@ -187,7 +185,11 @@ class _ColumnBox extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
       child: ClipRect(
-        child: Align(alignment: column.alignment, heightFactor: 1, child: child),
+        child: Align(
+          alignment: column.alignment,
+          heightFactor: 1,
+          child: child,
+        ),
       ),
     );
 
@@ -213,11 +215,8 @@ class _PaginationFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     final rangeLabel = Text(
       'Showing ${pagination.rangeStart}–${pagination.rangeEnd} of ${pagination.totalItems}',
-      style: const TextStyle(
-        fontFamily: 'DM Sans',
-        fontWeight: FontWeight.w500,
-        fontSize: 12,
-        color: AppColors.textTertiary,
+      style: context.appTextStyles.emphasisMedium.copyWith(
+        color: context.appColors.textTertiary,
       ),
     );
 
@@ -239,8 +238,8 @@ class _PaginationFooter extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: AppColors.divider)),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: context.appColors.divider)),
       ),
       // A horizontally-scrolling page-button row has unbounded intrinsic
       // width, so it can't sit directly in a Wrap/Row; give it the leftover
@@ -258,7 +257,12 @@ class _PaginationFooter extends StatelessWidget {
             children: [
               rangeLabel,
               const SizedBox(width: 12),
-              Expanded(child: Align(alignment: Alignment.centerRight, child: pageButtons)),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: pageButtons,
+                ),
+              ),
             ],
           );
         },
@@ -268,7 +272,11 @@ class _PaginationFooter extends StatelessWidget {
 }
 
 class _PageButton extends StatelessWidget {
-  const _PageButton({required this.page, required this.selected, required this.onTap});
+  const _PageButton({
+    required this.page,
+    required this.selected,
+    required this.onTap,
+  });
 
   final int page;
   final bool selected;
@@ -284,17 +292,18 @@ class _PageButton extends StatelessWidget {
         height: 32,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary : AppColors.surface,
-          border: selected ? null : Border.all(color: AppColors.borderSubtle),
+          color: selected
+              ? context.appColors.primary
+              : context.appColors.surface,
+          border: selected
+              ? null
+              : Border.all(color: context.appColors.borderSubtle),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
           '$page',
-          style: TextStyle(
-            fontFamily: 'DM Sans',
-            fontWeight: FontWeight.w600,
-            fontSize: 12,
-            color: selected ? Colors.white : AppColors.textSecondary,
+          style: context.appTextStyles.label.copyWith(
+            color: selected ? Colors.white : context.appColors.textSecondary,
           ),
         ),
       ),

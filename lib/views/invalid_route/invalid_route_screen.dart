@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../values/app_theme/app_colors.dart';
-import '../../values/app_theme/app_text_styles.dart';
+import '../../utilities/extensions/context_extensions.dart';
 
 /// Fallback screen for unknown/invalid routes (404).
 class InvalidRouteScreen extends StatelessWidget {
@@ -17,16 +16,16 @@ class InvalidRouteScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.error_outline,
               size: 48,
-              color: AppColors.errorFg,
+              color: context.appColors.errorFg,
             ),
             const Gap(12),
-            const Text('Page not found', style: AppTextStyles.h2),
+            Text('Page not found', style: context.appTextStyles.h2),
             if (path != null) ...[
               const Gap(6),
-              Text(path!, style: AppTextStyles.bodySmall),
+              Text(path!, style: context.appTextStyles.bodySmall),
             ],
           ],
         ),

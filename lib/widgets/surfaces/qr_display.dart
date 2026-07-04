@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../buttons/app_button.dart';
 
 /// QR code block: image + label + monospace token. [large] switches between
@@ -49,30 +49,24 @@ class QrDisplay extends StatelessWidget {
                 if (title != null)
                   Text(
                     title!,
-                    style: const TextStyle(
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                      color: AppColors.textPrimary,
+                    style: context.appTextStyles.labelMedium.copyWith(
+                      color: context.appColors.textPrimary,
                     ),
                   ),
                 const SizedBox(height: 6),
                 Text(
                   tokenLabel,
-                  style: const TextStyle(
-                    fontFamily: 'DM Sans',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 11,
-                    color: AppColors.textTertiary,
+                  style: context.appTextStyles.bodySmall.copyWith(
+                    color: context.appColors.textTertiary,
                   ),
                 ),
                 Text(
                   token,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'monospace',
                     fontWeight: FontWeight.w600,
                     fontSize: 11,
-                    color: AppColors.primary,
+                    color: context.appColors.primary,
                   ),
                 ),
               ],
@@ -91,11 +85,8 @@ class QrDisplay extends StatelessWidget {
           Text(
             title!,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontFamily: 'DM Sans',
-              fontWeight: FontWeight.w600,
-              fontSize: 13,
-              color: AppColors.textPrimary,
+            style: context.appTextStyles.labelMedium.copyWith(
+              color: context.appColors.textPrimary,
             ),
           ),
         if (subtitle != null) ...[
@@ -103,22 +94,19 @@ class QrDisplay extends StatelessWidget {
           Text(
             subtitle!,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontFamily: 'DM Sans',
-              fontWeight: FontWeight.w500,
-              fontSize: 11,
-              color: AppColors.textTertiary,
+            style: context.appTextStyles.emphasisSmall.copyWith(
+              color: context.appColors.textTertiary,
             ),
           ),
         ],
         const SizedBox(height: 8),
         Text(
           token,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'monospace',
             fontWeight: FontWeight.w600,
             fontSize: 11,
-            color: AppColors.primary,
+            color: context.appColors.primary,
           ),
         ),
         if (onPrint != null) ...[
