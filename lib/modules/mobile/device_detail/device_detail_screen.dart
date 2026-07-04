@@ -318,31 +318,19 @@ class _ActionButtonGrid extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: AppButton(
-                  label: context.l10n.deviceDetailReturn,
-                  variant: AppButtonVariant.secondary,
-                  onPressed: () => _showComingSoon(context),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: AppButton(
-                  label: context.l10n.deviceDetailHandover,
-                  onPressed: () => _showComingSoon(context),
-                ),
-              ),
-            ],
+          AppButton(
+            label: context.l10n.deviceDetailReturn,
+            variant: AppButtonVariant.secondary,
+            expand: true,
+            onPressed: () => _showComingSoon(context),
           ),
         ],
       ),
     );
   }
 
-  // TODO(api): wire to real Support/Extend/Return/Handover flows once
-  // their endpoints and screens exist.
+  // TODO(api): wire to real Support/Extend/Return flows once their
+  // endpoints and screens exist.
   void _showComingSoon(BuildContext context) =>
       AppToast.info(context, context.l10n.comingSoon);
 }
