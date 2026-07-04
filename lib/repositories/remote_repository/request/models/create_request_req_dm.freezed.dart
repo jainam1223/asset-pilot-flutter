@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateRequestReqDm {
 
-@JsonKey(name: 'category_id') String get categoryId;@JsonKey(name: 'requested_from') DateTime get requestedFrom;@JsonKey(name: 'requested_to') DateTime get requestedTo; String get priority; String? get note;@JsonKey(name: 'is_wfh') bool get isWfh;
+ String get categoryId; DateTime get requestedFrom; DateTime get requestedTo; String get priority; String? get note; bool get isWfh;
 /// Create a copy of CreateRequestReqDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $CreateRequestReqDmCopyWith<$Res>  {
   factory $CreateRequestReqDmCopyWith(CreateRequestReqDm value, $Res Function(CreateRequestReqDm) _then) = _$CreateRequestReqDmCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'category_id') String categoryId,@JsonKey(name: 'requested_from') DateTime requestedFrom,@JsonKey(name: 'requested_to') DateTime requestedTo, String priority, String? note,@JsonKey(name: 'is_wfh') bool isWfh
+ String categoryId, DateTime requestedFrom, DateTime requestedTo, String priority, String? note, bool isWfh
 });
 
 
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'category_id')  String categoryId, @JsonKey(name: 'requested_from')  DateTime requestedFrom, @JsonKey(name: 'requested_to')  DateTime requestedTo,  String priority,  String? note, @JsonKey(name: 'is_wfh')  bool isWfh)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String categoryId,  DateTime requestedFrom,  DateTime requestedTo,  String priority,  String? note,  bool isWfh)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateRequestReqDm() when $default != null:
 return $default(_that.categoryId,_that.requestedFrom,_that.requestedTo,_that.priority,_that.note,_that.isWfh);case _:
@@ -179,7 +179,7 @@ return $default(_that.categoryId,_that.requestedFrom,_that.requestedTo,_that.pri
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'category_id')  String categoryId, @JsonKey(name: 'requested_from')  DateTime requestedFrom, @JsonKey(name: 'requested_to')  DateTime requestedTo,  String priority,  String? note, @JsonKey(name: 'is_wfh')  bool isWfh)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String categoryId,  DateTime requestedFrom,  DateTime requestedTo,  String priority,  String? note,  bool isWfh)  $default,) {final _that = this;
 switch (_that) {
 case _CreateRequestReqDm():
 return $default(_that.categoryId,_that.requestedFrom,_that.requestedTo,_that.priority,_that.note,_that.isWfh);case _:
@@ -199,7 +199,7 @@ return $default(_that.categoryId,_that.requestedFrom,_that.requestedTo,_that.pri
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'category_id')  String categoryId, @JsonKey(name: 'requested_from')  DateTime requestedFrom, @JsonKey(name: 'requested_to')  DateTime requestedTo,  String priority,  String? note, @JsonKey(name: 'is_wfh')  bool isWfh)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String categoryId,  DateTime requestedFrom,  DateTime requestedTo,  String priority,  String? note,  bool isWfh)?  $default,) {final _that = this;
 switch (_that) {
 case _CreateRequestReqDm() when $default != null:
 return $default(_that.categoryId,_that.requestedFrom,_that.requestedTo,_that.priority,_that.note,_that.isWfh);case _:
@@ -214,15 +214,15 @@ return $default(_that.categoryId,_that.requestedFrom,_that.requestedTo,_that.pri
 
 @JsonSerializable(includeIfNull: false)
 class _CreateRequestReqDm implements CreateRequestReqDm {
-  const _CreateRequestReqDm({@JsonKey(name: 'category_id') required this.categoryId, @JsonKey(name: 'requested_from') required this.requestedFrom, @JsonKey(name: 'requested_to') required this.requestedTo, required this.priority, this.note, @JsonKey(name: 'is_wfh') required this.isWfh});
+  const _CreateRequestReqDm({required this.categoryId, required this.requestedFrom, required this.requestedTo, required this.priority, this.note, required this.isWfh});
   factory _CreateRequestReqDm.fromJson(Map<String, dynamic> json) => _$CreateRequestReqDmFromJson(json);
 
-@override@JsonKey(name: 'category_id') final  String categoryId;
-@override@JsonKey(name: 'requested_from') final  DateTime requestedFrom;
-@override@JsonKey(name: 'requested_to') final  DateTime requestedTo;
+@override final  String categoryId;
+@override final  DateTime requestedFrom;
+@override final  DateTime requestedTo;
 @override final  String priority;
 @override final  String? note;
-@override@JsonKey(name: 'is_wfh') final  bool isWfh;
+@override final  bool isWfh;
 
 /// Create a copy of CreateRequestReqDm
 /// with the given fields replaced by the non-null parameter values.
@@ -257,7 +257,7 @@ abstract mixin class _$CreateRequestReqDmCopyWith<$Res> implements $CreateReques
   factory _$CreateRequestReqDmCopyWith(_CreateRequestReqDm value, $Res Function(_CreateRequestReqDm) _then) = __$CreateRequestReqDmCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'category_id') String categoryId,@JsonKey(name: 'requested_from') DateTime requestedFrom,@JsonKey(name: 'requested_to') DateTime requestedTo, String priority, String? note,@JsonKey(name: 'is_wfh') bool isWfh
+ String categoryId, DateTime requestedFrom, DateTime requestedTo, String priority, String? note, bool isWfh
 });
 
 

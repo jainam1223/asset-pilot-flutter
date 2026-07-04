@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../repositories/remote_repository/common/models/request_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
+import '../../../utilities/navigation/app_routes.dart';
 import '../../../utilities/network/network_state.dart';
 import '../../../values/app_global/current_user.dart';
 import '../../../widgets/widgets.dart';
 import 'cubit/my_devices_cubit.dart';
 import 'device_status_x.dart';
 
-/// Employee's device list (mockup E02) — active `request` rows with their
-/// assigned `item` + `category`, fetched from `GET /me/devices`.
+/// Employee's device list (mockup E02) — `item` rows currently owned by the
+/// signed-in employee, fetched from `GET /me/devices`.
 class MyDevicesScreen extends StatelessWidget {
   const MyDevicesScreen({super.key});
 
@@ -52,9 +52,7 @@ class MyDevicesScreen extends StatelessWidget {
                           ),
                         ),
                         Success(:final data) => _DeviceListSliver(
-                          devices: data
-                              .where((d) => d.assignedItem != null)
-                              .toList(),
+                          devices: data,
                         ),
                       },
                     ],
@@ -72,7 +70,7 @@ class MyDevicesScreen extends StatelessWidget {
 class _DeviceListSliver extends StatelessWidget {
   const _DeviceListSliver({required this.devices});
 
-  final List<RequestResDm> devices;
+  final List<MyDevice> devices;
 
   @override
   Widget build(BuildContext context) {
@@ -91,52 +89,44 @@ class _DeviceListSliver extends StatelessWidget {
       sliver: SliverList.separated(
         itemCount: devices.length,
         separatorBuilder: (_, _) => const SizedBox(height: 13),
-        itemBuilder: (context, index) => _DeviceCard(device: devices[index]),
+        itemBuilder: (context, index) => _DeviceCard(
+          device: devices[index],
+          onTap: () => context.push(
+            Routes.deviceDetail.path.replaceFirst(
+              ':id',
+              devices[index].item.id,
+            ),
+            extra: devices[index],
+          ),
+        ),
       ),
     );
   }
 }
 
 class _DeviceCard extends StatelessWidget {
-  const _DeviceCard({required this.device});
+  const _DeviceCard({required this.device, required this.onTap});
 
-  final RequestResDm device;
-
-  static final _dateFormat = DateFormat('dd MMM yyyy');
-
-  String? get _metaLine {
-    if (device.shipTrackingUrl != null) return 'In transit to home';
-    if (device.returnTrackingUrl != null) return 'Return in transit';
-    final from = device.assignedFrom;
-    final to = device.assignedTo;
-    if (from == null || to == null) return null;
-    return '${_dateFormat.format(from)} – ${_dateFormat.format(to)}';
-  }
+  final MyDevice device;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final item = device.assignedItem;
-    final status = deviceStatusFromWire(item?.status ?? 'available');
-    final categoryName = device.category?.name ?? '';
+    final item = device.item;
+    final status = deviceStatusFromWire(item.status);
+    final categoryName = device.categoryName;
 
     return ListItemCard(
+      onTap: onTap,
       leading: IconBox(
         icon: _categoryIcon(categoryName),
         semantic: status.semantic == AppSemantic.success
             ? AppSemantic.brand
             : status.semantic,
       ),
-      title: item?.name ?? '',
+      title: item.name,
       subtitle: categoryName,
       trailing: StatusPill(semantic: status.semantic, label: status.label),
-      meta: _metaLine == null
-          ? null
-          : MetaEntry(
-              icon: device.shipTrackingUrl != null
-                  ? Icons.local_shipping_outlined
-                  : Icons.calendar_today_outlined,
-              label: _metaLine!,
-            ),
     );
   }
 
