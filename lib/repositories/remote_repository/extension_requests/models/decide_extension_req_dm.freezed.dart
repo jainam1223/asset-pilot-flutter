@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DecideExtensionReqDm {
 
- String get extensionId; ExtensionStatus get decision; String? get note;
+@JsonKey(name: 'it_note') String? get itNote;
 /// Create a copy of DecideExtensionReqDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DecideExtensionReqDmCopyWith<DecideExtensionReqDm> get copyWith => _$DecideExte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DecideExtensionReqDm&&(identical(other.extensionId, extensionId) || other.extensionId == extensionId)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DecideExtensionReqDm&&(identical(other.itNote, itNote) || other.itNote == itNote));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,extensionId,decision,note);
+int get hashCode => Object.hash(runtimeType,itNote);
 
 @override
 String toString() {
-  return 'DecideExtensionReqDm(extensionId: $extensionId, decision: $decision, note: $note)';
+  return 'DecideExtensionReqDm(itNote: $itNote)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $DecideExtensionReqDmCopyWith<$Res>  {
   factory $DecideExtensionReqDmCopyWith(DecideExtensionReqDm value, $Res Function(DecideExtensionReqDm) _then) = _$DecideExtensionReqDmCopyWithImpl;
 @useResult
 $Res call({
- String extensionId, ExtensionStatus decision, String? note
+@JsonKey(name: 'it_note') String? itNote
 });
 
 
@@ -65,11 +65,9 @@ class _$DecideExtensionReqDmCopyWithImpl<$Res>
 
 /// Create a copy of DecideExtensionReqDm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? extensionId = null,Object? decision = null,Object? note = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? itNote = freezed,}) {
   return _then(_self.copyWith(
-extensionId: null == extensionId ? _self.extensionId : extensionId // ignore: cast_nullable_to_non_nullable
-as String,decision: null == decision ? _self.decision : decision // ignore: cast_nullable_to_non_nullable
-as ExtensionStatus,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+itNote: freezed == itNote ? _self.itNote : itNote // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -155,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String extensionId,  ExtensionStatus decision,  String? note)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'it_note')  String? itNote)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DecideExtensionReqDm() when $default != null:
-return $default(_that.extensionId,_that.decision,_that.note);case _:
+return $default(_that.itNote);case _:
   return orElse();
 
 }
@@ -176,10 +174,10 @@ return $default(_that.extensionId,_that.decision,_that.note);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String extensionId,  ExtensionStatus decision,  String? note)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'it_note')  String? itNote)  $default,) {final _that = this;
 switch (_that) {
 case _DecideExtensionReqDm():
-return $default(_that.extensionId,_that.decision,_that.note);case _:
+return $default(_that.itNote);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +194,10 @@ return $default(_that.extensionId,_that.decision,_that.note);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String extensionId,  ExtensionStatus decision,  String? note)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'it_note')  String? itNote)?  $default,) {final _that = this;
 switch (_that) {
 case _DecideExtensionReqDm() when $default != null:
-return $default(_that.extensionId,_that.decision,_that.note);case _:
+return $default(_that.itNote);case _:
   return null;
 
 }
@@ -211,12 +209,10 @@ return $default(_that.extensionId,_that.decision,_that.note);case _:
 
 @JsonSerializable(includeIfNull: false)
 class _DecideExtensionReqDm implements DecideExtensionReqDm {
-  const _DecideExtensionReqDm({required this.extensionId, required this.decision, this.note});
+  const _DecideExtensionReqDm({@JsonKey(name: 'it_note') this.itNote});
   factory _DecideExtensionReqDm.fromJson(Map<String, dynamic> json) => _$DecideExtensionReqDmFromJson(json);
 
-@override final  String extensionId;
-@override final  ExtensionStatus decision;
-@override final  String? note;
+@override@JsonKey(name: 'it_note') final  String? itNote;
 
 /// Create a copy of DecideExtensionReqDm
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +227,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DecideExtensionReqDm&&(identical(other.extensionId, extensionId) || other.extensionId == extensionId)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DecideExtensionReqDm&&(identical(other.itNote, itNote) || other.itNote == itNote));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,extensionId,decision,note);
+int get hashCode => Object.hash(runtimeType,itNote);
 
 @override
 String toString() {
-  return 'DecideExtensionReqDm(extensionId: $extensionId, decision: $decision, note: $note)';
+  return 'DecideExtensionReqDm(itNote: $itNote)';
 }
 
 
@@ -251,7 +247,7 @@ abstract mixin class _$DecideExtensionReqDmCopyWith<$Res> implements $DecideExte
   factory _$DecideExtensionReqDmCopyWith(_DecideExtensionReqDm value, $Res Function(_DecideExtensionReqDm) _then) = __$DecideExtensionReqDmCopyWithImpl;
 @override @useResult
 $Res call({
- String extensionId, ExtensionStatus decision, String? note
+@JsonKey(name: 'it_note') String? itNote
 });
 
 
@@ -268,11 +264,9 @@ class __$DecideExtensionReqDmCopyWithImpl<$Res>
 
 /// Create a copy of DecideExtensionReqDm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? extensionId = null,Object? decision = null,Object? note = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? itNote = freezed,}) {
   return _then(_DecideExtensionReqDm(
-extensionId: null == extensionId ? _self.extensionId : extensionId // ignore: cast_nullable_to_non_nullable
-as String,decision: null == decision ? _self.decision : decision // ignore: cast_nullable_to_non_nullable
-as ExtensionStatus,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+itNote: freezed == itNote ? _self.itNote : itNote // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

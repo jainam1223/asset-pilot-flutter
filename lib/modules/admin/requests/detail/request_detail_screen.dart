@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../repositories/remote_repository/requests/models/request_detail_res_dm.dart';
 import '../../../../repositories/remote_repository/requests/models/suggested_device_res_dm.dart';
@@ -9,6 +10,7 @@ import '../../../../utilities/extensions/context_extensions.dart';
 import '../../../../utilities/navigation/app_routes.dart';
 import '../../../../utilities/network/network_state.dart';
 import '../../../../values/constants/app_constants.dart';
+import '../../../../values/enumeration/statuses.dart';
 import '../../../../widgets/widgets.dart';
 import '../../shell/admin_shell.dart';
 import '../request_status_x.dart';
@@ -81,8 +83,14 @@ class _RequestInfoPanel extends StatelessWidget {
 
   final RequestDetailResDm detail;
 
+  static final _dateFormat = DateFormat('dd MMM yyyy');
+
+  String _formatDate(DateTime? date) => date == null ? '—' : _dateFormat.format(date.toLocal());
+
   @override
   Widget build(BuildContext context) {
+    final managerApproved = detail.mgrApprovalStatus == MgrApprovalStatus.approved ||
+        detail.mgrApprovalStatus == MgrApprovalStatus.notRequired;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,14 +99,14 @@ class _RequestInfoPanel extends StatelessWidget {
           const Gap(14),
           Row(
             children: [
-              AppAvatar(name: detail.employeeName),
+              AppAvatar(name: detail.requesterName),
               const Gap(11),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(detail.employeeName, style: context.appTextStyles.labelLarge),
+                  Text(detail.requesterName, style: context.appTextStyles.labelLarge),
                   Text(
-                    detail.employeeDepartment,
+                    detail.managerName ?? '',
                     style: context.appTextStyles.bodySmall,
                   ),
                 ],
@@ -110,7 +118,7 @@ class _RequestInfoPanel extends StatelessWidget {
             rows: [
               InfoRow(
                 label: context.l10n.requestFieldCategory,
-                value: Text(detail.category),
+                value: Text(detail.categoryName),
               ),
               InfoRow(
                 label: context.l10n.requestFieldPriority,
@@ -130,7 +138,7 @@ class _RequestInfoPanel extends StatelessWidget {
               InfoRow(
                 label: context.l10n.requestFieldMgrApproval,
                 value: Text(
-                  detail.managerApproved
+                  managerApproved
                       ? context.l10n.requestApproved
                       : context.l10n.requestPending,
                 ),
@@ -141,13 +149,13 @@ class _RequestInfoPanel extends StatelessWidget {
           Text(context.l10n.requestRequestedDates, style: context.appTextStyles.bodySmall),
           const Gap(5),
           Text(
-            '${detail.requestedFrom} – ${detail.requestedTo}',
+            '${_formatDate(detail.requestedFrom)} – ${_formatDate(detail.requestedTo)}',
             style: context.appTextStyles.labelLarge,
           ),
           const Gap(14),
           Text(context.l10n.requestNote, style: context.appTextStyles.bodySmall),
           const Gap(5),
-          Text(detail.note, style: context.appTextStyles.bodyMedium),
+          Text(detail.note ?? '', style: context.appTextStyles.bodyMedium),
         ],
       ),
     );
@@ -181,13 +189,18 @@ class _SuggestionsPanel extends StatelessWidget {
                 separatorBuilder: (_, _) => const Gap(11),
                 itemBuilder: (context, index) {
                   final suggestion = suggestions[index];
+                  final freeUntil = suggestion.freeUntil;
+                  final subtitle = freeUntil == null
+                      ? context.l10n.requestSuggestedDevicesSubtitle
+                      : '${suggestion.activeBookingsCount} pending · free until '
+                          '${DateFormat('dd MMM').format(freeUntil.toLocal())}';
                   return SuggestionCard(
-                    rank: suggestion.rank,
-                    title: '${suggestion.name} · SN ${suggestion.serial}',
-                    subtitle: suggestion.reason,
+                    rank: index + 1,
+                    title: '${suggestion.name} · SN ${suggestion.serialNo}',
+                    subtitle: subtitle,
                     selectLabel: context.l10n.suggestionSelect,
-                    recommended: suggestion.deviceId == state.selectedDeviceId,
-                    onSelect: () => cubit.selectDevice(suggestion.deviceId),
+                    recommended: suggestion.itemId == state.selectedDeviceId,
+                    onSelect: () => cubit.selectDevice(suggestion.itemId),
                   );
                 },
               ),
@@ -201,7 +214,9 @@ class _SuggestionsPanel extends StatelessWidget {
               Expanded(
                 child: PickerField(
                   label: context.l10n.requestAssignedFrom,
-                  valueText: state.assignedFrom,
+                  valueText: state.assignedFrom == null
+                      ? ''
+                      : DateFormat('dd MMM yyyy').format(state.assignedFrom!.toLocal()),
                   onTap: () {},
                 ),
               ),
@@ -209,7 +224,9 @@ class _SuggestionsPanel extends StatelessWidget {
               Expanded(
                 child: PickerField(
                   label: context.l10n.requestAssignedTo,
-                  valueText: state.assignedTo,
+                  valueText: state.assignedTo == null
+                      ? ''
+                      : DateFormat('dd MMM yyyy').format(state.assignedTo!.toLocal()),
                   onTap: () {},
                 ),
               ),

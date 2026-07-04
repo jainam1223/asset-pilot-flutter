@@ -15,10 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DeviceTimelineEventResDm {
 
- String get id; String get title; String get timestamp; String get actor; String get description; String get fromStatus; String get toStatus; String get relatedRequestId;/// One of `'assignment' | 'shipping' | 'delivery' | 'support' |
-/// 'handover'` — drives the timeline dot color (mockup A06 uses a
-/// distinct color per event kind, not a single uniform brand color).
- String get kind;
+@JsonKey(name: 'event_type') DeviceLogEvent get eventType;@JsonKey(name: 'actor_role') ActorRole get actorRole;@JsonKey(name: 'from_value') String? get fromValue;@JsonKey(name: 'to_value') String? get toValue; String? get note; Map<String, dynamic>? get metadata;@JsonKey(name: 'occurred_at') DateTime? get occurredAt;
 /// Create a copy of DeviceTimelineEventResDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +28,16 @@ $DeviceTimelineEventResDmCopyWith<DeviceTimelineEventResDm> get copyWith => _$De
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceTimelineEventResDm&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.actor, actor) || other.actor == actor)&&(identical(other.description, description) || other.description == description)&&(identical(other.fromStatus, fromStatus) || other.fromStatus == fromStatus)&&(identical(other.toStatus, toStatus) || other.toStatus == toStatus)&&(identical(other.relatedRequestId, relatedRequestId) || other.relatedRequestId == relatedRequestId)&&(identical(other.kind, kind) || other.kind == kind));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceTimelineEventResDm&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.actorRole, actorRole) || other.actorRole == actorRole)&&(identical(other.fromValue, fromValue) || other.fromValue == fromValue)&&(identical(other.toValue, toValue) || other.toValue == toValue)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other.metadata, metadata)&&(identical(other.occurredAt, occurredAt) || other.occurredAt == occurredAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,timestamp,actor,description,fromStatus,toStatus,relatedRequestId,kind);
+int get hashCode => Object.hash(runtimeType,eventType,actorRole,fromValue,toValue,note,const DeepCollectionEquality().hash(metadata),occurredAt);
 
 @override
 String toString() {
-  return 'DeviceTimelineEventResDm(id: $id, title: $title, timestamp: $timestamp, actor: $actor, description: $description, fromStatus: $fromStatus, toStatus: $toStatus, relatedRequestId: $relatedRequestId, kind: $kind)';
+  return 'DeviceTimelineEventResDm(eventType: $eventType, actorRole: $actorRole, fromValue: $fromValue, toValue: $toValue, note: $note, metadata: $metadata, occurredAt: $occurredAt)';
 }
 
 
@@ -51,7 +48,7 @@ abstract mixin class $DeviceTimelineEventResDmCopyWith<$Res>  {
   factory $DeviceTimelineEventResDmCopyWith(DeviceTimelineEventResDm value, $Res Function(DeviceTimelineEventResDm) _then) = _$DeviceTimelineEventResDmCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String timestamp, String actor, String description, String fromStatus, String toStatus, String relatedRequestId, String kind
+@JsonKey(name: 'event_type') DeviceLogEvent eventType,@JsonKey(name: 'actor_role') ActorRole actorRole,@JsonKey(name: 'from_value') String? fromValue,@JsonKey(name: 'to_value') String? toValue, String? note, Map<String, dynamic>? metadata,@JsonKey(name: 'occurred_at') DateTime? occurredAt
 });
 
 
@@ -68,18 +65,16 @@ class _$DeviceTimelineEventResDmCopyWithImpl<$Res>
 
 /// Create a copy of DeviceTimelineEventResDm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? timestamp = null,Object? actor = null,Object? description = null,Object? fromStatus = null,Object? toStatus = null,Object? relatedRequestId = null,Object? kind = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? eventType = null,Object? actorRole = null,Object? fromValue = freezed,Object? toValue = freezed,Object? note = freezed,Object? metadata = freezed,Object? occurredAt = freezed,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as String,actor: null == actor ? _self.actor : actor // ignore: cast_nullable_to_non_nullable
-as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,fromStatus: null == fromStatus ? _self.fromStatus : fromStatus // ignore: cast_nullable_to_non_nullable
-as String,toStatus: null == toStatus ? _self.toStatus : toStatus // ignore: cast_nullable_to_non_nullable
-as String,relatedRequestId: null == relatedRequestId ? _self.relatedRequestId : relatedRequestId // ignore: cast_nullable_to_non_nullable
-as String,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
-as String,
+eventType: null == eventType ? _self.eventType : eventType // ignore: cast_nullable_to_non_nullable
+as DeviceLogEvent,actorRole: null == actorRole ? _self.actorRole : actorRole // ignore: cast_nullable_to_non_nullable
+as ActorRole,fromValue: freezed == fromValue ? _self.fromValue : fromValue // ignore: cast_nullable_to_non_nullable
+as String?,toValue: freezed == toValue ? _self.toValue : toValue // ignore: cast_nullable_to_non_nullable
+as String?,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+as String?,metadata: freezed == metadata ? _self.metadata : metadata // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,occurredAt: freezed == occurredAt ? _self.occurredAt : occurredAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -164,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String timestamp,  String actor,  String description,  String fromStatus,  String toStatus,  String relatedRequestId,  String kind)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_type')  DeviceLogEvent eventType, @JsonKey(name: 'actor_role')  ActorRole actorRole, @JsonKey(name: 'from_value')  String? fromValue, @JsonKey(name: 'to_value')  String? toValue,  String? note,  Map<String, dynamic>? metadata, @JsonKey(name: 'occurred_at')  DateTime? occurredAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeviceTimelineEventResDm() when $default != null:
-return $default(_that.id,_that.title,_that.timestamp,_that.actor,_that.description,_that.fromStatus,_that.toStatus,_that.relatedRequestId,_that.kind);case _:
+return $default(_that.eventType,_that.actorRole,_that.fromValue,_that.toValue,_that.note,_that.metadata,_that.occurredAt);case _:
   return orElse();
 
 }
@@ -185,10 +180,10 @@ return $default(_that.id,_that.title,_that.timestamp,_that.actor,_that.descripti
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String timestamp,  String actor,  String description,  String fromStatus,  String toStatus,  String relatedRequestId,  String kind)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_type')  DeviceLogEvent eventType, @JsonKey(name: 'actor_role')  ActorRole actorRole, @JsonKey(name: 'from_value')  String? fromValue, @JsonKey(name: 'to_value')  String? toValue,  String? note,  Map<String, dynamic>? metadata, @JsonKey(name: 'occurred_at')  DateTime? occurredAt)  $default,) {final _that = this;
 switch (_that) {
 case _DeviceTimelineEventResDm():
-return $default(_that.id,_that.title,_that.timestamp,_that.actor,_that.description,_that.fromStatus,_that.toStatus,_that.relatedRequestId,_that.kind);case _:
+return $default(_that.eventType,_that.actorRole,_that.fromValue,_that.toValue,_that.note,_that.metadata,_that.occurredAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +200,10 @@ return $default(_that.id,_that.title,_that.timestamp,_that.actor,_that.descripti
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String timestamp,  String actor,  String description,  String fromStatus,  String toStatus,  String relatedRequestId,  String kind)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'event_type')  DeviceLogEvent eventType, @JsonKey(name: 'actor_role')  ActorRole actorRole, @JsonKey(name: 'from_value')  String? fromValue, @JsonKey(name: 'to_value')  String? toValue,  String? note,  Map<String, dynamic>? metadata, @JsonKey(name: 'occurred_at')  DateTime? occurredAt)?  $default,) {final _that = this;
 switch (_that) {
 case _DeviceTimelineEventResDm() when $default != null:
-return $default(_that.id,_that.title,_that.timestamp,_that.actor,_that.description,_that.fromStatus,_that.toStatus,_that.relatedRequestId,_that.kind);case _:
+return $default(_that.eventType,_that.actorRole,_that.fromValue,_that.toValue,_that.note,_that.metadata,_that.occurredAt);case _:
   return null;
 
 }
@@ -220,21 +215,24 @@ return $default(_that.id,_that.title,_that.timestamp,_that.actor,_that.descripti
 @JsonSerializable()
 
 class _DeviceTimelineEventResDm implements DeviceTimelineEventResDm {
-  const _DeviceTimelineEventResDm({this.id = '', this.title = '', this.timestamp = '', this.actor = '', this.description = '', this.fromStatus = '', this.toStatus = '', this.relatedRequestId = '', this.kind = 'assignment'});
+  const _DeviceTimelineEventResDm({@JsonKey(name: 'event_type') this.eventType = DeviceLogEvent.statusChanged, @JsonKey(name: 'actor_role') this.actorRole = ActorRole.system, @JsonKey(name: 'from_value') this.fromValue, @JsonKey(name: 'to_value') this.toValue, this.note, final  Map<String, dynamic>? metadata, @JsonKey(name: 'occurred_at') this.occurredAt}): _metadata = metadata;
   factory _DeviceTimelineEventResDm.fromJson(Map<String, dynamic> json) => _$DeviceTimelineEventResDmFromJson(json);
 
-@override@JsonKey() final  String id;
-@override@JsonKey() final  String title;
-@override@JsonKey() final  String timestamp;
-@override@JsonKey() final  String actor;
-@override@JsonKey() final  String description;
-@override@JsonKey() final  String fromStatus;
-@override@JsonKey() final  String toStatus;
-@override@JsonKey() final  String relatedRequestId;
-/// One of `'assignment' | 'shipping' | 'delivery' | 'support' |
-/// 'handover'` — drives the timeline dot color (mockup A06 uses a
-/// distinct color per event kind, not a single uniform brand color).
-@override@JsonKey() final  String kind;
+@override@JsonKey(name: 'event_type') final  DeviceLogEvent eventType;
+@override@JsonKey(name: 'actor_role') final  ActorRole actorRole;
+@override@JsonKey(name: 'from_value') final  String? fromValue;
+@override@JsonKey(name: 'to_value') final  String? toValue;
+@override final  String? note;
+ final  Map<String, dynamic>? _metadata;
+@override Map<String, dynamic>? get metadata {
+  final value = _metadata;
+  if (value == null) return null;
+  if (_metadata is EqualUnmodifiableMapView) return _metadata;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
+@override@JsonKey(name: 'occurred_at') final  DateTime? occurredAt;
 
 /// Create a copy of DeviceTimelineEventResDm
 /// with the given fields replaced by the non-null parameter values.
@@ -249,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceTimelineEventResDm&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.actor, actor) || other.actor == actor)&&(identical(other.description, description) || other.description == description)&&(identical(other.fromStatus, fromStatus) || other.fromStatus == fromStatus)&&(identical(other.toStatus, toStatus) || other.toStatus == toStatus)&&(identical(other.relatedRequestId, relatedRequestId) || other.relatedRequestId == relatedRequestId)&&(identical(other.kind, kind) || other.kind == kind));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceTimelineEventResDm&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.actorRole, actorRole) || other.actorRole == actorRole)&&(identical(other.fromValue, fromValue) || other.fromValue == fromValue)&&(identical(other.toValue, toValue) || other.toValue == toValue)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other._metadata, _metadata)&&(identical(other.occurredAt, occurredAt) || other.occurredAt == occurredAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,timestamp,actor,description,fromStatus,toStatus,relatedRequestId,kind);
+int get hashCode => Object.hash(runtimeType,eventType,actorRole,fromValue,toValue,note,const DeepCollectionEquality().hash(_metadata),occurredAt);
 
 @override
 String toString() {
-  return 'DeviceTimelineEventResDm(id: $id, title: $title, timestamp: $timestamp, actor: $actor, description: $description, fromStatus: $fromStatus, toStatus: $toStatus, relatedRequestId: $relatedRequestId, kind: $kind)';
+  return 'DeviceTimelineEventResDm(eventType: $eventType, actorRole: $actorRole, fromValue: $fromValue, toValue: $toValue, note: $note, metadata: $metadata, occurredAt: $occurredAt)';
 }
 
 
@@ -269,7 +267,7 @@ abstract mixin class _$DeviceTimelineEventResDmCopyWith<$Res> implements $Device
   factory _$DeviceTimelineEventResDmCopyWith(_DeviceTimelineEventResDm value, $Res Function(_DeviceTimelineEventResDm) _then) = __$DeviceTimelineEventResDmCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String timestamp, String actor, String description, String fromStatus, String toStatus, String relatedRequestId, String kind
+@JsonKey(name: 'event_type') DeviceLogEvent eventType,@JsonKey(name: 'actor_role') ActorRole actorRole,@JsonKey(name: 'from_value') String? fromValue,@JsonKey(name: 'to_value') String? toValue, String? note, Map<String, dynamic>? metadata,@JsonKey(name: 'occurred_at') DateTime? occurredAt
 });
 
 
@@ -286,18 +284,16 @@ class __$DeviceTimelineEventResDmCopyWithImpl<$Res>
 
 /// Create a copy of DeviceTimelineEventResDm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? timestamp = null,Object? actor = null,Object? description = null,Object? fromStatus = null,Object? toStatus = null,Object? relatedRequestId = null,Object? kind = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? eventType = null,Object? actorRole = null,Object? fromValue = freezed,Object? toValue = freezed,Object? note = freezed,Object? metadata = freezed,Object? occurredAt = freezed,}) {
   return _then(_DeviceTimelineEventResDm(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as String,actor: null == actor ? _self.actor : actor // ignore: cast_nullable_to_non_nullable
-as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,fromStatus: null == fromStatus ? _self.fromStatus : fromStatus // ignore: cast_nullable_to_non_nullable
-as String,toStatus: null == toStatus ? _self.toStatus : toStatus // ignore: cast_nullable_to_non_nullable
-as String,relatedRequestId: null == relatedRequestId ? _self.relatedRequestId : relatedRequestId // ignore: cast_nullable_to_non_nullable
-as String,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
-as String,
+eventType: null == eventType ? _self.eventType : eventType // ignore: cast_nullable_to_non_nullable
+as DeviceLogEvent,actorRole: null == actorRole ? _self.actorRole : actorRole // ignore: cast_nullable_to_non_nullable
+as ActorRole,fromValue: freezed == fromValue ? _self.fromValue : fromValue // ignore: cast_nullable_to_non_nullable
+as String?,toValue: freezed == toValue ? _self.toValue : toValue // ignore: cast_nullable_to_non_nullable
+as String?,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+as String?,metadata: freezed == metadata ? _self._metadata : metadata // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,occurredAt: freezed == occurredAt ? _self.occurredAt : occurredAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

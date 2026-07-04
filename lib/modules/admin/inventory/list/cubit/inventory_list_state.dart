@@ -8,6 +8,7 @@ class InventoryListState extends Equatable {
     this.categoryFilter = 'all',
     this.searchQuery = '',
     this.currentPage = 1,
+    this.totalItems = 0,
   });
 
   final NetworkState<List<InventoryItemResDm>> items;
@@ -15,10 +16,13 @@ class InventoryListState extends Equatable {
   /// One of the raw `DeviceStatus` enum names, or `'all'`.
   final String statusFilter;
 
-  /// One of the inventory categories (e.g. `'Laptop'`), or `'all'`.
+  /// A category id, or `'all'`.
   final String categoryFilter;
   final String searchQuery;
   final int currentPage;
+
+  /// Total matching rows on the server, from `meta.pagination.total_items`.
+  final int totalItems;
 
   InventoryListState copyWith({
     NetworkState<List<InventoryItemResDm>>? items,
@@ -26,6 +30,7 @@ class InventoryListState extends Equatable {
     String? categoryFilter,
     String? searchQuery,
     int? currentPage,
+    int? totalItems,
   }) {
     return InventoryListState(
       items: items ?? this.items,
@@ -33,6 +38,7 @@ class InventoryListState extends Equatable {
       categoryFilter: categoryFilter ?? this.categoryFilter,
       searchQuery: searchQuery ?? this.searchQuery,
       currentPage: currentPage ?? this.currentPage,
+      totalItems: totalItems ?? this.totalItems,
     );
   }
 
@@ -43,5 +49,6 @@ class InventoryListState extends Equatable {
         categoryFilter,
         searchQuery,
         currentPage,
+        totalItems,
       ];
 }

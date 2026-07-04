@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../repositories/local_repository/secure_storage.dart';
 import '../../values/flavors/flavor_config.dart';
 
 /// Builds and holds the shared [Dio] instance used by all repositories.
@@ -26,14 +27,34 @@ class DioClient {
 
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
-          // TODO(auth): attach bearer token from secure storage.
+        onRequest: (options, handler) async {
+          // Skip ngrok's browser-warning interstitial (dev tunnel).
+          options.headers['ngrok-skip-browser-warning'] = 'true';
+          // Attach the bearer token when a session exists.
+          final token = await SecureStorage.instance.readAuthToken();
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
           handler.next(options);
         },
         onResponse: (response, handler) {
           final body = response.data;
           if (body is Map && body.containsKey('data')) {
-            response.data = body['data'];
+            // Preserve server-side pagination (carried in `meta.pagination`)
+            // by folding it alongside the list into an envelope that
+            // `PaginatedResDm` can deserialize. Non-paginated responses keep
+            // the plain `data` unwrap.
+            final meta = body['meta'];
+            final pagination =
+                meta is Map ? meta['pagination'] : null;
+            if (pagination != null) {
+              response.data = <String, dynamic>{
+                'items': body['data'],
+                'pagination': pagination,
+              };
+            } else {
+              response.data = body['data'];
+            }
           }
           handler.next(response);
         },

@@ -1,16 +1,21 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../values/enumeration/statuses.dart';
-import 'active_handover_summary_res_dm.dart';
+import '../../common/models/handover_request_res_dm.dart';
+import '../../common/models/support_request_res_dm.dart';
 import 'current_assignment_res_dm.dart';
-import 'open_ticket_summary_res_dm.dart';
 
 part 'inventory_detail_res_dm.freezed.dart';
 part 'inventory_detail_res_dm.g.dart';
 
-/// Full detail for a single device (mockup A05).
+/// Full detail for a single device (mockup A05) — a UI-facing flattening of
+/// `GET /admin/items/{id}`'s nested `{ item, category, current_owner,
+/// current_request, open_support[], active_handover }` response.
 ///
-/// Models only the content of the `APIResponse.data` field, per convention.
+/// NOT deserialized directly via [fromJson]/[toJson] from the wire response
+/// (the nesting doesn't map 1:1) — [InventoryRepository.fetchInventoryDetail]
+/// constructs this by reading the raw nested DMs and flattening them here, so
+/// the screen keeps a single flat `detail.*` accessor surface.
 @freezed
 abstract class InventoryDetailResDm with _$InventoryDetailResDm {
   const factory InventoryDetailResDm({
@@ -22,12 +27,11 @@ abstract class InventoryDetailResDm with _$InventoryDetailResDm {
     @Default('') String clientName,
     @Default(DeviceStatus.available) DeviceStatus status,
     @Default('') String currentOwnerName,
-    @Default('') String purchaseDate,
+    DateTime? purchaseDate,
     @Default('') String qrToken,
     CurrentAssignmentResDm? currentAssignment,
-    @Default(<OpenTicketSummaryResDm>[])
-    List<OpenTicketSummaryResDm> openTickets,
-    ActiveHandoverSummaryResDm? activeHandover,
+    @Default(<SupportRequestResDm>[]) List<SupportRequestResDm> openTickets,
+    HandoverRequestResDm? activeHandover,
   }) = _InventoryDetailResDm;
 
   factory InventoryDetailResDm.fromJson(Map<String, dynamic> json) =>

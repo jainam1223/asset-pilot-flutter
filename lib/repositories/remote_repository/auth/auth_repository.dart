@@ -1,42 +1,57 @@
 import '../../../models/api_response/api_result.dart';
-import '../../../models/exceptions/app_exception.dart';
+import '../../../values/app_global/admin_session.dart';
+import '../../local_repository/secure_storage.dart';
 import '../api_repository/api_repository.dart';
 import '../common/models/user_res_dm.dart';
+import 'models/login_req_dm.dart';
+import 'models/login_res_dm.dart';
 
 /// Repository for authentication.
 ///
-/// Singleton via a private constructor + [instance], per convention. NOTE:
-/// this scaffold is not wired to a live backend — [login] returns MOCKED data.
-/// When the API is ready, replace the mock body with
-/// `apiService.login(LoginReqDm(...))`.
+/// Singleton via a private constructor + [instance], per convention.
 class AuthRepository extends Repository {
   AuthRepository._();
 
   static final AuthRepository instance = AuthRepository._();
 
-  /// Log in with [email] / [password]. Currently mocked.
+  /// Log in with [email] / [password]. On success, stores the token pair and
+  /// fetches `/auth/me` to populate [AdminSession] before returning the user
+  /// profile — callers (mobile and admin login cubits alike) get back the
+  /// same `ApiResult<UserResDm>` shape either way.
   Future<ApiResult<UserResDm>> login({
     required String email,
     required String password,
   }) async {
-    // --- MOCK -------------------------------------------------------------
-    await Future<void>.delayed(const Duration(milliseconds: 600));
-    if (email.isEmpty || password.isEmpty) {
-      // Demonstrates the failure branch flowing through NetworkState.
-      return const ApiFailure<UserResDm>(
-        NetworkException('Email and password are required.'),
-      );
-    }
-    return ApiSuccess<UserResDm>(
-      UserResDm(
-        id: 'u_001',
-        name: 'Arjun Mehta',
-        email: email,
-        role: 'employee',
-        accessToken: 'mock-token',
-      ),
+    final loginResult = await apiService.login(
+      LoginReqDm(email: email, password: password),
     );
-    // --- REAL (enable when backend exists) --------------------------------
-    // return apiService.login(LoginReqDm(email: email, password: password));
+    switch (loginResult) {
+      case ApiFailure<LoginResDm>(:final error):
+        return ApiFailure<UserResDm>(error);
+      case ApiSuccess<LoginResDm>(:final data):
+        await SecureStorage.instance.writeAuthToken(data.accessToken);
+    }
+
+    final meResult = await apiService.getMe();
+    return meResult.when(
+      success: (user) {
+        AdminSession.set(
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          managerId: user.managerId,
+          isActive: user.isActive,
+        );
+        return ApiSuccess<UserResDm>(user);
+      },
+      failure: ApiFailure<UserResDm>.new,
+    );
+  }
+
+  /// Clear the stored session (token + [AdminSession]).
+  Future<void> logout() async {
+    await SecureStorage.instance.clear();
+    AdminSession.clear();
   }
 }

@@ -161,7 +161,7 @@ class _DeviceInfoCard extends StatelessWidget {
               ),
               InfoRow(
                 label: context.l10n.inventoryFieldPurchaseDate,
-                value: Text(detail.purchaseDate),
+                value: Text(detail.purchaseDate?.toLocal().toString() ?? '—'),
               ),
               InfoRow(
                 label: context.l10n.inventoryFieldQrToken,
@@ -252,11 +252,17 @@ class _OpenTicketsCard extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(ticket.title, style: context.appTextStyles.labelLarge),
                               Text(
-                                context.l10n.inventoryTicketFiledOn(ticket.raisedOn),
-                                style: context.appTextStyles.bodySmall,
+                                ticket.description,
+                                style: context.appTextStyles.labelLarge,
                               ),
+                              if (ticket.filedAt != null)
+                                Text(
+                                  context.l10n.inventoryTicketFiledOn(
+                                    ticket.filedAt!.toLocal().toString(),
+                                  ),
+                                  style: context.appTextStyles.bodySmall,
+                                ),
                             ],
                           ),
                         ),
@@ -304,7 +310,11 @@ class _ActiveHandoverCard extends StatelessWidget {
                         context.l10n.inventoryHandoverBorrower(handover.borrowerName),
                         style: context.appTextStyles.labelLarge,
                       ),
-                      Text(handover.durationLabel, style: context.appTextStyles.bodySmall),
+                      if (handover.requestedDurationHours != null)
+                        Text(
+                          '${handover.requestedDurationHours} h',
+                          style: context.appTextStyles.bodySmall,
+                        ),
                     ],
                   ),
                 ),

@@ -68,16 +68,59 @@ extension HandoverStatusX on HandoverStatus {
       };
 }
 
-/// Maps a [DeviceTimelineEventResDm.kind] onto a timeline dot color
-/// (mockup A06 gives each event kind a distinct color rather than a single
-/// uniform brand color).
-extension DeviceTimelineEventKindX on String {
+/// Maps a [DeviceLogEvent] onto a timeline dot color (mockup A06 gives each
+/// event kind a distinct color rather than a single uniform brand color) and
+/// a human-readable title.
+extension DeviceLogEventX on DeviceLogEvent {
   AppSemantic get timelineDotSemantic => switch (this) {
-        'assignment' => AppSemantic.brand,
-        'shipping' => AppSemantic.info,
-        'delivery' => AppSemantic.success,
-        'support' => AppSemantic.warning,
-        'handover' => AppSemantic.brand,
+        DeviceLogEvent.assigned ||
+        DeviceLogEvent.clientAssigned ||
+        DeviceLogEvent.assignmentCompleted =>
+          AppSemantic.brand,
+        DeviceLogEvent.shipOutboundInitiated ||
+        DeviceLogEvent.returnShipInitiated =>
+          AppSemantic.info,
+        DeviceLogEvent.shipOutboundCompleted ||
+        DeviceLogEvent.returnReceived =>
+          AppSemantic.success,
+        DeviceLogEvent.supportOpened ||
+        DeviceLogEvent.supportResolved ||
+        DeviceLogEvent.supportAutoClosed =>
+          AppSemantic.warning,
+        DeviceLogEvent.handoverRequested ||
+        DeviceLogEvent.handoverAccepted ||
+        DeviceLogEvent.handoverRejected ||
+        DeviceLogEvent.handoverCancelled ||
+        DeviceLogEvent.handoverCompleted =>
+          AppSemantic.brand,
+        DeviceLogEvent.markedLost || DeviceLogEvent.retired => AppSemantic.danger,
         _ => AppSemantic.neutral,
+      };
+
+  String get title => switch (this) {
+        DeviceLogEvent.deviceCreated => 'Device created',
+        DeviceLogEvent.deviceEdited => 'Device edited',
+        DeviceLogEvent.assigned => 'Assigned',
+        DeviceLogEvent.clientAssigned => 'Client-assigned',
+        DeviceLogEvent.shipOutboundInitiated => 'Shipped outbound',
+        DeviceLogEvent.shipOutboundCompleted => 'Delivery confirmed',
+        DeviceLogEvent.returnShipInitiated => 'Return shipment initiated',
+        DeviceLogEvent.returnReceived => 'Return received',
+        DeviceLogEvent.assignmentCompleted => 'Assignment completed',
+        DeviceLogEvent.statusChanged => 'Status changed',
+        DeviceLogEvent.supportOpened => 'Support ticket opened',
+        DeviceLogEvent.supportResolved => 'Support ticket resolved',
+        DeviceLogEvent.supportAutoClosed => 'Support ticket auto-closed',
+        DeviceLogEvent.extensionRequested => 'Extension requested',
+        DeviceLogEvent.extensionApproved => 'Extension approved',
+        DeviceLogEvent.extensionRejected => 'Extension rejected',
+        DeviceLogEvent.handoverRequested => 'Handover requested',
+        DeviceLogEvent.handoverAccepted => 'Handover accepted',
+        DeviceLogEvent.handoverRejected => 'Handover rejected',
+        DeviceLogEvent.handoverCancelled => 'Handover cancelled',
+        DeviceLogEvent.handoverCompleted => 'Handover completed',
+        DeviceLogEvent.markedLost => 'Marked lost',
+        DeviceLogEvent.retired => 'Retired',
+        DeviceLogEvent.returnedToClient => 'Returned to client',
       };
 }

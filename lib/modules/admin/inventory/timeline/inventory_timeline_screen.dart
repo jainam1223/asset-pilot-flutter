@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../repositories/remote_repository/inventory/models/device_timeline_event_res_dm.dart';
 import '../../../../utilities/extensions/context_extensions.dart';
@@ -52,12 +53,16 @@ class _InventoryTimelineScreenState extends State<InventoryTimelineScreen> {
                       entries: [
                         for (final event in events)
                           TimelineEntry(
-                            title: event.title,
-                            timestamp: event.timestamp,
-                            description: event.relatedRequestId.isEmpty
-                                ? '${event.description} · Actor: ${event.actor}'
-                                : '${event.description} · Actor: ${event.actor} · request ${event.relatedRequestId}',
-                            semantic: event.kind.timelineDotSemantic,
+                            title: event.eventType.title,
+                            timestamp: event.occurredAt == null
+                                ? ''
+                                : DateFormat('dd MMM yyyy · HH:mm')
+                                    .format(event.occurredAt!.toLocal()),
+                            description: [
+                              if (event.note != null && event.note!.isNotEmpty) event.note,
+                              'Actor: ${event.actorRole.name}',
+                            ].join(' · '),
+                            semantic: event.eventType.timelineDotSemantic,
                           ),
                       ],
                     ),

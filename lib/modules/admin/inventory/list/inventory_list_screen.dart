@@ -50,8 +50,9 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
                     state: state.items,
                     isEmpty: (data) => data.isEmpty,
                     onData: (context, data) => _InventoryTable(
-                      allFiltered: context.read<InventoryListCubit>().filteredItems,
+                      rows: data,
                       currentPage: state.currentPage,
+                      totalItems: state.totalItems,
                     ),
                   );
                 },
@@ -107,12 +108,13 @@ class _FiltersRow extends StatelessWidget {
                       .label,
               onTap: () => _showStatusMenu(context, cubit),
             ),
+            // TODO(category-filter): category filtering by id needs the
+            // categories dropdown endpoint wired to a picker; stubbed as
+            // display-only until that UI exists.
             FilterDropdownChip(
               label: context.l10n.inventoryFilterCategory,
-              valueLabel: state.categoryFilter == 'all'
-                  ? context.l10n.inventoryFilterAll
-                  : state.categoryFilter,
-              onTap: () => _showCategoryMenu(context, cubit),
+              valueLabel: context.l10n.inventoryFilterAll,
+              onTap: () => AppToast.info(context, context.l10n.comingSoon),
             ),
             SizedBox(
               width: 280,
@@ -140,37 +142,22 @@ class _FiltersRow extends StatelessWidget {
       if (value != null && context.mounted) cubit.setStatusFilter(value);
     });
   }
-
-  void _showCategoryMenu(BuildContext context, InventoryListCubit cubit) {
-    const categories = ['all', 'Laptop', 'Monitor', 'Mobile', 'Accessory'];
-    showMenu<String>(
-      context: context,
-      position: const RelativeRect.fromLTRB(360, 200, 0, 0),
-      items: [
-        for (final category in categories)
-          PopupMenuItem(
-            value: category,
-            child: Text(category == 'all' ? context.l10n.inventoryFilterAll : category),
-          ),
-      ],
-    ).then((value) {
-      if (value != null && context.mounted) cubit.setCategoryFilter(value);
-    });
-  }
 }
 
 class _InventoryTable extends StatelessWidget {
-  const _InventoryTable({required this.allFiltered, required this.currentPage});
+  const _InventoryTable({
+    required this.rows,
+    required this.currentPage,
+    required this.totalItems,
+  });
 
-  final List<InventoryItemResDm> allFiltered;
+  final List<InventoryItemResDm> rows;
   final int currentPage;
+  final int totalItems;
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<InventoryListCubit>();
-    final start = (currentPage - 1) * kInventoryListPageSize;
-    final end = (start + kInventoryListPageSize).clamp(0, allFiltered.length);
-    final pageRows = start < allFiltered.length ? allFiltered.sublist(start, end) : <InventoryItemResDm>[];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -185,17 +172,17 @@ class _InventoryTable extends StatelessWidget {
               ),
               TableColumn<InventoryItemResDm>(
                 header: context.l10n.inventoryFieldSerial,
-                cellBuilder: (context, row) => Text(row.serial),
+                cellBuilder: (context, row) => Text(row.serialNo),
               ),
               TableColumn<InventoryItemResDm>(
                 header: context.l10n.columnCategory,
-                cellBuilder: (context, row) => Text(row.category),
+                cellBuilder: (context, row) => Text(row.categoryName),
               ),
               TableColumn<InventoryItemResDm>(
                 header: context.l10n.inventoryFieldOwnerType,
                 cellBuilder: (context, row) => Text(
                   row.ownerType == OwnerType.client
-                      ? context.l10n.inventoryOwnerTypeClient(row.clientName)
+                      ? context.l10n.inventoryOwnerTypeClient(row.clientName ?? '')
                       : row.ownerType.label,
                 ),
               ),
@@ -210,9 +197,9 @@ class _InventoryTable extends StatelessWidget {
               TableColumn<InventoryItemResDm>(
                 header: context.l10n.inventoryFieldCurrentOwner,
                 cellBuilder: (context, row) => Text(
-                  row.currentOwnerName.isEmpty
+                  (row.currentOwnerName ?? '').isEmpty
                       ? context.l10n.inventoryUnassignedOwner
-                      : row.currentOwnerName,
+                      : row.currentOwnerName!,
                 ),
               ),
               TableColumn<InventoryItemResDm>(
@@ -242,10 +229,10 @@ class _InventoryTable extends StatelessWidget {
                 ),
               ),
             ],
-            rows: pageRows,
+            rows: rows,
             pagination: TablePagination(
               currentPage: currentPage,
-              totalItems: allFiltered.length,
+              totalItems: totalItems,
               pageSize: kInventoryListPageSize,
               onPageChanged: cubit.setPage,
             ),

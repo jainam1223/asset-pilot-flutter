@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InventoryDetailResDm {
 
- String get id; String get name; String get serial; String get category; OwnerType get ownerType; String get clientName; DeviceStatus get status; String get currentOwnerName; String get purchaseDate; String get qrToken; CurrentAssignmentResDm? get currentAssignment; List<OpenTicketSummaryResDm> get openTickets; ActiveHandoverSummaryResDm? get activeHandover;
+ String get id; String get name; String get serial; String get category; OwnerType get ownerType; String get clientName; DeviceStatus get status; String get currentOwnerName; DateTime? get purchaseDate; String get qrToken; CurrentAssignmentResDm? get currentAssignment; List<SupportRequestResDm> get openTickets; HandoverRequestResDm? get activeHandover;
 /// Create a copy of InventoryDetailResDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $InventoryDetailResDmCopyWith<$Res>  {
   factory $InventoryDetailResDmCopyWith(InventoryDetailResDm value, $Res Function(InventoryDetailResDm) _then) = _$InventoryDetailResDmCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String serial, String category, OwnerType ownerType, String clientName, DeviceStatus status, String currentOwnerName, String purchaseDate, String qrToken, CurrentAssignmentResDm? currentAssignment, List<OpenTicketSummaryResDm> openTickets, ActiveHandoverSummaryResDm? activeHandover
+ String id, String name, String serial, String category, OwnerType ownerType, String clientName, DeviceStatus status, String currentOwnerName, DateTime? purchaseDate, String qrToken, CurrentAssignmentResDm? currentAssignment, List<SupportRequestResDm> openTickets, HandoverRequestResDm? activeHandover
 });
 
 
-$CurrentAssignmentResDmCopyWith<$Res>? get currentAssignment;$ActiveHandoverSummaryResDmCopyWith<$Res>? get activeHandover;
+$CurrentAssignmentResDmCopyWith<$Res>? get currentAssignment;$HandoverRequestResDmCopyWith<$Res>? get activeHandover;
 
 }
 /// @nodoc
@@ -65,7 +65,7 @@ class _$InventoryDetailResDmCopyWithImpl<$Res>
 
 /// Create a copy of InventoryDetailResDm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? serial = null,Object? category = null,Object? ownerType = null,Object? clientName = null,Object? status = null,Object? currentOwnerName = null,Object? purchaseDate = null,Object? qrToken = null,Object? currentAssignment = freezed,Object? openTickets = null,Object? activeHandover = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? serial = null,Object? category = null,Object? ownerType = null,Object? clientName = null,Object? status = null,Object? currentOwnerName = null,Object? purchaseDate = freezed,Object? qrToken = null,Object? currentAssignment = freezed,Object? openTickets = null,Object? activeHandover = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -75,12 +75,12 @@ as String,ownerType: null == ownerType ? _self.ownerType : ownerType // ignore: 
 as OwnerType,clientName: null == clientName ? _self.clientName : clientName // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as DeviceStatus,currentOwnerName: null == currentOwnerName ? _self.currentOwnerName : currentOwnerName // ignore: cast_nullable_to_non_nullable
-as String,purchaseDate: null == purchaseDate ? _self.purchaseDate : purchaseDate // ignore: cast_nullable_to_non_nullable
-as String,qrToken: null == qrToken ? _self.qrToken : qrToken // ignore: cast_nullable_to_non_nullable
+as String,purchaseDate: freezed == purchaseDate ? _self.purchaseDate : purchaseDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,qrToken: null == qrToken ? _self.qrToken : qrToken // ignore: cast_nullable_to_non_nullable
 as String,currentAssignment: freezed == currentAssignment ? _self.currentAssignment : currentAssignment // ignore: cast_nullable_to_non_nullable
 as CurrentAssignmentResDm?,openTickets: null == openTickets ? _self.openTickets : openTickets // ignore: cast_nullable_to_non_nullable
-as List<OpenTicketSummaryResDm>,activeHandover: freezed == activeHandover ? _self.activeHandover : activeHandover // ignore: cast_nullable_to_non_nullable
-as ActiveHandoverSummaryResDm?,
+as List<SupportRequestResDm>,activeHandover: freezed == activeHandover ? _self.activeHandover : activeHandover // ignore: cast_nullable_to_non_nullable
+as HandoverRequestResDm?,
   ));
 }
 /// Create a copy of InventoryDetailResDm
@@ -99,12 +99,12 @@ $CurrentAssignmentResDmCopyWith<$Res>? get currentAssignment {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ActiveHandoverSummaryResDmCopyWith<$Res>? get activeHandover {
+$HandoverRequestResDmCopyWith<$Res>? get activeHandover {
     if (_self.activeHandover == null) {
     return null;
   }
 
-  return $ActiveHandoverSummaryResDmCopyWith<$Res>(_self.activeHandover!, (value) {
+  return $HandoverRequestResDmCopyWith<$Res>(_self.activeHandover!, (value) {
     return _then(_self.copyWith(activeHandover: value));
   });
 }
@@ -189,7 +189,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String serial,  String category,  OwnerType ownerType,  String clientName,  DeviceStatus status,  String currentOwnerName,  String purchaseDate,  String qrToken,  CurrentAssignmentResDm? currentAssignment,  List<OpenTicketSummaryResDm> openTickets,  ActiveHandoverSummaryResDm? activeHandover)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String serial,  String category,  OwnerType ownerType,  String clientName,  DeviceStatus status,  String currentOwnerName,  DateTime? purchaseDate,  String qrToken,  CurrentAssignmentResDm? currentAssignment,  List<SupportRequestResDm> openTickets,  HandoverRequestResDm? activeHandover)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InventoryDetailResDm() when $default != null:
 return $default(_that.id,_that.name,_that.serial,_that.category,_that.ownerType,_that.clientName,_that.status,_that.currentOwnerName,_that.purchaseDate,_that.qrToken,_that.currentAssignment,_that.openTickets,_that.activeHandover);case _:
@@ -210,7 +210,7 @@ return $default(_that.id,_that.name,_that.serial,_that.category,_that.ownerType,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String serial,  String category,  OwnerType ownerType,  String clientName,  DeviceStatus status,  String currentOwnerName,  String purchaseDate,  String qrToken,  CurrentAssignmentResDm? currentAssignment,  List<OpenTicketSummaryResDm> openTickets,  ActiveHandoverSummaryResDm? activeHandover)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String serial,  String category,  OwnerType ownerType,  String clientName,  DeviceStatus status,  String currentOwnerName,  DateTime? purchaseDate,  String qrToken,  CurrentAssignmentResDm? currentAssignment,  List<SupportRequestResDm> openTickets,  HandoverRequestResDm? activeHandover)  $default,) {final _that = this;
 switch (_that) {
 case _InventoryDetailResDm():
 return $default(_that.id,_that.name,_that.serial,_that.category,_that.ownerType,_that.clientName,_that.status,_that.currentOwnerName,_that.purchaseDate,_that.qrToken,_that.currentAssignment,_that.openTickets,_that.activeHandover);case _:
@@ -230,7 +230,7 @@ return $default(_that.id,_that.name,_that.serial,_that.category,_that.ownerType,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String serial,  String category,  OwnerType ownerType,  String clientName,  DeviceStatus status,  String currentOwnerName,  String purchaseDate,  String qrToken,  CurrentAssignmentResDm? currentAssignment,  List<OpenTicketSummaryResDm> openTickets,  ActiveHandoverSummaryResDm? activeHandover)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String serial,  String category,  OwnerType ownerType,  String clientName,  DeviceStatus status,  String currentOwnerName,  DateTime? purchaseDate,  String qrToken,  CurrentAssignmentResDm? currentAssignment,  List<SupportRequestResDm> openTickets,  HandoverRequestResDm? activeHandover)?  $default,) {final _that = this;
 switch (_that) {
 case _InventoryDetailResDm() when $default != null:
 return $default(_that.id,_that.name,_that.serial,_that.category,_that.ownerType,_that.clientName,_that.status,_that.currentOwnerName,_that.purchaseDate,_that.qrToken,_that.currentAssignment,_that.openTickets,_that.activeHandover);case _:
@@ -245,7 +245,7 @@ return $default(_that.id,_that.name,_that.serial,_that.category,_that.ownerType,
 @JsonSerializable()
 
 class _InventoryDetailResDm implements InventoryDetailResDm {
-  const _InventoryDetailResDm({this.id = '', this.name = '', this.serial = '', this.category = '', this.ownerType = OwnerType.company, this.clientName = '', this.status = DeviceStatus.available, this.currentOwnerName = '', this.purchaseDate = '', this.qrToken = '', this.currentAssignment, final  List<OpenTicketSummaryResDm> openTickets = const <OpenTicketSummaryResDm>[], this.activeHandover}): _openTickets = openTickets;
+  const _InventoryDetailResDm({this.id = '', this.name = '', this.serial = '', this.category = '', this.ownerType = OwnerType.company, this.clientName = '', this.status = DeviceStatus.available, this.currentOwnerName = '', this.purchaseDate, this.qrToken = '', this.currentAssignment, final  List<SupportRequestResDm> openTickets = const <SupportRequestResDm>[], this.activeHandover}): _openTickets = openTickets;
   factory _InventoryDetailResDm.fromJson(Map<String, dynamic> json) => _$InventoryDetailResDmFromJson(json);
 
 @override@JsonKey() final  String id;
@@ -256,17 +256,17 @@ class _InventoryDetailResDm implements InventoryDetailResDm {
 @override@JsonKey() final  String clientName;
 @override@JsonKey() final  DeviceStatus status;
 @override@JsonKey() final  String currentOwnerName;
-@override@JsonKey() final  String purchaseDate;
+@override final  DateTime? purchaseDate;
 @override@JsonKey() final  String qrToken;
 @override final  CurrentAssignmentResDm? currentAssignment;
- final  List<OpenTicketSummaryResDm> _openTickets;
-@override@JsonKey() List<OpenTicketSummaryResDm> get openTickets {
+ final  List<SupportRequestResDm> _openTickets;
+@override@JsonKey() List<SupportRequestResDm> get openTickets {
   if (_openTickets is EqualUnmodifiableListView) return _openTickets;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_openTickets);
 }
 
-@override final  ActiveHandoverSummaryResDm? activeHandover;
+@override final  HandoverRequestResDm? activeHandover;
 
 /// Create a copy of InventoryDetailResDm
 /// with the given fields replaced by the non-null parameter values.
@@ -301,11 +301,11 @@ abstract mixin class _$InventoryDetailResDmCopyWith<$Res> implements $InventoryD
   factory _$InventoryDetailResDmCopyWith(_InventoryDetailResDm value, $Res Function(_InventoryDetailResDm) _then) = __$InventoryDetailResDmCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String serial, String category, OwnerType ownerType, String clientName, DeviceStatus status, String currentOwnerName, String purchaseDate, String qrToken, CurrentAssignmentResDm? currentAssignment, List<OpenTicketSummaryResDm> openTickets, ActiveHandoverSummaryResDm? activeHandover
+ String id, String name, String serial, String category, OwnerType ownerType, String clientName, DeviceStatus status, String currentOwnerName, DateTime? purchaseDate, String qrToken, CurrentAssignmentResDm? currentAssignment, List<SupportRequestResDm> openTickets, HandoverRequestResDm? activeHandover
 });
 
 
-@override $CurrentAssignmentResDmCopyWith<$Res>? get currentAssignment;@override $ActiveHandoverSummaryResDmCopyWith<$Res>? get activeHandover;
+@override $CurrentAssignmentResDmCopyWith<$Res>? get currentAssignment;@override $HandoverRequestResDmCopyWith<$Res>? get activeHandover;
 
 }
 /// @nodoc
@@ -318,7 +318,7 @@ class __$InventoryDetailResDmCopyWithImpl<$Res>
 
 /// Create a copy of InventoryDetailResDm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? serial = null,Object? category = null,Object? ownerType = null,Object? clientName = null,Object? status = null,Object? currentOwnerName = null,Object? purchaseDate = null,Object? qrToken = null,Object? currentAssignment = freezed,Object? openTickets = null,Object? activeHandover = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? serial = null,Object? category = null,Object? ownerType = null,Object? clientName = null,Object? status = null,Object? currentOwnerName = null,Object? purchaseDate = freezed,Object? qrToken = null,Object? currentAssignment = freezed,Object? openTickets = null,Object? activeHandover = freezed,}) {
   return _then(_InventoryDetailResDm(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -328,12 +328,12 @@ as String,ownerType: null == ownerType ? _self.ownerType : ownerType // ignore: 
 as OwnerType,clientName: null == clientName ? _self.clientName : clientName // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as DeviceStatus,currentOwnerName: null == currentOwnerName ? _self.currentOwnerName : currentOwnerName // ignore: cast_nullable_to_non_nullable
-as String,purchaseDate: null == purchaseDate ? _self.purchaseDate : purchaseDate // ignore: cast_nullable_to_non_nullable
-as String,qrToken: null == qrToken ? _self.qrToken : qrToken // ignore: cast_nullable_to_non_nullable
+as String,purchaseDate: freezed == purchaseDate ? _self.purchaseDate : purchaseDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,qrToken: null == qrToken ? _self.qrToken : qrToken // ignore: cast_nullable_to_non_nullable
 as String,currentAssignment: freezed == currentAssignment ? _self.currentAssignment : currentAssignment // ignore: cast_nullable_to_non_nullable
 as CurrentAssignmentResDm?,openTickets: null == openTickets ? _self._openTickets : openTickets // ignore: cast_nullable_to_non_nullable
-as List<OpenTicketSummaryResDm>,activeHandover: freezed == activeHandover ? _self.activeHandover : activeHandover // ignore: cast_nullable_to_non_nullable
-as ActiveHandoverSummaryResDm?,
+as List<SupportRequestResDm>,activeHandover: freezed == activeHandover ? _self.activeHandover : activeHandover // ignore: cast_nullable_to_non_nullable
+as HandoverRequestResDm?,
   ));
 }
 
@@ -353,12 +353,12 @@ $CurrentAssignmentResDmCopyWith<$Res>? get currentAssignment {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ActiveHandoverSummaryResDmCopyWith<$Res>? get activeHandover {
+$HandoverRequestResDmCopyWith<$Res>? get activeHandover {
     if (_self.activeHandover == null) {
     return null;
   }
 
-  return $ActiveHandoverSummaryResDmCopyWith<$Res>(_self.activeHandover!, (value) {
+  return $HandoverRequestResDmCopyWith<$Res>(_self.activeHandover!, (value) {
     return _then(_self.copyWith(activeHandover: value));
   });
 }

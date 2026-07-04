@@ -10,6 +10,8 @@ import '../../modules/admin/inventory/list/cubit/inventory_list_cubit.dart';
 import '../../modules/admin/inventory/list/inventory_list_screen.dart';
 import '../../modules/admin/inventory/timeline/cubit/inventory_timeline_cubit.dart';
 import '../../modules/admin/inventory/timeline/inventory_timeline_screen.dart';
+import '../../modules/admin/login/cubit/login_cubit.dart';
+import '../../modules/admin/login/login_screen.dart';
 import '../../modules/admin/maintenance/list/cubit/maintenance_list_cubit.dart';
 import '../../modules/admin/maintenance/list/maintenance_list_screen.dart';
 import '../../modules/admin/requests/detail/cubit/request_detail_cubit.dart';
@@ -23,10 +25,16 @@ import 'app_routes.dart';
 /// GoRouter for the IT Admin (web/desktop) variant.
 GoRouter buildAdminRouter() {
   return GoRouter(
-    initialLocation: Routes.adminDashboard.path,
+    initialLocation: Routes.login.path,
     errorBuilder: (context, state) =>
         InvalidRouteScreen(path: state.uri.toString()),
     routes: [
+      GoRoute(
+        path: Routes.login.path,
+        name: Routes.login.name,
+        builder: (context, state) =>
+            const AdminLoginScreen().withProvider((_) => AdminLoginCubit()),
+      ),
       GoRoute(
         path: Routes.adminDashboard.path,
         name: Routes.adminDashboard.name,

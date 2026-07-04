@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AssignDeviceReqDm {
 
- String get requestId; String get deviceId; String get assignedFrom; String get assignedTo; bool get workFromHome;
+@JsonKey(name: 'item_id') String get itemId;@JsonKey(name: 'assigned_from') DateTime get assignedFrom;@JsonKey(name: 'assigned_to') DateTime get assignedTo;@JsonKey(name: 'is_wfh') bool? get isWfh;
 /// Create a copy of AssignDeviceReqDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AssignDeviceReqDmCopyWith<AssignDeviceReqDm> get copyWith => _$AssignDeviceReqD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AssignDeviceReqDm&&(identical(other.requestId, requestId) || other.requestId == requestId)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.assignedFrom, assignedFrom) || other.assignedFrom == assignedFrom)&&(identical(other.assignedTo, assignedTo) || other.assignedTo == assignedTo)&&(identical(other.workFromHome, workFromHome) || other.workFromHome == workFromHome));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AssignDeviceReqDm&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.assignedFrom, assignedFrom) || other.assignedFrom == assignedFrom)&&(identical(other.assignedTo, assignedTo) || other.assignedTo == assignedTo)&&(identical(other.isWfh, isWfh) || other.isWfh == isWfh));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,requestId,deviceId,assignedFrom,assignedTo,workFromHome);
+int get hashCode => Object.hash(runtimeType,itemId,assignedFrom,assignedTo,isWfh);
 
 @override
 String toString() {
-  return 'AssignDeviceReqDm(requestId: $requestId, deviceId: $deviceId, assignedFrom: $assignedFrom, assignedTo: $assignedTo, workFromHome: $workFromHome)';
+  return 'AssignDeviceReqDm(itemId: $itemId, assignedFrom: $assignedFrom, assignedTo: $assignedTo, isWfh: $isWfh)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AssignDeviceReqDmCopyWith<$Res>  {
   factory $AssignDeviceReqDmCopyWith(AssignDeviceReqDm value, $Res Function(AssignDeviceReqDm) _then) = _$AssignDeviceReqDmCopyWithImpl;
 @useResult
 $Res call({
- String requestId, String deviceId, String assignedFrom, String assignedTo, bool workFromHome
+@JsonKey(name: 'item_id') String itemId,@JsonKey(name: 'assigned_from') DateTime assignedFrom,@JsonKey(name: 'assigned_to') DateTime assignedTo,@JsonKey(name: 'is_wfh') bool? isWfh
 });
 
 
@@ -65,14 +65,13 @@ class _$AssignDeviceReqDmCopyWithImpl<$Res>
 
 /// Create a copy of AssignDeviceReqDm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? requestId = null,Object? deviceId = null,Object? assignedFrom = null,Object? assignedTo = null,Object? workFromHome = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? itemId = null,Object? assignedFrom = null,Object? assignedTo = null,Object? isWfh = freezed,}) {
   return _then(_self.copyWith(
-requestId: null == requestId ? _self.requestId : requestId // ignore: cast_nullable_to_non_nullable
-as String,deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
+itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
 as String,assignedFrom: null == assignedFrom ? _self.assignedFrom : assignedFrom // ignore: cast_nullable_to_non_nullable
-as String,assignedTo: null == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
-as String,workFromHome: null == workFromHome ? _self.workFromHome : workFromHome // ignore: cast_nullable_to_non_nullable
-as bool,
+as DateTime,assignedTo: null == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
+as DateTime,isWfh: freezed == isWfh ? _self.isWfh : isWfh // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -157,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String requestId,  String deviceId,  String assignedFrom,  String assignedTo,  bool workFromHome)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  String itemId, @JsonKey(name: 'assigned_from')  DateTime assignedFrom, @JsonKey(name: 'assigned_to')  DateTime assignedTo, @JsonKey(name: 'is_wfh')  bool? isWfh)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AssignDeviceReqDm() when $default != null:
-return $default(_that.requestId,_that.deviceId,_that.assignedFrom,_that.assignedTo,_that.workFromHome);case _:
+return $default(_that.itemId,_that.assignedFrom,_that.assignedTo,_that.isWfh);case _:
   return orElse();
 
 }
@@ -178,10 +177,10 @@ return $default(_that.requestId,_that.deviceId,_that.assignedFrom,_that.assigned
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String requestId,  String deviceId,  String assignedFrom,  String assignedTo,  bool workFromHome)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  String itemId, @JsonKey(name: 'assigned_from')  DateTime assignedFrom, @JsonKey(name: 'assigned_to')  DateTime assignedTo, @JsonKey(name: 'is_wfh')  bool? isWfh)  $default,) {final _that = this;
 switch (_that) {
 case _AssignDeviceReqDm():
-return $default(_that.requestId,_that.deviceId,_that.assignedFrom,_that.assignedTo,_that.workFromHome);case _:
+return $default(_that.itemId,_that.assignedFrom,_that.assignedTo,_that.isWfh);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +197,10 @@ return $default(_that.requestId,_that.deviceId,_that.assignedFrom,_that.assigned
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String requestId,  String deviceId,  String assignedFrom,  String assignedTo,  bool workFromHome)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'item_id')  String itemId, @JsonKey(name: 'assigned_from')  DateTime assignedFrom, @JsonKey(name: 'assigned_to')  DateTime assignedTo, @JsonKey(name: 'is_wfh')  bool? isWfh)?  $default,) {final _that = this;
 switch (_that) {
 case _AssignDeviceReqDm() when $default != null:
-return $default(_that.requestId,_that.deviceId,_that.assignedFrom,_that.assignedTo,_that.workFromHome);case _:
+return $default(_that.itemId,_that.assignedFrom,_that.assignedTo,_that.isWfh);case _:
   return null;
 
 }
@@ -213,14 +212,13 @@ return $default(_that.requestId,_that.deviceId,_that.assignedFrom,_that.assigned
 
 @JsonSerializable(includeIfNull: false)
 class _AssignDeviceReqDm implements AssignDeviceReqDm {
-  const _AssignDeviceReqDm({required this.requestId, required this.deviceId, required this.assignedFrom, required this.assignedTo, required this.workFromHome});
+  const _AssignDeviceReqDm({@JsonKey(name: 'item_id') required this.itemId, @JsonKey(name: 'assigned_from') required this.assignedFrom, @JsonKey(name: 'assigned_to') required this.assignedTo, @JsonKey(name: 'is_wfh') this.isWfh});
   factory _AssignDeviceReqDm.fromJson(Map<String, dynamic> json) => _$AssignDeviceReqDmFromJson(json);
 
-@override final  String requestId;
-@override final  String deviceId;
-@override final  String assignedFrom;
-@override final  String assignedTo;
-@override final  bool workFromHome;
+@override@JsonKey(name: 'item_id') final  String itemId;
+@override@JsonKey(name: 'assigned_from') final  DateTime assignedFrom;
+@override@JsonKey(name: 'assigned_to') final  DateTime assignedTo;
+@override@JsonKey(name: 'is_wfh') final  bool? isWfh;
 
 /// Create a copy of AssignDeviceReqDm
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AssignDeviceReqDm&&(identical(other.requestId, requestId) || other.requestId == requestId)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId)&&(identical(other.assignedFrom, assignedFrom) || other.assignedFrom == assignedFrom)&&(identical(other.assignedTo, assignedTo) || other.assignedTo == assignedTo)&&(identical(other.workFromHome, workFromHome) || other.workFromHome == workFromHome));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AssignDeviceReqDm&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.assignedFrom, assignedFrom) || other.assignedFrom == assignedFrom)&&(identical(other.assignedTo, assignedTo) || other.assignedTo == assignedTo)&&(identical(other.isWfh, isWfh) || other.isWfh == isWfh));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,requestId,deviceId,assignedFrom,assignedTo,workFromHome);
+int get hashCode => Object.hash(runtimeType,itemId,assignedFrom,assignedTo,isWfh);
 
 @override
 String toString() {
-  return 'AssignDeviceReqDm(requestId: $requestId, deviceId: $deviceId, assignedFrom: $assignedFrom, assignedTo: $assignedTo, workFromHome: $workFromHome)';
+  return 'AssignDeviceReqDm(itemId: $itemId, assignedFrom: $assignedFrom, assignedTo: $assignedTo, isWfh: $isWfh)';
 }
 
 
@@ -255,7 +253,7 @@ abstract mixin class _$AssignDeviceReqDmCopyWith<$Res> implements $AssignDeviceR
   factory _$AssignDeviceReqDmCopyWith(_AssignDeviceReqDm value, $Res Function(_AssignDeviceReqDm) _then) = __$AssignDeviceReqDmCopyWithImpl;
 @override @useResult
 $Res call({
- String requestId, String deviceId, String assignedFrom, String assignedTo, bool workFromHome
+@JsonKey(name: 'item_id') String itemId,@JsonKey(name: 'assigned_from') DateTime assignedFrom,@JsonKey(name: 'assigned_to') DateTime assignedTo,@JsonKey(name: 'is_wfh') bool? isWfh
 });
 
 
@@ -272,14 +270,13 @@ class __$AssignDeviceReqDmCopyWithImpl<$Res>
 
 /// Create a copy of AssignDeviceReqDm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? requestId = null,Object? deviceId = null,Object? assignedFrom = null,Object? assignedTo = null,Object? workFromHome = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? itemId = null,Object? assignedFrom = null,Object? assignedTo = null,Object? isWfh = freezed,}) {
   return _then(_AssignDeviceReqDm(
-requestId: null == requestId ? _self.requestId : requestId // ignore: cast_nullable_to_non_nullable
-as String,deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
+itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
 as String,assignedFrom: null == assignedFrom ? _self.assignedFrom : assignedFrom // ignore: cast_nullable_to_non_nullable
-as String,assignedTo: null == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
-as String,workFromHome: null == workFromHome ? _self.workFromHome : workFromHome // ignore: cast_nullable_to_non_nullable
-as bool,
+as DateTime,assignedTo: null == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
+as DateTime,isWfh: freezed == isWfh ? _self.isWfh : isWfh // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
