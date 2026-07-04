@@ -113,6 +113,7 @@ class _RequestCard extends StatelessWidget {
     return AppCard(
       onTap: () => context.push(
         Routes.requestDetail.path.replaceFirst(':id', request.id),
+        extra: request,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

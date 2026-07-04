@@ -39,7 +39,6 @@ class DeviceDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = deviceStatusFromWire(item.status);
-
     return Scaffold(
       backgroundColor: context.appColors.scaffoldAlt,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -72,7 +71,7 @@ class DeviceDetailScreen extends StatelessWidget {
                   AppCard(
                     child: QrDisplay(
                       qrImage: QrImageView(
-                        data: item.qrCodeToken,
+                        data: item.id,
                         backgroundColor: Colors.white,
                         eyeStyle: QrEyeStyle(
                           color: context.appColors.textPrimary,
