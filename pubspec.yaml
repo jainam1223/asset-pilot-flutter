@@ -33,8 +33,6 @@ dependencies:
   dio: 5.10.0
   # Type-safe REST client generator built on Dio.
   retrofit: 4.9.2
-  # Compile-time, obfuscated env config generated from .env (BASE_URL etc).
-  envied: 1.3.8
 
   # State Management
   # Value equality for state/model classes.
@@ -73,8 +71,6 @@ dev_dependencies:
   json_serializable: 6.14.0
   # Generates Retrofit API service implementations.
   retrofit_generator: 10.2.7
-  # Generates the obfuscated Env class from @Envied fields.
-  envied_generator: 1.3.8
 
   # Linting
   # Recommended lint set.

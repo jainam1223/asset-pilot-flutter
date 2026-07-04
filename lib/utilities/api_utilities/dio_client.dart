@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../env/env.dart';
+import '../../values/flavors/flavor_config.dart';
 
 /// Builds and holds the shared [Dio] instance used by all repositories.
 ///
-/// Base URL comes from [Env.current] (flavor-aware). Auth token injection and
-/// refresh belong in interceptors added here as the app grows.
+/// Base URL comes from [FlavorConfig.baseUrl] (flavor-aware). Auth token
+/// injection and refresh belong in interceptors added here as the app grows.
 class DioClient {
   DioClient._();
 
@@ -17,7 +17,7 @@ class DioClient {
   Dio _build() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: Env.current.baseUrl,
+        baseUrl: FlavorConfig.baseUrl,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         contentType: 'application/json',
