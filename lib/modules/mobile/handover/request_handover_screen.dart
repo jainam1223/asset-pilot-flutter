@@ -3,18 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../repositories/remote_repository/common/models/device_by_qr_res_dm.dart';
+import '../../../repositories/remote_repository/handover/models/handover_lookup_item_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/network/network_state.dart';
 import '../../../widgets/widgets.dart';
 import 'cubit/request_handover_cubit.dart';
 
 /// Request Handover screen (mockup E13) — the borrower confirms the device
-/// resolved from Scan/Pick and sends `POST /me/handover-requests`.
+/// resolved from Scan/Pick (via `GET /me/devices/{itemId}`) and sends
+/// `POST /me/handover-requests`.
 class RequestHandoverScreen extends StatelessWidget {
-  const RequestHandoverScreen({super.key, required this.device});
-
-  final DeviceByQrResDm device;
+  const RequestHandoverScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,26 +43,37 @@ class RequestHandoverScreen extends StatelessWidget {
               children: [
                 const _RequestHandoverAppBar(),
                 Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                    children: [
-                      _DeviceCard(device: device),
-                      const SizedBox(height: 16),
-                      const _DurationField(),
-                      const SizedBox(height: 16),
-                      AppTextField.multiline(
-                        label: context.l10n.requestHandoverNoteLabel,
-                        hintText: context.l10n.requestHandoverNoteHint,
-                        onChanged: context.read<RequestHandoverCubit>().setNote,
-                      ),
-                      const SizedBox(height: 16),
-                      InlineAlert(
-                        semantic: AppSemantic.brand,
-                        icon: Icons.info_outline,
-                        message: context.l10n.requestHandoverMultiRequestNotice,
-                      ),
-                    ],
-                  ),
+                  child: switch (state.device) {
+                    Idle() || Loading() => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    Error(:final message) => Center(
+                      child: Text(message, textAlign: TextAlign.center),
+                    ),
+                    Success(:final data) => ListView(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      children: [
+                        _DeviceCard(item: data.item),
+                        const SizedBox(height: 16),
+                        const _DurationField(),
+                        const SizedBox(height: 16),
+                        AppTextField.multiline(
+                          label: context.l10n.requestHandoverNoteLabel,
+                          hintText: context.l10n.requestHandoverNoteHint,
+                          onChanged: context
+                              .read<RequestHandoverCubit>()
+                              .setNote,
+                        ),
+                        const SizedBox(height: 16),
+                        InlineAlert(
+                          semantic: AppSemantic.brand,
+                          icon: Icons.info_outline,
+                          message:
+                              context.l10n.requestHandoverMultiRequestNotice,
+                        ),
+                      ],
+                    ),
+                  },
                 ),
                 _SubmitBar(isLoading: state.submit.isLoading),
               ],
@@ -107,9 +117,9 @@ class _RequestHandoverAppBar extends StatelessWidget {
 }
 
 class _DeviceCard extends StatelessWidget {
-  const _DeviceCard({required this.device});
+  const _DeviceCard({required this.item});
 
-  final DeviceByQrResDm device;
+  final HandoverLookupItemResDm item;
 
   @override
   Widget build(BuildContext context) {
@@ -127,10 +137,13 @@ class _DeviceCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(device.name, style: context.appTextStyles.labelXLarge),
+                Text(item.name, style: context.appTextStyles.labelXLarge),
                 const SizedBox(height: 5),
                 Text(
-                  context.l10n.requestHandoverOwnerMeta(device.ownerName),
+                  context.l10n.deviceDetailHeaderMeta(
+                    item.serialNo,
+                    item.category?.name ?? '',
+                  ),
                   style: context.appTextStyles.bodySmall.copyWith(
                     color: context.appColors.textTertiary,
                   ),
