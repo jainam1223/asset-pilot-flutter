@@ -7,6 +7,8 @@ import '../../../widgets/nav/app_bottom_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
 import '../my_devices/cubit/my_devices_cubit.dart';
 import '../my_devices/my_devices_screen.dart';
+import '../requests/cubit/requests_cubit.dart';
+import '../requests/requests_screen.dart';
 
 /// Employee/Manager home shell with bottom navigation (mockup E02 chrome).
 ///
@@ -48,12 +50,17 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
     ];
     return Scaffold(
       backgroundColor: context.appColors.scaffoldAlt,
-      body: _index == 0
-          ? BlocProvider(
-              create: (_) => MyDevicesCubit(),
-              child: const MyDevicesScreen(),
-            )
-          : _ComingSoon(label: items[_index].label),
+      body: switch (_index) {
+        0 => BlocProvider(
+          create: (_) => MyDevicesCubit(),
+          child: const MyDevicesScreen(),
+        ),
+        1 => BlocProvider(
+          create: (_) => RequestsCubit(),
+          child: const RequestsScreen(),
+        ),
+        _ => _ComingSoon(label: items[_index].label),
+      },
       bottomNavigationBar: AppBottomNav(
         items: items,
         selectedIndex: _index,
