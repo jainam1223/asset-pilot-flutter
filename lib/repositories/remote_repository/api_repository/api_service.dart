@@ -4,18 +4,21 @@ import 'package:retrofit/retrofit.dart';
 import '../../../models/api_response/api_result.dart';
 import '../../../utilities/api_utilities/my_call_adapter.dart';
 import '../auth/models/login_req_dm.dart';
+import '../common/models/device_by_qr_res_dm.dart';
+import '../common/models/handover_request_res_dm.dart';
 import '../common/models/item_category_res_dm.dart';
 import '../common/models/item_res_dm.dart';
 import '../common/models/request_res_dm.dart';
 import '../common/models/user_res_dm.dart';
-import '../request/models/create_request_req_dm.dart';
 import '../extension_requests/models/decide_extension_req_dm.dart';
 import '../extension_requests/models/extension_request_summary_res_dm.dart';
+import '../handover/models/create_handover_request_req_dm.dart';
 import '../inventory/models/device_timeline_event_res_dm.dart';
 import '../inventory/models/inventory_detail_res_dm.dart';
 import '../inventory/models/inventory_item_res_dm.dart';
 import '../maintenance/models/maintenance_item_res_dm.dart';
 import '../maintenance/models/update_device_status_req_dm.dart';
+import '../request/models/create_request_req_dm.dart';
 import '../requests/models/assign_device_req_dm.dart';
 import '../requests/models/reject_request_req_dm.dart';
 import '../requests/models/request_detail_res_dm.dart';
@@ -119,6 +122,20 @@ abstract class ApiService {
     @Path('id') String id,
   );
 
+  /// Resolve a device's QR code to its handover pre-fill info (Handover ·
+  /// Scan/Pick, mockup E12).
+  @GET('/devices/by-qr/{qrCodeToken}')
+  Future<ApiResult<DeviceByQrResDm>> resolveDeviceByQr(
+    @Path('qrCodeToken') String qrCodeToken,
+  );
+
+  /// Raise a new handover request (Request Handover, mockup E13).
+  @POST('/me/handover-requests')
+  Future<ApiResult<HandoverRequestResDm>> createHandoverRequest(
+    @Header('X-User-Id') String userId,
+    @Body() CreateHandoverRequestReqDm body,
+  );
+
   /// List devices under repair/maintenance for the admin Maintenance queue
   /// (A10).
   @GET('/admin/maintenance')
@@ -134,7 +151,7 @@ abstract class ApiService {
   /// List extension requests for the admin Extension Requests table (A11).
   @GET('/admin/extension-requests')
   Future<ApiResult<List<ExtensionRequestSummaryResDm>>>
-      fetchExtensionRequests();
+  fetchExtensionRequests();
 
   /// Approve or reject an extension request (A11 "Approve"/"Reject").
   @POST('/admin/extension-requests/{id}/decide')

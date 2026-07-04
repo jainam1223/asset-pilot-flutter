@@ -412,5 +412,41 @@
   "createRequestSuccessToast": "Request sent successfully.",
   "@createRequestSuccessToast": {},
   "createRequestFabTooltip": "Request Device",
-  "@createRequestFabTooltip": {}
+  "@createRequestFabTooltip": {},
+  "handoverTitle": "Handover",
+  "@handoverTitle": {},
+  "handoverScanPrompt": "Point at a device's QR code",
+  "@handoverScanPrompt": {},
+  "handoverScanOr": "or",
+  "@handoverScanOr": {},
+  "handoverSearchHint": "Search device by name or serial",
+  "@handoverSearchHint": {},
+  "handoverPickFromList": "Pick from list",
+  "@handoverPickFromList": {},
+  "requestHandoverTitle": "Request Handover",
+  "@requestHandoverTitle": {},
+  "requestHandoverOwnerMeta": "Owner · {ownerName}",
+  "@requestHandoverOwnerMeta": {
+    "placeholders": {
+      "ownerName": {"type": "String"}
+    }
+  },
+  "requestHandoverDurationValue": "{hours}",
+  "@requestHandoverDurationValue": {
+    "placeholders": {
+      "hours": {"type": "int"}
+    }
+  },
+  "requestHandoverDurationInformational": "informational",
+  "@requestHandoverDurationInformational": {},
+  "requestHandoverNoteLabel": "Note (optional)",
+  "@requestHandoverNoteLabel": {},
+  "requestHandoverNoteHint": "Need the dock for an offsite demo…",
+  "@requestHandoverNoteHint": {},
+  "requestHandoverMultiRequestNotice": "Multiple people can request the same device — the owner decides.",
+  "@requestHandoverMultiRequestNotice": {},
+  "requestHandoverSendRequest": "Send Handover Request",
+  "@requestHandoverSendRequest": {},
+  "requestHandoverSuccessToast": "Handover request sent successfully.",
+  "@requestHandoverSuccessToast": {}
 }
