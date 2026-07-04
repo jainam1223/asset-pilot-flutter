@@ -6,6 +6,11 @@ import '../../../utilities/api_utilities/my_call_adapter.dart';
 import '../auth/models/login_req_dm.dart';
 import '../common/models/request_res_dm.dart';
 import '../common/models/user_res_dm.dart';
+import '../requests/models/assign_device_req_dm.dart';
+import '../requests/models/reject_request_req_dm.dart';
+import '../requests/models/request_detail_res_dm.dart';
+import '../requests/models/request_summary_res_dm.dart';
+import '../requests/models/suggested_device_res_dm.dart';
 
 part 'api_service.g.dart';
 
@@ -42,5 +47,37 @@ abstract class ApiService {
   Future<ApiResult<RequestResDm>> getRequestDetail(
     @Header('X-User-Id') String userId,
     @Path('requestId') String requestId,
+  );
+
+  /// List device requests for the admin Request Management table (A02).
+  /// TODO(backend): wire query params for status/priority/category/search
+  /// once the endpoint contract is finalized.
+  @GET('/admin/requests')
+  Future<ApiResult<List<RequestSummaryResDm>>> fetchRequests();
+
+  /// Fetch full detail for a single request (A03).
+  @GET('/admin/requests/{id}')
+  Future<ApiResult<RequestDetailResDm>> fetchRequestDetail(
+    @Path('id') String id,
+  );
+
+  /// Fetch AI-ranked suggested devices for a request (A03).
+  @GET('/admin/requests/{id}/suggested-devices')
+  Future<ApiResult<List<SuggestedDeviceResDm>>> fetchSuggestedDevices(
+    @Path('id') String id,
+  );
+
+  /// Assign a device to a request (A03 "Assign Device").
+  @POST('/admin/requests/{id}/assign')
+  Future<ApiResult<void>> assignDevice(
+    @Path('id') String id,
+    @Body() AssignDeviceReqDm body,
+  );
+
+  /// Reject a request (A03 "Reject").
+  @POST('/admin/requests/{id}/reject')
+  Future<ApiResult<void>> rejectRequest(
+    @Path('id') String id,
+    @Body() RejectRequestReqDm body,
   );
 }
