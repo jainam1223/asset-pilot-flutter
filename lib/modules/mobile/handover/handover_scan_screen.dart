@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '../../../repositories/remote_repository/common/models/device_by_qr_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/navigation/app_routes.dart';
-import '../../../utilities/network/network_state.dart';
 import '../../../values/app_theme/app_colors.dart';
 import '../../../widgets/widgets.dart';
-import 'cubit/handover_scan_cubit.dart';
 
 /// Handover · Scan/Pick screen (mockup E12) — the entry point to raising a
-/// handover request. Scans a device's QR via camera, or falls back to a
-/// search field ("Pick from list"); both paths resolve a [DeviceByQrResDm]
-/// and push Request Handover (mockup E13) with it.
+/// handover request. The scanned QR code's raw value *is* the device's
+/// `itemId`; this screen just reads it and pushes Request Handover
+/// (mockup E13), which fetches the device via `GET /me/devices/{itemId}`.
 class HandoverScanScreen extends StatefulWidget {
   const HandoverScanScreen({super.key});
 
@@ -35,76 +31,50 @@ class _HandoverScanScreenState extends State<HandoverScanScreen> {
 
   void _onDetect(BuildContext context, BarcodeCapture capture) {
     if (_handled) return;
-    final token = capture.barcodes.firstOrNull?.rawValue;
-    if (token == null || token.isEmpty) return;
+    final itemId = capture.barcodes.firstOrNull?.rawValue;
+    if (itemId == null || itemId.isEmpty) return;
     _handled = true;
-    context.read<HandoverScanCubit>().resolveQrCode(token);
+    context.push(Routes.requestHandover.path, extra: itemId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HandoverScanCubit, HandoverScanState>(
-      listenWhen: (previous, current) => previous.resolve != current.resolve,
-      listener: (context, state) {
-        switch (state.resolve) {
-          case Success(:final data):
-            context.push(Routes.requestHandover.path, extra: data);
-          case Error(:final message):
-            AppToast.error(context, message);
-            _handled = false;
-            context.read<HandoverScanCubit>().reset();
-          case Idle() || Loading():
-            break;
-        }
-      },
-      builder: (context, state) {
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: Scaffold(
-            backgroundColor: AppColors.deviceDark,
-            body: Column(
-              children: [
-                Expanded(
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      MobileScanner(
-                        controller: _scannerController,
-                        onDetect: (capture) => _onDetect(context, capture),
-                      ),
-                      Container(color: Colors.black.withValues(alpha: 0.25)),
-                      _ScanHeader(onBack: () => context.pop()),
-                      const Center(child: _ScanFrame()),
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: 40,
-                        child: Text(
-                          context.l10n.handoverScanPrompt,
-                          textAlign: TextAlign.center,
-                          style: context.appTextStyles.bodySmall.copyWith(
-                            color: Colors.white.withValues(alpha: 0.75),
-                          ),
-                        ),
-                      ),
-                      if (state.resolve.isLoading)
-                        const ColoredBox(
-                          color: Colors.black45,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                    ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        backgroundColor: AppColors.deviceDark,
+        body: Column(
+          children: [
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  MobileScanner(
+                    controller: _scannerController,
+                    onDetect: (capture) => _onDetect(context, capture),
                   ),
-                ),
-                _PickFromListPanel(isLoading: state.resolve.isLoading),
-              ],
+                  Container(color: Colors.black.withValues(alpha: 0.25)),
+                  _ScanHeader(onBack: () => context.pop()),
+                  const Center(child: _ScanFrame()),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 40,
+                    child: Text(
+                      context.l10n.handoverScanPrompt,
+                      textAlign: TextAlign.center,
+                      style: context.appTextStyles.bodySmall.copyWith(
+                        color: Colors.white.withValues(alpha: 0.75),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+            const _PickFromListPanel(isLoading: false),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -236,9 +206,7 @@ class _PickFromListPanel extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(
-                child: Divider(color: context.appColors.border),
-              ),
+              Expanded(child: Divider(color: context.appColors.border)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
@@ -248,9 +216,7 @@ class _PickFromListPanel extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: Divider(color: context.appColors.border),
-              ),
+              Expanded(child: Divider(color: context.appColors.border)),
             ],
           ),
           const SizedBox(height: 16),
