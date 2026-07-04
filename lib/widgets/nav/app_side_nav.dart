@@ -19,7 +19,9 @@ class AppSideNav extends StatelessWidget {
   });
 
   final List<NavItem> items;
-  final String selectedId;
+
+  /// Id of the highlighted item, or `null` if none should appear selected.
+  final String? selectedId;
   final ValueChanged<String> onSelected;
 
   /// Full brand label shown when [expanded]; collapses to its initials.

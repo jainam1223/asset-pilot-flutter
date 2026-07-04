@@ -34,7 +34,6 @@ class _ExtensionRequestListScreenState
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.adminExtensionRequests,
-      selectedNavId: 'extensionRequests',
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
         child: Column(
@@ -43,21 +42,26 @@ class _ExtensionRequestListScreenState
             const _StatusPillsRow(),
             const Gap(16),
             Expanded(
-              child: BlocBuilder<ExtensionRequestListCubit,
-                  ExtensionRequestListState>(
-                builder: (context, state) {
-                  return NetworkStateView<List<ExtensionRequestSummaryResDm>>(
-                    state: state.extensions,
-                    isEmpty: (data) => data.isEmpty,
-                    onData: (context, data) => _ExtensionsTable(
-                      allFiltered: context
-                          .read<ExtensionRequestListCubit>()
-                          .filteredExtensionRequests,
-                      currentPage: state.currentPage,
-                    ),
-                  );
-                },
-              ),
+              child:
+                  BlocBuilder<
+                    ExtensionRequestListCubit,
+                    ExtensionRequestListState
+                  >(
+                    builder: (context, state) {
+                      return NetworkStateView<
+                        List<ExtensionRequestSummaryResDm>
+                      >(
+                        state: state.extensions,
+                        isEmpty: (data) => data.isEmpty,
+                        onData: (context, data) => _ExtensionsTable(
+                          allFiltered: context
+                              .read<ExtensionRequestListCubit>()
+                              .filteredExtensionRequests,
+                          currentPage: state.currentPage,
+                        ),
+                      );
+                    },
+                  ),
             ),
           ],
         ),
@@ -75,10 +79,7 @@ class _StatusPillsRow extends StatelessWidget {
       builder: (context, state) {
         return FilterPillTabs(
           tabs: [
-            PillTab(
-              id: 'pending',
-              label: context.l10n.extensionFilterPending,
-            ),
+            PillTab(id: 'pending', label: context.l10n.extensionFilterPending),
             PillTab(
               id: 'approved',
               label: context.l10n.extensionFilterApproved,
@@ -97,7 +98,10 @@ class _StatusPillsRow extends StatelessWidget {
 }
 
 class _ExtensionsTable extends StatelessWidget {
-  const _ExtensionsTable({required this.allFiltered, required this.currentPage});
+  const _ExtensionsTable({
+    required this.allFiltered,
+    required this.currentPage,
+  });
 
   final List<ExtensionRequestSummaryResDm> allFiltered;
   final int currentPage;
@@ -106,8 +110,10 @@ class _ExtensionsTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<ExtensionRequestListCubit>();
     final start = (currentPage - 1) * kExtensionRequestListPageSize;
-    final end =
-        (start + kExtensionRequestListPageSize).clamp(0, allFiltered.length);
+    final end = (start + kExtensionRequestListPageSize).clamp(
+      0,
+      allFiltered.length,
+    );
     final pageRows = start < allFiltered.length
         ? allFiltered.sublist(start, end)
         : <ExtensionRequestSummaryResDm>[];

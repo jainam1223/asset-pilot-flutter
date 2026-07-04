@@ -40,9 +40,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       title: context.l10n.requestDetailTitle(
         context.read<RequestDetailCubit>().requestId,
       ),
-      selectedNavId: 'requests',
       child: BlocConsumer<RequestDetailCubit, RequestDetailState>(
-        listenWhen: (previous, current) => previous.submission != current.submission,
+        listenWhen: (previous, current) =>
+            previous.submission != current.submission,
         listener: (context, state) {
           switch (state.submission) {
             case Success():
@@ -62,11 +62,17 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(width: 280, child: _RequestInfoPanel(detail: detail)),
+                  SizedBox(
+                    width: 280,
+                    child: _RequestInfoPanel(detail: detail),
+                  ),
                   const Gap(18),
                   Expanded(child: _SuggestionsPanel(state: state)),
                   const Gap(18),
-                  SizedBox(width: 320, child: _BookingCalendarPanel(detail: detail)),
+                  SizedBox(
+                    width: 320,
+                    child: _BookingCalendarPanel(detail: detail),
+                  ),
                 ],
               ),
             ),
@@ -97,7 +103,10 @@ class _RequestInfoPanel extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(detail.employeeName, style: context.appTextStyles.labelLarge),
+                  Text(
+                    detail.employeeName,
+                    style: context.appTextStyles.labelLarge,
+                  ),
                   Text(
                     detail.employeeDepartment,
                     style: context.appTextStyles.bodySmall,
@@ -139,14 +148,20 @@ class _RequestInfoPanel extends StatelessWidget {
             ],
           ),
           const Gap(14),
-          Text(context.l10n.requestRequestedDates, style: context.appTextStyles.bodySmall),
+          Text(
+            context.l10n.requestRequestedDates,
+            style: context.appTextStyles.bodySmall,
+          ),
           const Gap(5),
           Text(
             '${detail.requestedFrom} – ${detail.requestedTo}',
             style: context.appTextStyles.labelLarge,
           ),
           const Gap(14),
-          Text(context.l10n.requestNote, style: context.appTextStyles.bodySmall),
+          Text(
+            context.l10n.requestNote,
+            style: context.appTextStyles.bodySmall,
+          ),
           const Gap(5),
           Text(detail.note, style: context.appTextStyles.bodyMedium),
         ],
@@ -191,7 +206,10 @@ class _SuggestionsPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.l10n.requestSuggestedDevicesTitle, style: context.appTextStyles.h3),
+          Text(
+            context.l10n.requestSuggestedDevicesTitle,
+            style: context.appTextStyles.h3,
+          ),
           const Gap(6),
           Text(
             context.l10n.requestSuggestedDevicesSubtitle,
@@ -273,7 +291,9 @@ class _SuggestionsPanel extends StatelessWidget {
               AppButton(
                 label: context.l10n.requestReject,
                 variant: AppButtonVariant.secondary,
-                onPressed: state.submission is Loading ? null : () => cubit.reject(),
+                onPressed: state.submission is Loading
+                    ? null
+                    : () => cubit.reject(),
               ),
             ],
           ),
@@ -294,7 +314,10 @@ class _BookingCalendarPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.l10n.requestBookingCalendarTitle, style: context.appTextStyles.h3),
+          Text(
+            context.l10n.requestBookingCalendarTitle,
+            style: context.appTextStyles.h3,
+          ),
           const Gap(6),
           Text(
             context.l10n.requestBookingCalendarSubtitle,
@@ -344,7 +367,10 @@ class _CalendarBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 32, child: Text(month, style: context.appTextStyles.bodySmall)),
+        SizedBox(
+          width: 32,
+          child: Text(month, style: context.appTextStyles.bodySmall),
+        ),
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(5),

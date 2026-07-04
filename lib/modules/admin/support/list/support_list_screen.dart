@@ -36,7 +36,6 @@ class _SupportListScreenState extends State<SupportListScreen> {
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.adminSupport,
-      selectedNavId: 'support',
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
         child: BlocListener<SupportListCubit, SupportListState>(

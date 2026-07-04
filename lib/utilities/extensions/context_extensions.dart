@@ -24,4 +24,27 @@ extension ContextExtensions on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this);
 
   Size get screenSize => MediaQuery.sizeOf(this);
+
+  /// A [RelativeRect] anchoring a popup menu just below this context's widget,
+  /// or `null` if this context is no longer in a laid-out tree (e.g. called
+  /// after the widget was unmounted or before its first layout).
+  /// Pass the tapped element's own context so `showMenu(position: ...)` opens
+  /// next to it instead of at a hardcoded screen offset.
+  RelativeRect? menuPositionBelow() {
+    final box = findRenderObject();
+    final overlayState = Navigator.of(this).overlay;
+    if (box is! RenderBox || overlayState == null) return null;
+    final overlay = overlayState.context.findRenderObject();
+    if (overlay is! RenderBox) return null;
+    final offset = box.localToGlobal(
+      box.size.bottomLeft(Offset.zero),
+      ancestor: overlay,
+    );
+    return RelativeRect.fromLTRB(
+      offset.dx,
+      offset.dy,
+      overlay.size.width - offset.dx,
+      0,
+    );
+  }
 }

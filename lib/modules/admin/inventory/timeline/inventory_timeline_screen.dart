@@ -22,7 +22,8 @@ class InventoryTimelineScreen extends StatefulWidget {
   final String deviceName;
 
   @override
-  State<InventoryTimelineScreen> createState() => _InventoryTimelineScreenState();
+  State<InventoryTimelineScreen> createState() =>
+      _InventoryTimelineScreenState();
 }
 
 class _InventoryTimelineScreenState extends State<InventoryTimelineScreen> {
@@ -36,7 +37,6 @@ class _InventoryTimelineScreenState extends State<InventoryTimelineScreen> {
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.inventoryTimelineTitle(widget.deviceName),
-      selectedNavId: 'inventory',
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
         child: BlocBuilder<InventoryTimelineCubit, InventoryTimelineState>(

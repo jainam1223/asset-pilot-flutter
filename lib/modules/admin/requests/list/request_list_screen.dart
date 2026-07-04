@@ -33,7 +33,6 @@ class _RequestListScreenState extends State<RequestListScreen> {
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.adminRequests,
-      selectedNavId: 'requests',
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
         child: Column(

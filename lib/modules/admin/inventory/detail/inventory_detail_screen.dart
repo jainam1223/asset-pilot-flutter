@@ -34,7 +34,6 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen> {
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.adminInventory,
-      selectedNavId: 'inventory',
       child: BlocBuilder<InventoryDetailCubit, InventoryDetailState>(
         builder: (context, state) {
           return NetworkStateView<InventoryDetailResDm>(
@@ -84,7 +83,10 @@ class _HeaderBar extends StatelessWidget {
       children: [
         Text(detail.name, style: context.appTextStyles.h2),
         const Gap(12),
-        StatusPill(semantic: detail.status.semantic, label: detail.status.label),
+        StatusPill(
+          semantic: detail.status.semantic,
+          label: detail.status.label,
+        ),
         const Spacer(),
         AppButton(
           label: context.l10n.inventoryChangeStatus,
@@ -131,7 +133,10 @@ class _DeviceInfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.l10n.inventoryDeviceInfoTitle, style: context.appTextStyles.h3),
+          Text(
+            context.l10n.inventoryDeviceInfoTitle,
+            style: context.appTextStyles.h3,
+          ),
           const Gap(14),
           InfoRowsCard(
             rows: [
@@ -187,10 +192,16 @@ class _CurrentAssignmentCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.l10n.inventoryCurrentAssignmentTitle, style: context.appTextStyles.h3),
+          Text(
+            context.l10n.inventoryCurrentAssignmentTitle,
+            style: context.appTextStyles.h3,
+          ),
           const Gap(14),
           if (assignment == null)
-            Text(context.l10n.inventoryNoAssignment, style: context.appTextStyles.bodySmall)
+            Text(
+              context.l10n.inventoryNoAssignment,
+              style: context.appTextStyles.bodySmall,
+            )
           else
             InfoRowsCard(
               rows: [
@@ -204,12 +215,16 @@ class _CurrentAssignmentCard extends StatelessWidget {
                 ),
                 InfoRow(
                   label: context.l10n.inventoryFieldDates,
-                  value: Text('${assignment.assignedFrom} – ${assignment.assignedTo}'),
+                  value: Text(
+                    '${assignment.assignedFrom} – ${assignment.assignedTo}',
+                  ),
                 ),
                 InfoRow(
                   label: context.l10n.inventoryFieldWfh,
                   value: Text(
-                    assignment.workFromHome ? context.l10n.inventoryYes : context.l10n.inventoryNo,
+                    assignment.workFromHome
+                        ? context.l10n.inventoryYes
+                        : context.l10n.inventoryNo,
                   ),
                 ),
                 InfoRow(
@@ -235,10 +250,16 @@ class _OpenTicketsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.l10n.inventoryOpenTicketsTitle, style: context.appTextStyles.h3),
+          Text(
+            context.l10n.inventoryOpenTicketsTitle,
+            style: context.appTextStyles.h3,
+          ),
           const Gap(14),
           if (detail.openTickets.isEmpty)
-            Text(context.l10n.inventoryNoOpenTickets, style: context.appTextStyles.bodySmall)
+            Text(
+              context.l10n.inventoryNoOpenTickets,
+              style: context.appTextStyles.bodySmall,
+            )
           else
             Column(
               children: [
@@ -252,9 +273,14 @@ class _OpenTicketsCard extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(ticket.title, style: context.appTextStyles.labelLarge),
                               Text(
-                                context.l10n.inventoryTicketFiledOn(ticket.raisedOn),
+                                ticket.title,
+                                style: context.appTextStyles.labelLarge,
+                              ),
+                              Text(
+                                context.l10n.inventoryTicketFiledOn(
+                                  ticket.raisedOn,
+                                ),
                                 style: context.appTextStyles.bodySmall,
                               ),
                             ],
@@ -288,10 +314,16 @@ class _ActiveHandoverCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.l10n.inventoryActiveHandoverTitle, style: context.appTextStyles.h3),
+          Text(
+            context.l10n.inventoryActiveHandoverTitle,
+            style: context.appTextStyles.h3,
+          ),
           const Gap(14),
           if (handover == null)
-            Text(context.l10n.inventoryNoActiveHandover, style: context.appTextStyles.bodySmall)
+            Text(
+              context.l10n.inventoryNoActiveHandover,
+              style: context.appTextStyles.bodySmall,
+            )
           else
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -301,10 +333,15 @@ class _ActiveHandoverCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        context.l10n.inventoryHandoverBorrower(handover.borrowerName),
+                        context.l10n.inventoryHandoverBorrower(
+                          handover.borrowerName,
+                        ),
                         style: context.appTextStyles.labelLarge,
                       ),
-                      Text(handover.durationLabel, style: context.appTextStyles.bodySmall),
+                      Text(
+                        handover.durationLabel,
+                        style: context.appTextStyles.bodySmall,
+                      ),
                     ],
                   ),
                 ),

@@ -38,7 +38,6 @@ class _DirectClientAssignmentScreenState
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.assignmentTitle,
-      selectedNavId: 'assignment',
       child: BlocConsumer<ClientAssignmentCubit, ClientAssignmentState>(
         listenWhen: (previous, current) => previous.submission != current.submission,
         listener: (context, state) {

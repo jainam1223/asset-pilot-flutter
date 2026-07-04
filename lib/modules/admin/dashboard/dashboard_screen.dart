@@ -27,7 +27,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.adminDashboard,
-      selectedNavId: 'dashboard',
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
         child:
