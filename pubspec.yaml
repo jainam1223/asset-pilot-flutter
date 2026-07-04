@@ -75,6 +75,12 @@ dev_dependencies:
   # Linting
   # Recommended lint set.
   flutter_lints: 6.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_icon.png"
 
 flutter:
   uses-material-design: true
@@ -84,6 +90,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+
 
   # Fonts from the design system (Poppins headings + DM Sans body).
   # DEFERRED: the .ttf files are added under assets/fonts/ during UI
