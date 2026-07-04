@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../utilities/extensions/context_extensions.dart';
+import '../../../utilities/navigation/app_routes.dart';
 import '../../../widgets/nav/app_bottom_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
 import '../my_devices/cubit/my_devices_cubit.dart';
@@ -61,6 +63,13 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
         ),
         _ => _ComingSoon(label: items[_index].label),
       },
+      floatingActionButton: FloatingActionButton(
+        tooltip: l10n.createRequestFabTooltip,
+        onPressed: () => context.push(Routes.createRequest.path),
+        backgroundColor: context.appColors.primary,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
+      ),
       bottomNavigationBar: AppBottomNav(
         items: items,
         selectedIndex: _index,

@@ -10,6 +10,7 @@ enum Routes {
   splash(path: '/splash', name: 'splash'),
   login(path: '/login', name: 'login'),
   mobileShell(path: '/home', name: 'mobileShell'),
+  createRequest(path: '/requests/new', name: 'createRequest'),
   requestDetail(path: '/requests/:id', name: 'requestDetail'),
 
   // Admin (IT)
