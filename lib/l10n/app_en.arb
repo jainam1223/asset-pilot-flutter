@@ -33,5 +33,19 @@
   "adminSettings": "Settings",
   "@adminSettings": {},
   "comingSoon": "Coming soon",
-  "@comingSoon": {}
+  "@comingSoon": {},
+  "myDevicesGreeting": "Hi, {name} 👋",
+  "@myDevicesGreeting": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "myDevicesTitle": "My Devices",
+  "@myDevicesTitle": {},
+  "noDevicesTitle": "No devices yet",
+  "@noDevicesTitle": {},
+  "noDevicesAssigned": "Devices assigned to you will show up here.",
+  "@noDevicesAssigned": {},
+  "somethingWentWrong": "Something went wrong",
+  "@somethingWentWrong": {}
 }

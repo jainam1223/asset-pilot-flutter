@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../widgets/nav/app_bottom_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
+import '../my_devices/cubit/my_devices_cubit.dart';
+import '../my_devices/my_devices_screen.dart';
 
 /// Employee/Manager home shell with bottom navigation (mockup E02 chrome).
 ///
@@ -45,10 +48,12 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
     ];
     return Scaffold(
       backgroundColor: context.appColors.scaffoldAlt,
-      appBar: AppBar(
-        title: Text(items[_index].label, style: context.appTextStyles.h2),
-      ),
-      body: _ComingSoon(label: items[_index].label),
+      body: _index == 0
+          ? BlocProvider(
+              create: (_) => MyDevicesCubit(),
+              child: const MyDevicesScreen(),
+            )
+          : _ComingSoon(label: items[_index].label),
       bottomNavigationBar: AppBottomNav(
         items: items,
         selectedIndex: _index,
