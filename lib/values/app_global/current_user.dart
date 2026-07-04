@@ -8,4 +8,6 @@
 abstract final class CurrentUser {
   static const String id = '71d58bd8-3750-4be0-8259-4c2a54728592';
   static const String name = 'Arjun Mehta';
+  static const String managerId = 'mgr_priya_n';
+  static const String managerName = 'Priya Nair';
 }
