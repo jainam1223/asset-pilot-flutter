@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../values/app_theme/app_colors.dart';
+import '../utilities/extensions/context_extensions.dart';
 
 /// Shared semantic color vocabulary consumed by [StatusPill], [InlineAlert],
 /// [ToastKind]-based toasts, and [AppProgressBar].
@@ -14,26 +14,29 @@ enum AppSemantic { success, warning, danger, info, brand, neutral }
 typedef SemanticColors = ({Color fg, Color bg});
 
 extension AppSemanticColors on AppSemantic {
-  SemanticColors get colors => switch (this) {
-        AppSemantic.success => (fg: AppColors.successFg, bg: AppColors.successBg),
-        AppSemantic.warning => (fg: AppColors.warningFg, bg: AppColors.warningBg),
-        AppSemantic.danger => (fg: AppColors.errorFg, bg: AppColors.errorBg),
-        AppSemantic.info => (fg: AppColors.infoFg, bg: AppColors.infoBg),
-        AppSemantic.brand => (fg: AppColors.primary, bg: AppColors.surfaceMuted),
-        AppSemantic.neutral => (fg: AppColors.neutralFg, bg: AppColors.neutralBg),
-      };
+  SemanticColors colors(BuildContext context) {
+    final tokens = context.appColors;
+    return switch (this) {
+      AppSemantic.success => (fg: tokens.successFg, bg: tokens.successBg),
+      AppSemantic.warning => (fg: tokens.warningFg, bg: tokens.warningBg),
+      AppSemantic.danger => (fg: tokens.errorFg, bg: tokens.errorBg),
+      AppSemantic.info => (fg: tokens.infoFg, bg: tokens.infoBg),
+      AppSemantic.brand => (fg: tokens.primary, bg: tokens.surfaceMuted),
+      AppSemantic.neutral => (fg: tokens.neutralFg, bg: tokens.neutralBg),
+    };
+  }
 
-  Color get fg => colors.fg;
+  Color fg(BuildContext context) => colors(context).fg;
 
-  Color get bg => colors.bg;
+  Color bg(BuildContext context) => colors(context).bg;
 
   /// Default icon for contexts that don't supply their own (e.g. [InlineAlert]).
   IconData get icon => switch (this) {
-        AppSemantic.success => Icons.check_circle_outline,
-        AppSemantic.warning => Icons.warning_amber_rounded,
-        AppSemantic.danger => Icons.error_outline,
-        AppSemantic.info => Icons.info_outline,
-        AppSemantic.brand => Icons.info_outline,
-        AppSemantic.neutral => Icons.circle_outlined,
-      };
+    AppSemantic.success => Icons.check_circle_outline,
+    AppSemantic.warning => Icons.warning_amber_rounded,
+    AppSemantic.danger => Icons.error_outline,
+    AppSemantic.info => Icons.info_outline,
+    AppSemantic.brand => Icons.info_outline,
+    AppSemantic.neutral => Icons.circle_outlined,
+  };
 }

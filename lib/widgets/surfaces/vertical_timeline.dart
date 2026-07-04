@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../cards/app_card.dart';
 import '../widget_enums.dart';
 
@@ -34,13 +34,16 @@ class VerticalTimeline extends StatelessWidget {
           left: 9,
           top: 6,
           bottom: 6,
-          child: Container(width: 2, color: AppColors.borderSubtle),
+          child: Container(width: 2, color: context.appColors.borderSubtle),
         ),
         Column(
           children: [
             for (var i = 0; i < entries.length; i++)
               Padding(
-                padding: EdgeInsets.only(bottom: i == entries.length - 1 ? 0 : 22, left: 34),
+                padding: EdgeInsets.only(
+                  bottom: i == entries.length - 1 ? 0 : 22,
+                  left: 34,
+                ),
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
@@ -51,14 +54,20 @@ class VerticalTimeline extends StatelessWidget {
                         width: 20,
                         height: 20,
                         decoration: BoxDecoration(
-                          color: entries[i].semantic.fg,
+                          color: entries[i].semantic.fg(context),
                           shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.surface, width: 3),
+                          border: Border.all(
+                            color: context.appColors.surface,
+                            width: 3,
+                          ),
                         ),
                       ),
                     ),
                     AppCard(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -69,21 +78,16 @@ class VerticalTimeline extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   entries[i].title,
-                                  style: const TextStyle(
-                                    fontFamily: 'DM Sans',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: AppColors.textPrimary,
-                                  ),
+                                  style: context.appTextStyles.labelMedium
+                                      .copyWith(
+                                        color: context.appColors.textPrimary,
+                                      ),
                                 ),
                               ),
                               Text(
                                 entries[i].timestamp,
-                                style: const TextStyle(
-                                  fontFamily: 'DM Sans',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 11,
-                                  color: AppColors.textTertiary,
+                                style: context.appTextStyles.bodySmall.copyWith(
+                                  color: context.appColors.textTertiary,
                                 ),
                               ),
                             ],
@@ -91,12 +95,9 @@ class VerticalTimeline extends StatelessWidget {
                           const SizedBox(height: 6),
                           Text(
                             entries[i].description,
-                            style: const TextStyle(
-                              fontFamily: 'DM Sans',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
+                            style: context.appTextStyles.bodyXSmall.copyWith(
                               height: 1.5,
-                              color: AppColors.textSecondary,
+                              color: context.appColors.textSecondary,
                             ),
                           ),
                         ],

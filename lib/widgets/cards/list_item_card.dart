@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../indicators/icon_box.dart';
 import 'app_card.dart';
 
@@ -54,27 +54,23 @@ class ListItemCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         title,
-                        style: const TextStyle(
-                          fontFamily: 'DM Sans',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
-                          height: 1.2,
-                          color: AppColors.textPrimary,
+                        style: context.appTextStyles.labelXLarge.copyWith(
+                          color: context.appColors.textPrimary,
                         ),
                       ),
                     ),
-                    if (trailing != null) ...[const SizedBox(width: 8), trailing!],
+                    if (trailing != null) ...[
+                      const SizedBox(width: 8),
+                      trailing!,
+                    ],
                   ],
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 6),
                   Text(
                     subtitle!,
-                    style: const TextStyle(
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: AppColors.textTertiary,
+                    style: context.appTextStyles.bodyXSmall.copyWith(
+                      color: context.appColors.textTertiary,
                     ),
                   ),
                 ],
@@ -82,15 +78,16 @@ class ListItemCard extends StatelessWidget {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      Icon(meta!.icon, size: 14, color: AppColors.textHint),
+                      Icon(
+                        meta!.icon,
+                        size: 14,
+                        color: context.appColors.textHint,
+                      ),
                       const SizedBox(width: 6),
                       Text(
                         meta!.label,
-                        style: const TextStyle(
-                          fontFamily: 'DM Sans',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
+                        style: context.appTextStyles.emphasisMedium.copyWith(
+                          color: context.appColors.textSecondary,
                         ),
                       ),
                     ],

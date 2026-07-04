@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../indicators/app_avatar.dart';
 import 'app_card.dart';
 
@@ -44,11 +44,8 @@ class RequestCard extends StatelessWidget {
                   const SizedBox(width: 11),
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: AppColors.textPrimary,
+                    style: context.appTextStyles.labelLarge.copyWith(
+                      color: context.appColors.textPrimary,
                     ),
                   ),
                 ],
@@ -61,11 +58,8 @@ class RequestCard extends StatelessWidget {
             const SizedBox(height: 11),
             Text(
               metaLine!,
-              style: const TextStyle(
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                color: AppColors.textTertiary,
+              style: context.appTextStyles.emphasisMedium.copyWith(
+                color: context.appColors.textTertiary,
               ),
             ),
           ],
@@ -73,12 +67,9 @@ class RequestCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               note!,
-              style: const TextStyle(
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w400,
-                fontSize: 12,
+              style: context.appTextStyles.bodyXSmall.copyWith(
+                color: context.appColors.textSecondary,
                 height: 1.5,
-                color: AppColors.textSecondary,
               ),
             ),
           ],

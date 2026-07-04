@@ -4,7 +4,6 @@ part 'splash_state.freezed.dart';
 
 @freezed
 abstract class SplashState with _$SplashState {
-  const factory SplashState({
-    @Default(false) bool navigateToLogin,
-  }) = _SplashState;
+  const factory SplashState({@Default(false) bool navigateToLogin}) =
+      _SplashState;
 }

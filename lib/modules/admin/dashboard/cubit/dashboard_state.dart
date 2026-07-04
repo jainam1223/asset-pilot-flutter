@@ -16,7 +16,12 @@ class DashboardKpis extends Equatable {
   final int openSupport;
 
   @override
-  List<Object?> get props => [totalDevices, assigned, pendingRequests, openSupport];
+  List<Object?> get props => [
+    totalDevices,
+    assigned,
+    pendingRequests,
+    openSupport,
+  ];
 }
 
 @immutable

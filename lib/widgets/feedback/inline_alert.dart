@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utilities/extensions/context_extensions.dart';
 import '../widget_enums.dart';
 
 /// Non-floating, tinted contextual message box (info/warning/success/danger)
@@ -14,9 +15,9 @@ class InlineAlert extends StatelessWidget {
     this.icon,
     this.dense = false,
   }) : assert(
-          message != null || messageWidget != null,
-          'Provide either message or messageWidget',
-        );
+         message != null || messageWidget != null,
+         'Provide either message or messageWidget',
+       );
 
   final AppSemantic semantic;
 
@@ -32,9 +33,12 @@ class InlineAlert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = semantic.colors;
+    final colors = semantic.colors(context);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: dense ? 13 : 16, vertical: dense ? 10 : 12),
+      padding: EdgeInsets.symmetric(
+        horizontal: dense ? 13 : 16,
+        vertical: dense ? 10 : 12,
+      ),
       decoration: BoxDecoration(
         color: colors.bg,
         borderRadius: BorderRadius.circular(11),
@@ -44,16 +48,19 @@ class InlineAlert extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 1),
-            child: Icon(icon ?? semantic.icon, size: dense ? 16 : 18, color: colors.fg),
+            child: Icon(
+              icon ?? semantic.icon,
+              size: dense ? 16 : 18,
+              color: colors.fg,
+            ),
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: messageWidget ??
+            child:
+                messageWidget ??
                 Text(
                   message!,
-                  style: TextStyle(
-                    fontFamily: 'DM Sans',
-                    fontWeight: FontWeight.w500,
+                  style: context.appTextStyles.emphasisSmall.copyWith(
                     fontSize: dense ? 11 : 12,
                     height: 1.4,
                     color: colors.fg,

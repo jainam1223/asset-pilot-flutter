@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 
 /// Outlined text field with a floating label. Default/focused border colors
 /// come from the app's `inputDecorationTheme` (see `app_theme.dart`) — this
@@ -54,12 +54,12 @@ class AppTextField extends StatelessWidget {
     this.errorText,
     this.enabled = true,
     this.onChanged,
-  })  : leadingIcon = null,
-        obscureText = false,
-        keyboardType = TextInputType.multiline,
-        readOnly = false,
-        onTap = null,
-        suffixIcon = null;
+  }) : leadingIcon = null,
+       obscureText = false,
+       keyboardType = TextInputType.multiline,
+       readOnly = false,
+       onTap = null,
+       suffixIcon = null;
 
   @override
   Widget build(BuildContext context) {
@@ -73,11 +73,8 @@ class AppTextField extends StatelessWidget {
       enabled: enabled,
       onTap: onTap,
       onChanged: onChanged,
-      style: const TextStyle(
-        fontFamily: 'DM Sans',
-        fontWeight: FontWeight.w500,
-        fontSize: 15,
-        color: AppColors.textPrimary,
+      style: context.appTextStyles.bodyLarge.copyWith(
+        color: context.appColors.textPrimary,
       ),
       decoration: InputDecoration(
         labelText: label,

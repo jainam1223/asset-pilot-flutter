@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 
 enum AppButtonVariant { primary, secondary, destructive, success }
 
@@ -11,34 +11,34 @@ enum AppButtonSize { small, medium, large }
 
 extension _ButtonMetrics on AppButtonSize {
   double get verticalPadding => switch (this) {
-        AppButtonSize.small => 9,
-        AppButtonSize.medium => 13,
-        AppButtonSize.large => 16,
-      };
+    AppButtonSize.small => 9,
+    AppButtonSize.medium => 13,
+    AppButtonSize.large => 16,
+  };
 
   double get horizontalPadding => switch (this) {
-        AppButtonSize.small => 13,
-        AppButtonSize.medium => 16,
-        AppButtonSize.large => 18,
-      };
+    AppButtonSize.small => 13,
+    AppButtonSize.medium => 16,
+    AppButtonSize.large => 18,
+  };
 
   double get fontSize => switch (this) {
-        AppButtonSize.small => 11,
-        AppButtonSize.medium => 13,
-        AppButtonSize.large => 15,
-      };
+    AppButtonSize.small => 11,
+    AppButtonSize.medium => 13,
+    AppButtonSize.large => 15,
+  };
 
   double get radius => switch (this) {
-        AppButtonSize.small => 8,
-        AppButtonSize.medium => 11,
-        AppButtonSize.large => 13,
-      };
+    AppButtonSize.small => 8,
+    AppButtonSize.medium => 11,
+    AppButtonSize.large => 13,
+  };
 
   double get spinnerSize => switch (this) {
-        AppButtonSize.small => 14,
-        AppButtonSize.medium => 18,
-        AppButtonSize.large => 20,
-      };
+    AppButtonSize.small => 14,
+    AppButtonSize.medium => 18,
+    AppButtonSize.large => 20,
+  };
 }
 
 /// The one button widget for every filled/outlined use case in the app:
@@ -79,62 +79,72 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final child = _buildChild();
+    final child = _buildChild(context);
     final button = switch (variant) {
       AppButtonVariant.primary => _GradientButton(
-          onPressed: _disabled ? null : onPressed,
-          size: size,
-          child: child,
-        ),
+        onPressed: _disabled ? null : onPressed,
+        size: size,
+        child: child,
+      ),
       AppButtonVariant.secondary => OutlinedButton(
-          onPressed: _disabled ? null : onPressed,
-          style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.textSecondary,
-            side: const BorderSide(color: AppColors.border, width: 1.5),
-            padding: EdgeInsets.symmetric(
-              horizontal: size.horizontalPadding,
-              vertical: size.verticalPadding,
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(size.radius)),
+        onPressed: _disabled ? null : onPressed,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: context.appColors.textSecondary,
+          side: BorderSide(color: context.appColors.border, width: 1.5),
+          padding: EdgeInsets.symmetric(
+            horizontal: size.horizontalPadding,
+            vertical: size.verticalPadding,
           ),
-          child: child,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(size.radius),
+          ),
         ),
+        child: child,
+      ),
       AppButtonVariant.destructive => OutlinedButton(
-          onPressed: _disabled ? null : onPressed,
-          style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.errorFg,
-            side: const BorderSide(color: AppColors.errorFg, width: 1.5),
-            padding: EdgeInsets.symmetric(
-              horizontal: size.horizontalPadding,
-              vertical: size.verticalPadding,
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(size.radius)),
+        onPressed: _disabled ? null : onPressed,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: context.appColors.errorFg,
+          side: BorderSide(color: context.appColors.errorFg, width: 1.5),
+          padding: EdgeInsets.symmetric(
+            horizontal: size.horizontalPadding,
+            vertical: size.verticalPadding,
           ),
-          child: child,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(size.radius),
+          ),
         ),
+        child: child,
+      ),
       AppButtonVariant.success => ElevatedButton(
-          onPressed: _disabled ? null : onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.successFg,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            padding: EdgeInsets.symmetric(
-              horizontal: size.horizontalPadding,
-              vertical: size.verticalPadding,
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(size.radius)),
+        onPressed: _disabled ? null : onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: context.appColors.successFg,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: EdgeInsets.symmetric(
+            horizontal: size.horizontalPadding,
+            vertical: size.verticalPadding,
           ),
-          child: child,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(size.radius),
+          ),
         ),
+        child: child,
+      ),
     };
 
     return expand ? SizedBox(width: double.infinity, child: button) : button;
   }
 
-  Widget _buildChild() {
+  Widget _buildChild(BuildContext context) {
     if (isLoading) {
-      final color = variant == AppButtonVariant.secondary || variant == AppButtonVariant.destructive
-          ? (variant == AppButtonVariant.destructive ? AppColors.errorFg : AppColors.textSecondary)
+      final color =
+          variant == AppButtonVariant.secondary ||
+              variant == AppButtonVariant.destructive
+          ? (variant == AppButtonVariant.destructive
+                ? context.appColors.errorFg
+                : context.appColors.textSecondary)
           : Colors.white;
       return SizedBox(
         height: size.spinnerSize,
@@ -143,11 +153,16 @@ class AppButton extends StatelessWidget {
       );
     }
 
-    final textStyle = TextStyle(
-      fontFamily: 'DM Sans',
-      fontWeight: FontWeight.w600,
+    final textColor = switch (variant) {
+      AppButtonVariant.primary => Colors.white,
+      AppButtonVariant.secondary => context.appColors.textSecondary,
+      AppButtonVariant.destructive => context.appColors.errorFg,
+      AppButtonVariant.success => Colors.white,
+    };
+    final textStyle = context.appTextStyles.button.copyWith(
       fontSize: size.fontSize,
       height: 1,
+      color: textColor,
     );
 
     if (leadingIcon == null && trailingIcon == null) {
@@ -158,13 +173,13 @@ class AppButton extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (leadingIcon != null) ...[
-          Icon(leadingIcon, size: size.fontSize + 3),
+          Icon(leadingIcon, size: size.fontSize + 3, color: textColor),
           const SizedBox(width: 8),
         ],
         Text(label, style: textStyle),
         if (trailingIcon != null) ...[
           const SizedBox(width: 8),
-          Icon(trailingIcon, size: size.fontSize + 3),
+          Icon(trailingIcon, size: size.fontSize + 3, color: textColor),
         ],
       ],
     );
@@ -174,7 +189,11 @@ class AppButton extends StatelessWidget {
 /// Primary variant needs a gradient fill, which [ElevatedButton.styleFrom]
 /// can't express directly — wrapped in a [DecoratedBox] instead.
 class _GradientButton extends StatelessWidget {
-  const _GradientButton({required this.onPressed, required this.size, required this.child});
+  const _GradientButton({
+    required this.onPressed,
+    required this.size,
+    required this.child,
+  });
 
   final VoidCallback? onPressed;
   final AppButtonSize size;
@@ -188,17 +207,20 @@ class _GradientButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(size.radius),
         gradient: disabled
             ? null
-            : const LinearGradient(
+            : LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [AppColors.gradientStart, AppColors.gradientEnd],
+                colors: [
+                  context.appColors.gradientStart,
+                  context.appColors.gradientEnd,
+                ],
               ),
-        color: disabled ? AppColors.border : null,
+        color: disabled ? context.appColors.border : null,
         boxShadow: disabled
             ? null
             : [
                 BoxShadow(
-                  color: AppColors.primaryDark.withValues(alpha: 0.35),
+                  color: context.appColors.primaryDark.withValues(alpha: 0.35),
                   blurRadius: 24,
                   offset: const Offset(0, 12),
                 ),

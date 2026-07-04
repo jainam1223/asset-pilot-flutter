@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../widget_enums.dart';
 
 /// Label + value row above a thin rounded bar filled proportionally in a
@@ -34,20 +34,14 @@ class AppProgressBar extends StatelessWidget {
           children: [
             Text(
               label,
-              style: const TextStyle(
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                color: AppColors.textPrimary,
+              style: context.appTextStyles.emphasisMedium.copyWith(
+                color: context.appColors.textPrimary,
               ),
             ),
             Text(
               valueLabel,
-              style: const TextStyle(
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-                color: AppColors.textPrimary,
+              style: context.appTextStyles.label.copyWith(
+                color: context.appColors.textPrimary,
               ),
             ),
           ],
@@ -58,8 +52,8 @@ class AppProgressBar extends StatelessWidget {
           child: LinearProgressIndicator(
             value: value.clamp(0.0, 1.0),
             minHeight: 7,
-            backgroundColor: AppColors.surfaceMuted,
-            valueColor: AlwaysStoppedAnimation(semantic.fg),
+            backgroundColor: context.appColors.surfaceMuted,
+            valueColor: AlwaysStoppedAnimation(semantic.fg(context)),
           ),
         ),
       ],

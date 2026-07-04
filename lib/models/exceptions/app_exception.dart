@@ -16,7 +16,8 @@ sealed class AppException implements Exception {
   final int? statusCode;
 
   @override
-  String toString() => '$runtimeType(message: $message, statusCode: $statusCode)';
+  String toString() =>
+      '$runtimeType(message: $message, statusCode: $statusCode)';
 }
 
 /// A failure originating from the network / API layer.

@@ -13,7 +13,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<SplashCubit, SplashState>(
       listenWhen: (previous, current) =>
-      previous.navigateToLogin != current.navigateToLogin &&
+          previous.navigateToLogin != current.navigateToLogin &&
           current.navigateToLogin,
       listener: (context, state) {
         _navigateToNextScreen(context);

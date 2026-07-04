@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import 'app_card.dart';
 
 class InfoRow {
@@ -32,18 +32,17 @@ class InfoRowsCard extends StatelessWidget {
               decoration: BoxDecoration(
                 border: row == rows.last
                     ? null
-                    : const Border(bottom: BorderSide(color: AppColors.divider)),
+                    : Border(
+                        bottom: BorderSide(color: context.appColors.divider),
+                      ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     row.label,
-                    style: const TextStyle(
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: AppColors.textTertiary,
+                    style: context.appTextStyles.bodyMedium.copyWith(
+                      color: context.appColors.textTertiary,
                     ),
                   ),
                   row.value,

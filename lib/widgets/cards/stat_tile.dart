@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../widget_enums.dart';
 import 'app_card.dart';
 
@@ -8,7 +8,12 @@ import 'app_card.dart';
 /// Fixed internal scale — responsiveness (tiles-per-row) belongs to
 /// [StatTileRow], not the tile itself.
 class StatTile extends StatelessWidget {
-  const StatTile({super.key, required this.label, required this.value, this.semantic});
+  const StatTile({
+    super.key,
+    required this.label,
+    required this.value,
+    this.semantic,
+  });
 
   final String label;
   final String value;
@@ -26,22 +31,16 @@ class StatTile extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontFamily: 'DM Sans',
-              fontWeight: FontWeight.w400,
-              fontSize: 11,
-              color: AppColors.textTertiary,
+            style: context.appTextStyles.bodySmall.copyWith(
+              color: context.appColors.textTertiary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             value,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w700,
-              fontSize: 26,
+            style: context.appTextStyles.h1.copyWith(
               height: 1,
-              color: semantic?.fg ?? AppColors.textPrimary,
+              color: semantic?.fg(context) ?? context.appColors.textPrimary,
             ),
           ),
         ],
@@ -54,7 +53,12 @@ class StatTile extends StatelessWidget {
 /// can't fit [minTileWidth] per tile — this is the responsive piece; the
 /// tile itself never consults [Responsive].
 class StatTileRow extends StatelessWidget {
-  const StatTileRow({super.key, required this.tiles, this.minTileWidth = 140, this.spacing = 14});
+  const StatTileRow({
+    super.key,
+    required this.tiles,
+    this.minTileWidth = 140,
+    this.spacing = 14,
+  });
 
   final List<StatTile> tiles;
   final double minTileWidth;
@@ -64,8 +68,12 @@ class StatTileRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final perRow = (constraints.maxWidth / minTileWidth).floor().clamp(1, tiles.length);
-        final tileWidth = (constraints.maxWidth - spacing * (perRow - 1)) / perRow;
+        final perRow = (constraints.maxWidth / minTileWidth).floor().clamp(
+          1,
+          tiles.length,
+        );
+        final tileWidth =
+            (constraints.maxWidth - spacing * (perRow - 1)) / perRow;
         return Wrap(
           spacing: spacing,
           runSpacing: spacing,

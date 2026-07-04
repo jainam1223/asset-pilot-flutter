@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
-import '../../values/app_theme/app_text_styles.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../../values/constants/app_constants.dart';
 import 'nav_item.dart';
 
@@ -31,7 +30,7 @@ class AppSideNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: expanded ? AppConstants.adminNavWidth : 72,
-      color: AppColors.primaryDeep,
+      color: context.appColors.primaryDeep,
       padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -40,7 +39,10 @@ class AppSideNav extends StatelessWidget {
             padding: const EdgeInsets.only(left: 4, bottom: 22),
             child: Text(
               expanded ? brandLabel : brandLabel.substring(0, 1),
-              style: AppTextStyles.h3.copyWith(color: Colors.white, letterSpacing: 1.4),
+              style: context.appTextStyles.h3.copyWith(
+                color: Colors.white,
+                letterSpacing: 1.4,
+              ),
             ),
           ),
           for (final item in items)
@@ -71,7 +73,7 @@ class _SideNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? Colors.white : AppColors.primaryAccent;
+    final color = selected ? Colors.white : context.appColors.primaryAccent;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
@@ -84,29 +86,37 @@ class _SideNavItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(selected ? (item.selectedIcon ?? item.icon) : item.icon, size: 19, color: color),
+            Icon(
+              selected ? (item.selectedIcon ?? item.icon) : item.icon,
+              size: 19,
+              color: color,
+            ),
             if (expanded) ...[
               const SizedBox(width: 11),
               Expanded(
                 child: Text(
                   item.label,
-                  style: AppTextStyles.bodyLarge.copyWith(fontSize: 13, color: color),
+                  style: context.appTextStyles.bodyLarge.copyWith(
+                    fontSize: 13,
+                    color: color,
+                  ),
                 ),
               ),
               if (item.badgeCount != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 7,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
-                    color: AppColors.errorAccent,
+                    color: context.appColors.errorAccent,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
                     '${item.badgeCount}',
-                    style: const TextStyle(
-                      fontFamily: 'DM Sans',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 10,
+                    style: context.appTextStyles.overline.copyWith(
                       color: Colors.white,
+                      letterSpacing: 0,
                     ),
                   ),
                 ),

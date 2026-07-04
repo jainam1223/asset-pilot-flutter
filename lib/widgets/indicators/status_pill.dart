@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utilities/extensions/context_extensions.dart';
 import '../widget_enums.dart';
 
 /// Rounded-full status indicator: a colored dot + label on a tinted
@@ -27,7 +28,7 @@ class StatusPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = semantic.colors;
+    final colors = semantic.colors(context);
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: dense ? 7 : 9,
@@ -48,11 +49,8 @@ class StatusPill extends StatelessWidget {
           SizedBox(width: dense ? 5 : 6),
           Text(
             label,
-            style: TextStyle(
-              fontFamily: 'DM Sans',
-              fontWeight: FontWeight.w600,
+            style: context.appTextStyles.labelSmall.copyWith(
               fontSize: dense ? 9 : 10,
-              height: 1,
               color: colors.fg,
             ),
           ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../utilities/extensions/context_extensions.dart';
 import '../../utilities/network/network_state.dart';
-import '../../values/app_theme/app_colors.dart';
 import '../buttons/app_text_link.dart';
 
 /// Renders a [NetworkState] identically across screens: a centered spinner
@@ -36,10 +35,14 @@ class NetworkStateView<T> extends StatelessWidget {
     return switch (state) {
       Idle<T>() => onIdle?.call(context) ?? const SizedBox.shrink(),
       Loading<T>() => const Center(child: CircularProgressIndicator()),
-      Error<T>(:final message) => _ErrorView(message: message, onRetry: onRetry),
-      Success<T>(:final data) => (isEmpty?.call(data) ?? false)
-          ? (emptyBuilder?.call(context) ?? const SizedBox.shrink())
-          : onData(context, data),
+      Error<T>(:final message) => _ErrorView(
+        message: message,
+        onRetry: onRetry,
+      ),
+      Success<T>(:final data) =>
+        (isEmpty?.call(data) ?? false)
+            ? (emptyBuilder?.call(context) ?? const SizedBox.shrink())
+            : onData(context, data),
     };
   }
 }
@@ -58,16 +61,17 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline, size: 32, color: AppColors.errorFg),
+            Icon(
+              Icons.error_outline,
+              size: 32,
+              color: context.appColors.errorFg,
+            ),
             const SizedBox(height: 10),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontFamily: 'DM Sans',
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-                color: AppColors.textSecondary,
+              style: context.appTextStyles.emphasisLarge.copyWith(
+                color: context.appColors.textSecondary,
               ),
             ),
             if (onRetry != null) ...[

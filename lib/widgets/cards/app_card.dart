@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../../values/constants/app_constants.dart';
 
 /// Base white rounded-16 soft-shadow container. Every other card in the
@@ -26,14 +26,18 @@ class AppCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: selected ? AppColors.surfaceMuted : AppColors.surface,
+        color: selected
+            ? context.appColors.surfaceMuted
+            : context.appColors.surface,
         borderRadius: radius,
-        border: selected ? Border.all(color: AppColors.primary, width: 1.5) : null,
+        border: selected
+            ? Border.all(color: context.appColors.primary, width: 1.5)
+            : null,
         boxShadow: selected
             ? null
             : [
                 BoxShadow(
-                  color: AppColors.primaryDeep.withValues(alpha: 0.06),
+                  color: context.appColors.primaryDeep.withValues(alpha: 0.06),
                   blurRadius: 18,
                   offset: const Offset(0, 6),
                 ),

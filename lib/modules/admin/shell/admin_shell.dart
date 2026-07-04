@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/helpers/responsive.dart';
-import '../../../values/app_theme/app_colors.dart';
-import '../../../values/app_theme/app_text_styles.dart';
 import '../../../widgets/nav/app_side_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
 
@@ -21,13 +19,29 @@ class AdminShell extends StatelessWidget {
     final expanded = Responsive.isDesktop(context);
     final l10n = context.l10n;
     final items = [
-      NavItem(id: 'dashboard', label: l10n.adminDashboard, icon: Icons.dashboard_outlined),
-      NavItem(id: 'requests', label: l10n.adminRequests, icon: Icons.list_alt_outlined),
-      NavItem(id: 'inventory', label: l10n.adminInventory, icon: Icons.inventory_2_outlined),
-      NavItem(id: 'settings', label: l10n.adminSettings, icon: Icons.settings_outlined),
+      NavItem(
+        id: 'dashboard',
+        label: l10n.adminDashboard,
+        icon: Icons.dashboard_outlined,
+      ),
+      NavItem(
+        id: 'requests',
+        label: l10n.adminRequests,
+        icon: Icons.list_alt_outlined,
+      ),
+      NavItem(
+        id: 'inventory',
+        label: l10n.adminInventory,
+        icon: Icons.inventory_2_outlined,
+      ),
+      NavItem(
+        id: 'settings',
+        label: l10n.adminSettings,
+        icon: Icons.settings_outlined,
+      ),
     ];
     return Scaffold(
-      backgroundColor: AppColors.adminCanvas,
+      backgroundColor: context.appColors.adminCanvas,
       body: Row(
         children: [
           AppSideNav(
@@ -61,12 +75,14 @@ class _AdminTopBar extends StatelessWidget {
     return Container(
       height: 66,
       padding: const EdgeInsets.symmetric(horizontal: 28),
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(bottom: BorderSide(color: AppColors.borderSubtle)),
+      decoration: BoxDecoration(
+        color: context.appColors.surface,
+        border: Border(
+          bottom: BorderSide(color: context.appColors.borderSubtle),
+        ),
       ),
       alignment: Alignment.centerLeft,
-      child: Text(title, style: AppTextStyles.h2),
+      child: Text(title, style: context.appTextStyles.h2),
     );
   }
 }

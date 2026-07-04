@@ -17,8 +17,10 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> login({required String email, required String password}) async {
     safeEmit(state.copyWith(login: const Loading()));
     try {
-      final result =
-          await AuthRepository.instance.login(email: email, password: password);
+      final result = await AuthRepository.instance.login(
+        email: email,
+        password: password,
+      );
       result.when(
         success: (data) => safeEmit(state.copyWith(login: Success(data))),
         failure: (error) {
@@ -28,7 +30,9 @@ class LoginCubit extends Cubit<LoginState> {
       );
     } catch (e, st) {
       onError(e, st);
-      safeEmit(state.copyWith(login: Error(errorManager.handle(e, st).message)));
+      safeEmit(
+        state.copyWith(login: Error(errorManager.handle(e, st).message)),
+      );
     }
   }
 

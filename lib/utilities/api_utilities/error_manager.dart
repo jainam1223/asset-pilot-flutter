@@ -41,7 +41,8 @@ class ErrorManager {
         return const NoConnectionException();
       case DioExceptionType.badResponse:
         final code = error.response?.statusCode;
-        final message = _messageFromResponse(error.response?.data) ??
+        final message =
+            _messageFromResponse(error.response?.data) ??
             'Request failed${code == null ? '' : ' ($code)'}.';
         return NetworkException(message, statusCode: code);
       case DioExceptionType.cancel:

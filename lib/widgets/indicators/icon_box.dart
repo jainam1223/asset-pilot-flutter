@@ -9,19 +9,19 @@ enum IconBoxSize { md, lg }
 
 extension _IconBoxDims on IconBoxSize {
   double get box => switch (this) {
-        IconBoxSize.md => 46,
-        IconBoxSize.lg => 58,
-      };
+    IconBoxSize.md => 46,
+    IconBoxSize.lg => 58,
+  };
 
   double get radius => switch (this) {
-        IconBoxSize.md => 12,
-        IconBoxSize.lg => 16,
-      };
+    IconBoxSize.md => 12,
+    IconBoxSize.lg => 16,
+  };
 
   double get iconSize => switch (this) {
-        IconBoxSize.md => 24,
-        IconBoxSize.lg => 30,
-      };
+    IconBoxSize.md => 24,
+    IconBoxSize.lg => 30,
+  };
 }
 
 /// Tinted rounded box containing a category icon — the leading decoration
@@ -41,7 +41,7 @@ class IconBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = semantic.colors;
+    final colors = semantic.colors(context);
     return Container(
       width: size.box,
       height: size.box,

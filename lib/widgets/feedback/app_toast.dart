@@ -2,18 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../values/app_theme/app_colors.dart';
+import '../../utilities/extensions/context_extensions.dart';
 import '../widget_enums.dart';
 
 enum ToastKind { success, error, info, warning }
 
 extension _ToastKindSemantic on ToastKind {
   AppSemantic get semantic => switch (this) {
-        ToastKind.success => AppSemantic.success,
-        ToastKind.error => AppSemantic.danger,
-        ToastKind.info => AppSemantic.info,
-        ToastKind.warning => AppSemantic.warning,
-      };
+    ToastKind.success => AppSemantic.success,
+    ToastKind.error => AppSemantic.danger,
+    ToastKind.info => AppSemantic.info,
+    ToastKind.warning => AppSemantic.warning,
+  };
 }
 
 /// Presentation strategy for [AppToast]. Two implementations exist below;
@@ -40,17 +40,57 @@ abstract final class AppToast {
   /// crashes in tests or an unconfigured shell.
   static void configure(ToastPresenter presenter) => _presenter = presenter;
 
-  static void success(BuildContext context, String message, {String? actionLabel, VoidCallback? onAction}) =>
-      _presenter.show(context, message: message, kind: ToastKind.success, actionLabel: actionLabel, onAction: onAction);
+  static void success(
+    BuildContext context,
+    String message, {
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) => _presenter.show(
+    context,
+    message: message,
+    kind: ToastKind.success,
+    actionLabel: actionLabel,
+    onAction: onAction,
+  );
 
-  static void error(BuildContext context, String message, {String? actionLabel, VoidCallback? onAction}) =>
-      _presenter.show(context, message: message, kind: ToastKind.error, actionLabel: actionLabel, onAction: onAction);
+  static void error(
+    BuildContext context,
+    String message, {
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) => _presenter.show(
+    context,
+    message: message,
+    kind: ToastKind.error,
+    actionLabel: actionLabel,
+    onAction: onAction,
+  );
 
-  static void info(BuildContext context, String message, {String? actionLabel, VoidCallback? onAction}) =>
-      _presenter.show(context, message: message, kind: ToastKind.info, actionLabel: actionLabel, onAction: onAction);
+  static void info(
+    BuildContext context,
+    String message, {
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) => _presenter.show(
+    context,
+    message: message,
+    kind: ToastKind.info,
+    actionLabel: actionLabel,
+    onAction: onAction,
+  );
 
-  static void warning(BuildContext context, String message, {String? actionLabel, VoidCallback? onAction}) =>
-      _presenter.show(context, message: message, kind: ToastKind.warning, actionLabel: actionLabel, onAction: onAction);
+  static void warning(
+    BuildContext context,
+    String message, {
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) => _presenter.show(
+    context,
+    message: message,
+    kind: ToastKind.warning,
+    actionLabel: actionLabel,
+    onAction: onAction,
+  );
 }
 
 /// Bottom-anchored [SnackBar] — idiomatic on mobile. Register in
@@ -64,7 +104,7 @@ class SnackBarToastPresenter implements ToastPresenter {
     String? actionLabel,
     VoidCallback? onAction,
   }) {
-    final colors = kind.semantic.colors;
+    final colors = kind.semantic.colors(context);
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
@@ -78,10 +118,7 @@ class SnackBarToastPresenter implements ToastPresenter {
               Expanded(
                 child: Text(
                   message,
-                  style: TextStyle(
-                    fontFamily: 'DM Sans',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 13,
+                  style: context.appTextStyles.emphasisLarge.copyWith(
                     color: colors.fg,
                   ),
                 ),
@@ -89,7 +126,11 @@ class SnackBarToastPresenter implements ToastPresenter {
             ],
           ),
           action: actionLabel != null && onAction != null
-              ? SnackBarAction(label: actionLabel, textColor: colors.fg, onPressed: onAction)
+              ? SnackBarAction(
+                  label: actionLabel,
+                  textColor: colors.fg,
+                  onPressed: onAction,
+                )
               : null,
         ),
       );
@@ -169,7 +210,7 @@ class _ToastStackState extends State<_ToastStack> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = widget.kind.semantic.colors;
+    final colors = widget.kind.semantic.colors(context);
     return Positioned(
       top: 20 + (widget.index * 64),
       right: 20,
@@ -179,12 +220,12 @@ class _ToastStackState extends State<_ToastStack> {
           width: 340,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: context.appColors.surface,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: colors.fg.withValues(alpha: 0.35)),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primaryDeep.withValues(alpha: 0.18),
+                color: context.appColors.primaryDeep.withValues(alpha: 0.18),
                 blurRadius: 24,
                 offset: const Offset(0, 10),
               ),
@@ -197,11 +238,8 @@ class _ToastStackState extends State<_ToastStack> {
               Expanded(
                 child: Text(
                   widget.message,
-                  style: const TextStyle(
-                    fontFamily: 'DM Sans',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 13,
-                    color: AppColors.textPrimary,
+                  style: context.appTextStyles.emphasisLarge.copyWith(
+                    color: context.appColors.textPrimary,
                   ),
                 ),
               ),
@@ -215,9 +253,13 @@ class _ToastStackState extends State<_ToastStack> {
                 ),
               InkWell(
                 onTap: widget.onDismiss,
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 4),
-                  child: Icon(Icons.close, size: 16, color: AppColors.textHint),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: Icon(
+                    Icons.close,
+                    size: 16,
+                    color: context.appColors.textHint,
+                  ),
                 ),
               ),
             ],
