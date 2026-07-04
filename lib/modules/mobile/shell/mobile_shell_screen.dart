@@ -4,6 +4,8 @@ import 'package:gap/gap.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../values/app_theme/app_colors.dart';
 import '../../../values/app_theme/app_text_styles.dart';
+import '../../../widgets/nav/app_bottom_nav.dart';
+import '../../../widgets/nav/nav_item.dart';
 
 /// Employee/Manager home shell with bottom navigation (mockup E02 chrome).
 ///
@@ -21,37 +23,20 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final tabs = [
-      l10n.navDevices,
-      l10n.navRequests,
-      l10n.navHandover,
-      l10n.navProfile,
+    final items = [
+      NavItem(id: 'devices', label: l10n.navDevices, icon: Icons.laptop_mac_outlined),
+      NavItem(id: 'requests', label: l10n.navRequests, icon: Icons.list_alt_outlined),
+      NavItem(id: 'handover', label: l10n.navHandover, icon: Icons.swap_horiz_outlined),
+      NavItem(id: 'profile', label: l10n.navProfile, icon: Icons.person_outline),
     ];
     return Scaffold(
       backgroundColor: AppColors.scaffoldAlt,
-      appBar: AppBar(title: Text(tabs[_index], style: AppTextStyles.h2)),
-      body: _ComingSoon(label: tabs[_index]),
-      bottomNavigationBar: NavigationBar(
+      appBar: AppBar(title: Text(items[_index].label, style: AppTextStyles.h2)),
+      body: _ComingSoon(label: items[_index].label),
+      bottomNavigationBar: AppBottomNav(
+        items: items,
         selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.laptop_mac_outlined),
-            label: l10n.navDevices,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.list_alt_outlined),
-            label: l10n.navRequests,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.swap_horiz_outlined),
-            label: l10n.navHandover,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.person_outline),
-            label: l10n.navProfile,
-          ),
-        ],
+        onSelected: (i) => setState(() => _index = i),
       ),
     );
   }
@@ -68,8 +53,7 @@ class _ComingSoon extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.dashboard_customize_outlined,
-              size: 40, color: AppColors.primary),
+          const Icon(Icons.dashboard_customize_outlined, size: 40, color: AppColors.primary),
           const Gap(12),
           Text(label, style: AppTextStyles.h3),
           const Gap(4),

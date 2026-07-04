@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../modules/admin/dashboard/cubit/dashboard_cubit.dart';
 import '../../modules/admin/dashboard/dashboard_screen.dart';
+import '../../views/component_showcase/component_showcase_screen.dart';
 import '../../views/invalid_route/invalid_route_screen.dart';
 import 'app_routes.dart';
 
@@ -17,6 +18,11 @@ GoRouter buildAdminRouter() {
         name: Routes.adminDashboard.name,
         builder: (context, state) =>
             const DashboardScreen().withProvider((_) => DashboardCubit()),
+      ),
+      GoRoute(
+        path: Routes.componentShowcase.path,
+        name: Routes.componentShowcase.name,
+        builder: (context, state) => const ComponentShowcaseScreen(),
       ),
     ],
   );

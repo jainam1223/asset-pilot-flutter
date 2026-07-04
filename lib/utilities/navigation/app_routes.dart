@@ -12,7 +12,10 @@ enum Routes {
   mobileShell(path: '/home', name: 'mobileShell'),
 
   // Admin (IT)
-  adminDashboard(path: '/dashboard', name: 'adminDashboard');
+  adminDashboard(path: '/dashboard', name: 'adminDashboard'),
+
+  // Shared (temporary, both variants — component library verification)
+  componentShowcase(path: '/showcase', name: 'componentShowcase');
 
   const Routes({required this.path, required this.name});
 
