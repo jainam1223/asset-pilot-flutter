@@ -4,8 +4,10 @@ import 'package:retrofit/retrofit.dart';
 import '../../../models/api_response/api_result.dart';
 import '../../../utilities/api_utilities/my_call_adapter.dart';
 import '../auth/models/login_req_dm.dart';
+import '../common/models/item_category_res_dm.dart';
 import '../common/models/request_res_dm.dart';
 import '../common/models/user_res_dm.dart';
+import '../request/models/create_request_req_dm.dart';
 
 part 'api_service.g.dart';
 
@@ -42,5 +44,17 @@ abstract class ApiService {
   Future<ApiResult<RequestResDm>> getRequestDetail(
     @Header('X-User-Id') String userId,
     @Path('requestId') String requestId,
+  );
+
+  /// Active `item_category` rows, for the category picker on Request
+  /// Device (mockup E04).
+  @GET('/item-categories')
+  Future<ApiResult<List<ItemCategoryResDm>>> getItemCategories();
+
+  /// Raise a new device request (Request Device, mockup E04).
+  @POST('/me/requests')
+  Future<ApiResult<RequestResDm>> createRequest(
+    @Header('X-User-Id') String userId,
+    @Body() CreateRequestReqDm body,
   );
 }

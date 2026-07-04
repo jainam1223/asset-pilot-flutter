@@ -2,6 +2,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../modules/mobile/login/cubit/login_cubit.dart';
 import '../../modules/mobile/login/login_screen.dart';
+import '../../modules/mobile/requests/create_request_screen.dart';
+import '../../modules/mobile/requests/cubit/create_request_cubit.dart';
 import '../../modules/mobile/requests/cubit/request_detail_cubit.dart';
 import '../../modules/mobile/requests/request_detail_screen.dart';
 import '../../modules/mobile/shell/mobile_shell_screen.dart';
@@ -39,6 +41,13 @@ GoRouter buildMobileRouter() {
         path: Routes.mobileShell.path,
         name: Routes.mobileShell.name,
         builder: (context, state) => const MobileShellScreen(),
+      ),
+      GoRoute(
+        path: Routes.createRequest.path,
+        name: Routes.createRequest.name,
+        builder: (context, state) => const CreateRequestScreen().withProvider(
+          (_) => CreateRequestCubit(),
+        ),
       ),
       GoRoute(
         path: Routes.requestDetail.path,
