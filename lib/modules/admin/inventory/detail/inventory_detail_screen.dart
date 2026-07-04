@@ -34,7 +34,6 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen> {
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.adminInventory,
-      selectedNavId: 'inventory',
       child: BlocBuilder<InventoryDetailCubit, InventoryDetailState>(
         builder: (context, state) {
           return NetworkStateView<InventoryDetailResDm>(

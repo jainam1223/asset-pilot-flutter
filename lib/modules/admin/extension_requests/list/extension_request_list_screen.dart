@@ -35,7 +35,6 @@ class _ExtensionRequestListScreenState
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.adminExtensionRequests,
-      selectedNavId: 'extensionRequests',
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
         child: Column(

@@ -33,7 +33,6 @@ class _MaintenanceListScreenState extends State<MaintenanceListScreen> {
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.adminMaintenance,
-      selectedNavId: 'maintenance',
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
         child: BlocListener<MaintenanceListCubit, MaintenanceListState>(

@@ -41,7 +41,6 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       title: context.l10n.requestDetailTitle(
         context.read<RequestDetailCubit>().requestId,
       ),
-      selectedNavId: 'requests',
       child: BlocConsumer<RequestDetailCubit, RequestDetailState>(
         listenWhen: (previous, current) => previous.submission != current.submission,
         listener: (context, state) {

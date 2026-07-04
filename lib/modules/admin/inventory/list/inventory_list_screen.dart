@@ -33,7 +33,6 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.adminInventory,
-      selectedNavId: 'inventory',
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
         child: Column(

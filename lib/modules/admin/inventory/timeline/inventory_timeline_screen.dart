@@ -37,7 +37,6 @@ class _InventoryTimelineScreenState extends State<InventoryTimelineScreen> {
   Widget build(BuildContext context) {
     return AdminShell(
       title: context.l10n.inventoryTimelineTitle(widget.deviceName),
-      selectedNavId: 'inventory',
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
         child: BlocBuilder<InventoryTimelineCubit, InventoryTimelineState>(

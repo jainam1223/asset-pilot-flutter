@@ -7,34 +7,14 @@ import '../../../utilities/navigation/app_routes.dart';
 import '../../../widgets/nav/app_side_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
 
-/// IT Admin desktop/web shell with a persistent left navigation rail
-/// (mockup A01 chrome). Collapses to icon-only on narrow widths so the same
-/// shell serves web and desktop without platform branching.
-class AdminShell extends StatelessWidget {
-  const AdminShell({
-    super.key,
-    required this.title,
-    required this.selectedNavId,
-    required this.child,
-    this.leading,
-    this.trailing,
-  });
-
-  final String title;
-
-  /// Which [NavItem.id] is highlighted in the side nav (e.g. `'dashboard'`,
-  /// `'requests'`). Only ids with a built screen route via [_onSelected];
-  /// the rest are inert until their screens exist.
-  final String selectedNavId;
-  final Widget child;
-
-  /// Optional widget placed before [title] in the top bar (e.g. a back
-  /// button on a nested detail screen).
-  final Widget? leading;
-
-  /// Optional widget placed at the end of the top bar (e.g. a view-mode
-  /// toggle).
-  final Widget? trailing;
+/// Persistent left navigation rail for the IT Admin (web/desktop) variant.
+///
+/// Built ONCE by the admin `ShellRoute` (see `admin_routes.dart`), so it stays
+/// fixed while only the content area to its right swaps between destinations.
+/// The highlighted item is derived from the current route location rather than
+/// passed in per-screen, so no screen has to know its own nav id.
+class AdminNavRail extends StatelessWidget {
+  const AdminNavRail({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -72,28 +52,23 @@ class AdminShell extends StatelessWidget {
         icon: Icons.settings_outlined,
       ),
     ];
-    return Scaffold(
-      backgroundColor: context.appColors.adminCanvas,
-      body: Row(
-        children: [
-          AppSideNav(
-            items: items,
-            selectedId: selectedNavId,
-            onSelected: (id) => _onSelected(context, id),
-            brandLabel: 'ASSETPILOT',
-            expanded: expanded,
-          ),
-          Expanded(
-            child: Column(
-              children: [
-                _AdminTopBar(title: title, leading: leading, trailing: trailing),
-                Expanded(child: child),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return AppSideNav(
+      items: items,
+      selectedId: _selectedNavId(GoRouterState.of(context).uri.path),
+      onSelected: (id) => _onSelected(context, id),
+      brandLabel: 'ASSETPILOT',
+      expanded: expanded,
     );
+  }
+
+  /// Maps the current location to the nav id that should be highlighted.
+  /// Nested detail/timeline routes highlight their parent destination.
+  String _selectedNavId(String location) {
+    if (location.startsWith('/requests')) return 'requests';
+    if (location.startsWith('/inventory')) return 'inventory';
+    if (location.startsWith('/maintenance')) return 'maintenance';
+    if (location.startsWith('/extension-requests')) return 'extensionRequests';
+    return 'dashboard';
   }
 
   void _onSelected(BuildContext context, String id) {
@@ -106,6 +81,41 @@ class AdminShell extends StatelessWidget {
       _ => null,
     };
     if (path != null) context.go(path);
+  }
+}
+
+/// Per-screen content wrapper for the IT Admin variant: a top bar plus the
+/// screen body. The persistent side nav is provided separately by the admin
+/// `ShellRoute` via [AdminNavRail], so switching destinations only rebuilds
+/// this part — the rail stays put.
+class AdminShell extends StatelessWidget {
+  const AdminShell({
+    super.key,
+    required this.title,
+    required this.child,
+    this.leading,
+    this.trailing,
+  });
+
+  final String title;
+  final Widget child;
+
+  /// Optional widget placed before [title] in the top bar (e.g. a back
+  /// button on a nested detail screen).
+  final Widget? leading;
+
+  /// Optional widget placed at the end of the top bar (e.g. a view-mode
+  /// toggle).
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _AdminTopBar(title: title, leading: leading, trailing: trailing),
+        Expanded(child: child),
+      ],
+    );
   }
 }
 
