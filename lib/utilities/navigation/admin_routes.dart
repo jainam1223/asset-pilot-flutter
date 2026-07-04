@@ -2,6 +2,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../modules/admin/dashboard/cubit/dashboard_cubit.dart';
 import '../../modules/admin/dashboard/dashboard_screen.dart';
+import '../../modules/admin/requests/detail/cubit/request_detail_cubit.dart';
+import '../../modules/admin/requests/detail/request_detail_screen.dart';
+import '../../modules/admin/requests/list/cubit/request_list_cubit.dart';
+import '../../modules/admin/requests/list/request_list_screen.dart';
 import '../../views/component_showcase/component_showcase_screen.dart';
 import '../../views/invalid_route/invalid_route_screen.dart';
 import 'app_routes.dart';
@@ -18,6 +22,21 @@ GoRouter buildAdminRouter() {
         name: Routes.adminDashboard.name,
         builder: (context, state) =>
             const DashboardScreen().withProvider((_) => DashboardCubit()),
+      ),
+      GoRoute(
+        path: Routes.adminRequests.path,
+        name: Routes.adminRequests.name,
+        builder: (context, state) =>
+            const RequestListScreen().withProvider((_) => RequestListCubit()),
+      ),
+      GoRoute(
+        path: Routes.adminRequestDetail.path,
+        name: Routes.adminRequestDetail.name,
+        builder: (context, state) {
+          final id = Uri.decodeComponent(state.pathParameters['id'] ?? '');
+          return const RequestDetailScreen()
+              .withProvider((_) => RequestDetailCubit(id));
+        },
       ),
       GoRoute(
         path: Routes.componentShowcase.path,
