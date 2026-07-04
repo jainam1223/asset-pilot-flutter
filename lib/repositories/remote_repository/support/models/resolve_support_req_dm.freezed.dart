@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ResolveSupportReqDm {
 
- String get supportId; SupportResolution get resolution; DeviceStatus get oldDeviceNextStatus; String? get swappedToItemId; String? get itNote;
+@JsonKey(includeToJson: false) String get supportId; SupportResolution get resolution;@JsonKey(name: 'old_item_next_status') DeviceStatus? get oldDeviceNextStatus;@JsonKey(name: 'swapped_to_item_id') String? get swappedToItemId;@JsonKey(name: 'it_note') String? get itNote;
 /// Create a copy of ResolveSupportReqDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ResolveSupportReqDmCopyWith<$Res>  {
   factory $ResolveSupportReqDmCopyWith(ResolveSupportReqDm value, $Res Function(ResolveSupportReqDm) _then) = _$ResolveSupportReqDmCopyWithImpl;
 @useResult
 $Res call({
- String supportId, SupportResolution resolution, DeviceStatus oldDeviceNextStatus, String? swappedToItemId, String? itNote
+@JsonKey(includeToJson: false) String supportId, SupportResolution resolution,@JsonKey(name: 'old_item_next_status') DeviceStatus? oldDeviceNextStatus,@JsonKey(name: 'swapped_to_item_id') String? swappedToItemId,@JsonKey(name: 'it_note') String? itNote
 });
 
 
@@ -65,12 +65,12 @@ class _$ResolveSupportReqDmCopyWithImpl<$Res>
 
 /// Create a copy of ResolveSupportReqDm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? supportId = null,Object? resolution = null,Object? oldDeviceNextStatus = null,Object? swappedToItemId = freezed,Object? itNote = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? supportId = null,Object? resolution = null,Object? oldDeviceNextStatus = freezed,Object? swappedToItemId = freezed,Object? itNote = freezed,}) {
   return _then(_self.copyWith(
 supportId: null == supportId ? _self.supportId : supportId // ignore: cast_nullable_to_non_nullable
 as String,resolution: null == resolution ? _self.resolution : resolution // ignore: cast_nullable_to_non_nullable
-as SupportResolution,oldDeviceNextStatus: null == oldDeviceNextStatus ? _self.oldDeviceNextStatus : oldDeviceNextStatus // ignore: cast_nullable_to_non_nullable
-as DeviceStatus,swappedToItemId: freezed == swappedToItemId ? _self.swappedToItemId : swappedToItemId // ignore: cast_nullable_to_non_nullable
+as SupportResolution,oldDeviceNextStatus: freezed == oldDeviceNextStatus ? _self.oldDeviceNextStatus : oldDeviceNextStatus // ignore: cast_nullable_to_non_nullable
+as DeviceStatus?,swappedToItemId: freezed == swappedToItemId ? _self.swappedToItemId : swappedToItemId // ignore: cast_nullable_to_non_nullable
 as String?,itNote: freezed == itNote ? _self.itNote : itNote // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String supportId,  SupportResolution resolution,  DeviceStatus oldDeviceNextStatus,  String? swappedToItemId,  String? itNote)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String supportId,  SupportResolution resolution, @JsonKey(name: 'old_item_next_status')  DeviceStatus? oldDeviceNextStatus, @JsonKey(name: 'swapped_to_item_id')  String? swappedToItemId, @JsonKey(name: 'it_note')  String? itNote)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ResolveSupportReqDm() when $default != null:
 return $default(_that.supportId,_that.resolution,_that.oldDeviceNextStatus,_that.swappedToItemId,_that.itNote);case _:
@@ -178,7 +178,7 @@ return $default(_that.supportId,_that.resolution,_that.oldDeviceNextStatus,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String supportId,  SupportResolution resolution,  DeviceStatus oldDeviceNextStatus,  String? swappedToItemId,  String? itNote)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String supportId,  SupportResolution resolution, @JsonKey(name: 'old_item_next_status')  DeviceStatus? oldDeviceNextStatus, @JsonKey(name: 'swapped_to_item_id')  String? swappedToItemId, @JsonKey(name: 'it_note')  String? itNote)  $default,) {final _that = this;
 switch (_that) {
 case _ResolveSupportReqDm():
 return $default(_that.supportId,_that.resolution,_that.oldDeviceNextStatus,_that.swappedToItemId,_that.itNote);case _:
@@ -198,7 +198,7 @@ return $default(_that.supportId,_that.resolution,_that.oldDeviceNextStatus,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String supportId,  SupportResolution resolution,  DeviceStatus oldDeviceNextStatus,  String? swappedToItemId,  String? itNote)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String supportId,  SupportResolution resolution, @JsonKey(name: 'old_item_next_status')  DeviceStatus? oldDeviceNextStatus, @JsonKey(name: 'swapped_to_item_id')  String? swappedToItemId, @JsonKey(name: 'it_note')  String? itNote)?  $default,) {final _that = this;
 switch (_that) {
 case _ResolveSupportReqDm() when $default != null:
 return $default(_that.supportId,_that.resolution,_that.oldDeviceNextStatus,_that.swappedToItemId,_that.itNote);case _:
@@ -213,14 +213,14 @@ return $default(_that.supportId,_that.resolution,_that.oldDeviceNextStatus,_that
 
 @JsonSerializable(includeIfNull: false)
 class _ResolveSupportReqDm implements ResolveSupportReqDm {
-  const _ResolveSupportReqDm({required this.supportId, required this.resolution, required this.oldDeviceNextStatus, this.swappedToItemId, this.itNote});
+  const _ResolveSupportReqDm({@JsonKey(includeToJson: false) required this.supportId, required this.resolution, @JsonKey(name: 'old_item_next_status') this.oldDeviceNextStatus, @JsonKey(name: 'swapped_to_item_id') this.swappedToItemId, @JsonKey(name: 'it_note') this.itNote});
   factory _ResolveSupportReqDm.fromJson(Map<String, dynamic> json) => _$ResolveSupportReqDmFromJson(json);
 
-@override final  String supportId;
+@override@JsonKey(includeToJson: false) final  String supportId;
 @override final  SupportResolution resolution;
-@override final  DeviceStatus oldDeviceNextStatus;
-@override final  String? swappedToItemId;
-@override final  String? itNote;
+@override@JsonKey(name: 'old_item_next_status') final  DeviceStatus? oldDeviceNextStatus;
+@override@JsonKey(name: 'swapped_to_item_id') final  String? swappedToItemId;
+@override@JsonKey(name: 'it_note') final  String? itNote;
 
 /// Create a copy of ResolveSupportReqDm
 /// with the given fields replaced by the non-null parameter values.
@@ -255,7 +255,7 @@ abstract mixin class _$ResolveSupportReqDmCopyWith<$Res> implements $ResolveSupp
   factory _$ResolveSupportReqDmCopyWith(_ResolveSupportReqDm value, $Res Function(_ResolveSupportReqDm) _then) = __$ResolveSupportReqDmCopyWithImpl;
 @override @useResult
 $Res call({
- String supportId, SupportResolution resolution, DeviceStatus oldDeviceNextStatus, String? swappedToItemId, String? itNote
+@JsonKey(includeToJson: false) String supportId, SupportResolution resolution,@JsonKey(name: 'old_item_next_status') DeviceStatus? oldDeviceNextStatus,@JsonKey(name: 'swapped_to_item_id') String? swappedToItemId,@JsonKey(name: 'it_note') String? itNote
 });
 
 
@@ -272,12 +272,12 @@ class __$ResolveSupportReqDmCopyWithImpl<$Res>
 
 /// Create a copy of ResolveSupportReqDm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? supportId = null,Object? resolution = null,Object? oldDeviceNextStatus = null,Object? swappedToItemId = freezed,Object? itNote = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? supportId = null,Object? resolution = null,Object? oldDeviceNextStatus = freezed,Object? swappedToItemId = freezed,Object? itNote = freezed,}) {
   return _then(_ResolveSupportReqDm(
 supportId: null == supportId ? _self.supportId : supportId // ignore: cast_nullable_to_non_nullable
 as String,resolution: null == resolution ? _self.resolution : resolution // ignore: cast_nullable_to_non_nullable
-as SupportResolution,oldDeviceNextStatus: null == oldDeviceNextStatus ? _self.oldDeviceNextStatus : oldDeviceNextStatus // ignore: cast_nullable_to_non_nullable
-as DeviceStatus,swappedToItemId: freezed == swappedToItemId ? _self.swappedToItemId : swappedToItemId // ignore: cast_nullable_to_non_nullable
+as SupportResolution,oldDeviceNextStatus: freezed == oldDeviceNextStatus ? _self.oldDeviceNextStatus : oldDeviceNextStatus // ignore: cast_nullable_to_non_nullable
+as DeviceStatus?,swappedToItemId: freezed == swappedToItemId ? _self.swappedToItemId : swappedToItemId // ignore: cast_nullable_to_non_nullable
 as String?,itNote: freezed == itNote ? _self.itNote : itNote // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

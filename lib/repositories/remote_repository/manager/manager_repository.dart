@@ -2,7 +2,6 @@ import '../../../models/api_response/api_result.dart';
 import '../../../models/exceptions/app_exception.dart';
 import '../../../values/enumeration/statuses.dart';
 import '../api_repository/api_repository.dart';
-import '../extension_requests/models/decide_extension_req_dm.dart';
 import '../extension_requests/models/extension_request_summary_res_dm.dart';
 import 'models/pending_approval_res_dm.dart';
 import 'models/team_device_res_dm.dart';
@@ -53,21 +52,21 @@ class ManagerRepository extends Repository {
   ];
 
   static final List<ExtensionRequestSummaryResDm> _mockExtensions = [
-    const ExtensionRequestSummaryResDm(
+    ExtensionRequestSummaryResDm(
       id: '#54',
       employeeName: 'Arjun Mehta',
       deviceName: 'MacBook Pro 16" M3',
-      currentToDate: '04 Aug 2026',
-      extendToDate: '04 Nov 2026',
+      currentToDate: DateTime(2026, 8, 4),
+      extendToDate: DateTime(2026, 11, 4),
       mgrApprovalStatus: MgrApprovalStatus.pending,
       status: ExtensionStatus.pending,
     ),
-    const ExtensionRequestSummaryResDm(
+    ExtensionRequestSummaryResDm(
       id: '#53',
       employeeName: 'Ravi Sharma',
       deviceName: 'Dell UltraSharp U2723QE',
-      currentToDate: '31 Dec 2026',
-      extendToDate: '31 Mar 2027',
+      currentToDate: DateTime(2026, 12, 31),
+      extendToDate: DateTime(2027, 3, 31),
       mgrApprovalStatus: MgrApprovalStatus.pending,
       status: ExtensionStatus.pending,
     ),
@@ -189,20 +188,22 @@ class ManagerRepository extends Repository {
   /// Approve or reject a device extension request (M03 "Approve"/"Reject").
   /// Currently mocked; mutates the in-memory list so the row reflects the
   /// decision this session.
-  Future<ApiResult<void>> decideExtension(DecideExtensionReqDm body) async {
+  Future<ApiResult<void>> decideExtension({
+    required String extensionId,
+    required ExtensionStatus decision,
+  }) async {
     // --- MOCK ---------------------------------------------------------------
     await Future<void>.delayed(const Duration(milliseconds: 400));
-    final index = _mockExtensions.indexWhere(
-      (e) => e.id == body.extensionId,
-    );
+    final index = _mockExtensions.indexWhere((e) => e.id == extensionId);
     if (index != -1) {
       _mockExtensions[index] = _mockExtensions[index].copyWith(
-        status: body.decision,
+        status: decision,
       );
     }
     return const ApiSuccess<void>(null);
     // --- REAL (enable when backend exists) ----------------------------------
-    // return apiService.decideExtension(body.extensionId, body);
+    // return apiService.approveExtension(extensionId, ...) /
+    //        apiService.rejectExtension(extensionId, ...);
   }
 
   /// Read-only device list for this manager's direct reports (M04).

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../repositories/remote_repository/requests/models/request_summary_res_dm.dart';
 import '../../../../utilities/extensions/context_extensions.dart';
@@ -49,8 +50,9 @@ class _RequestListScreenState extends State<RequestListScreen> {
                     state: state.requests,
                     isEmpty: (data) => data.isEmpty,
                     onData: (context, data) => _RequestsTable(
-                      allFiltered: context.read<RequestListCubit>().filteredRequests,
+                      rows: data,
                       currentPage: state.currentPage,
+                      totalItems: state.totalItems,
                     ),
                   );
                 },
@@ -114,13 +116,14 @@ class _FiltersRowState extends State<_FiltersRow> {
               valueLabel: state.priorityFilter?.label ?? context.l10n.requestFilterAll,
               onTap: () => _showPriorityMenu(context, cubit),
             ),
+            // TODO(category-filter): category filtering by id needs the
+            // categories dropdown endpoint wired to a picker; stubbed as
+            // display-only until that UI exists.
             FilterDropdownChip(
               key: _categoryChipKey,
               label: context.l10n.requestFilterCategory,
-              valueLabel: state.categoryFilter == 'all'
-                  ? context.l10n.requestFilterAll
-                  : state.categoryFilter,
-              onTap: () => _showCategoryMenu(context, cubit),
+              valueLabel: context.l10n.requestFilterAll,
+              onTap: () => AppToast.info(context, context.l10n.comingSoon),
             ),
             // TODO(date-range): no date-range picker widget exists yet in the
             // shared library — this trigger is a display-only stub for now.
@@ -174,36 +177,27 @@ class _FiltersRowState extends State<_FiltersRow> {
     });
   }
 
-  void _showCategoryMenu(BuildContext context, RequestListCubit cubit) {
-    const categories = ['all', 'Laptop', 'Monitor', 'Mobile', 'Accessory'];
-    showMenu<String>(
-      context: context,
-      position: _menuPosition(_categoryChipKey),
-      items: [
-        for (final category in categories)
-          PopupMenuItem(
-            value: category,
-            child: Text(category == 'all' ? context.l10n.requestFilterAll : category),
-          ),
-      ],
-    ).then((value) {
-      if (value != null && context.mounted) cubit.setCategoryFilter(value);
-    });
-  }
 }
 
 class _RequestsTable extends StatelessWidget {
-  const _RequestsTable({required this.allFiltered, required this.currentPage});
+  const _RequestsTable({
+    required this.rows,
+    required this.currentPage,
+    required this.totalItems,
+  });
 
-  final List<RequestSummaryResDm> allFiltered;
+  final List<RequestSummaryResDm> rows;
   final int currentPage;
+  final int totalItems;
+
+  static final _dateFormat = DateFormat('dd MMM yyyy');
+
+  static String _formatDate(DateTime? date) =>
+      date == null ? '—' : _dateFormat.format(date.toLocal());
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<RequestListCubit>();
-    final start = (currentPage - 1) * kRequestListPageSize;
-    final end = (start + kRequestListPageSize).clamp(0, allFiltered.length);
-    final pageRows = start < allFiltered.length ? allFiltered.sublist(start, end) : <RequestSummaryResDm>[];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -218,11 +212,11 @@ class _RequestsTable extends StatelessWidget {
               TableColumn<RequestSummaryResDm>(
                 header: context.l10n.requestColumnEmployee,
                 flex: 2,
-                cellBuilder: (context, row) => Text(row.employeeName),
+                cellBuilder: (context, row) => Text(row.requesterName),
               ),
               TableColumn<RequestSummaryResDm>(
                 header: context.l10n.columnCategory,
-                cellBuilder: (context, row) => Text(row.category),
+                cellBuilder: (context, row) => Text(row.categoryName),
               ),
               TableColumn<RequestSummaryResDm>(
                 header: context.l10n.requestColumnPriority,
@@ -242,12 +236,17 @@ class _RequestsTable extends StatelessWidget {
               TableColumn<RequestSummaryResDm>(
                 header: context.l10n.requestColumnDates,
                 flex: 2,
-                cellBuilder: (context, row) => Text('${row.requestedFrom} – ${row.requestedTo}'),
+                cellBuilder: (context, row) => Text(
+                  '${_formatDate(row.requestedFrom)} – ${_formatDate(row.requestedTo)}',
+                ),
               ),
               TableColumn<RequestSummaryResDm>(
                 header: context.l10n.requestColumnMgr,
                 cellBuilder: (context, row) => Text(
-                  row.managerApproved ? context.l10n.requestApproved : context.l10n.requestPending,
+                  row.mgrApprovalStatus == MgrApprovalStatus.approved ||
+                          row.mgrApprovalStatus == MgrApprovalStatus.notRequired
+                      ? context.l10n.requestApproved
+                      : context.l10n.requestPending,
                 ),
               ),
               TableColumn<RequestSummaryResDm>(
@@ -265,10 +264,10 @@ class _RequestsTable extends StatelessWidget {
                 ),
               ),
             ],
-            rows: pageRows,
+            rows: rows,
             pagination: TablePagination(
               currentPage: currentPage,
-              totalItems: allFiltered.length,
+              totalItems: totalItems,
               pageSize: kRequestListPageSize,
               onPageChanged: cubit.setPage,
             ),

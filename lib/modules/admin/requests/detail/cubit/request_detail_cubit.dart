@@ -14,9 +14,9 @@ import '../../../../../utilities/network/safe_emit.dart';
 part 'request_detail_state.dart';
 
 /// Drives the Request Detail & Assign screen (mockup A03): loads the
-/// request's detail + AI-ranked suggested devices, tracks the assign form
-/// (selected device, date range, WFH toggle), and submits Assign/Reject
-/// through the mocked [RequestRepository].
+/// request's detail + suggested devices, tracks the assign form (selected
+/// device, date range, WFH toggle), and submits Assign/Reject through
+/// [RequestRepository].
 class RequestDetailCubit extends Cubit<RequestDetailState> {
   RequestDetailCubit(this.requestId) : super(const RequestDetailState());
 
@@ -32,7 +32,7 @@ class RequestDetailCubit extends Cubit<RequestDetailState> {
             detail: Success(data),
             assignedFrom: data.requestedFrom,
             assignedTo: data.requestedTo,
-            workFromHome: data.workFromHome,
+            workFromHome: data.isWfh,
           ),
         ),
         failure: (error) {
@@ -51,16 +51,12 @@ class RequestDetailCubit extends Cubit<RequestDetailState> {
     try {
       final result = await RequestRepository.instance.fetchSuggestedDevices(requestId);
       result.when(
-        success: (data) {
-          final recommended = data.where((d) => d.recommended).firstOrNull ??
-              (data.isNotEmpty ? data.first : null);
-          safeEmit(
-            state.copyWith(
-              suggestions: Success(data),
-              selectedDeviceId: recommended?.deviceId,
-            ),
-          );
-        },
+        success: (data) => safeEmit(
+          state.copyWith(
+            suggestions: Success(data),
+            selectedDeviceId: data.isNotEmpty ? data.first.itemId : null,
+          ),
+        ),
         failure: (error) {
           errorManager.handle(error);
           safeEmit(state.copyWith(suggestions: Error(error.message)));
@@ -76,25 +72,29 @@ class RequestDetailCubit extends Cubit<RequestDetailState> {
     safeEmit(state.copyWith(selectedDeviceId: deviceId));
   }
 
-  void updateAssignedFrom(String value) => safeEmit(state.copyWith(assignedFrom: value));
-
-  void updateAssignedTo(String value) => safeEmit(state.copyWith(assignedTo: value));
-
   void toggleWorkFromHome(bool value) => safeEmit(state.copyWith(workFromHome: value));
+
+  void updateAssignedFrom(DateTime value) =>
+      safeEmit(state.copyWith(assignedFrom: value));
+
+  void updateAssignedTo(DateTime value) =>
+      safeEmit(state.copyWith(assignedTo: value));
 
   Future<void> assign() async {
     final deviceId = state.selectedDeviceId;
-    if (deviceId == null) return;
+    final assignedFrom = state.assignedFrom;
+    final assignedTo = state.assignedTo;
+    if (deviceId == null || assignedFrom == null || assignedTo == null) return;
 
     safeEmit(state.copyWith(submission: const Loading()));
     try {
       final result = await RequestRepository.instance.assignDevice(
+        requestId,
         AssignDeviceReqDm(
-          requestId: requestId,
-          deviceId: deviceId,
-          assignedFrom: state.assignedFrom,
-          assignedTo: state.assignedTo,
-          workFromHome: state.workFromHome,
+          itemId: deviceId,
+          assignedFrom: assignedFrom,
+          assignedTo: assignedTo,
+          isWfh: state.workFromHome,
         ),
       );
       result.when(
@@ -114,7 +114,10 @@ class RequestDetailCubit extends Cubit<RequestDetailState> {
     safeEmit(state.copyWith(submission: const Loading()));
     try {
       final result = await RequestRepository.instance.rejectRequest(
-        RejectRequestReqDm(requestId: requestId, note: note),
+        requestId,
+        RejectRequestReqDm(
+          rejectedReason: note ?? 'Rejected by IT admin',
+        ),
       );
       result.when(
         success: (_) => safeEmit(state.copyWith(submission: const Success(null))),

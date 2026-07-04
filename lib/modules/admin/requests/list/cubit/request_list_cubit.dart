@@ -11,27 +11,34 @@ import '../../../../../values/enumeration/statuses.dart';
 
 part 'request_list_state.dart';
 
-/// Page size for the client-side pagination of the Request Management
+/// Page size for the server-side pagination of the Request Management
 /// table (mockup A02).
-const int kRequestListPageSize = 6;
+const int kRequestListPageSize = 10;
 
-/// Drives the Request Management screen (mockup A02): loads the full mock
-/// request list once, then re-derives the filtered/paginated view from the
-/// cached list whenever a filter or page changes.
+/// Drives the Request Management screen (mockup A02): loads a server-side
+/// paginated + filtered page of requests from [RequestRepository] whenever
+/// a filter or page changes.
 class RequestListCubit extends Cubit<RequestListState> {
   RequestListCubit() : super(const RequestListState());
-
-  List<RequestSummaryResDm> _allRequests = [];
 
   Future<void> loadRequests() async {
     safeEmit(state.copyWith(requests: const Loading()));
     try {
-      final result = await RequestRepository.instance.fetchRequests();
+      final result = await RequestRepository.instance.fetchRequests(
+        status: _statusFromFilter(state.statusFilter),
+        priority: state.priorityFilter,
+        categoryId: state.categoryFilter == 'all' ? null : state.categoryFilter,
+        search: state.searchQuery.isEmpty ? null : state.searchQuery,
+        page: state.currentPage,
+        pageSize: kRequestListPageSize,
+      );
       result.when(
-        success: (data) {
-          _allRequests = data;
-          safeEmit(state.copyWith(requests: Success(_filtered())));
-        },
+        success: (data) => safeEmit(
+          state.copyWith(
+            requests: Success(data.items),
+            totalItems: data.pagination.totalItems,
+          ),
+        ),
         failure: (error) {
           errorManager.handle(error);
           safeEmit(state.copyWith(requests: Error(error.message)));
@@ -43,9 +50,21 @@ class RequestListCubit extends Cubit<RequestListState> {
     }
   }
 
+  RequestStatus? _statusFromFilter(String filter) {
+    return switch (filter) {
+      'all' => null,
+      'pendingMgrApproval' => RequestStatus.pendingMgrApproval,
+      'pendingItApproval' => RequestStatus.pendingItApproval,
+      'assigned' => RequestStatus.assigned,
+      'rejected' => RequestStatus.rejected,
+      'completed' => RequestStatus.completed,
+      _ => null,
+    };
+  }
+
   void setStatusFilter(String statusFilter) {
     safeEmit(state.copyWith(statusFilter: statusFilter, currentPage: 1));
-    _reapplyFilters();
+    loadRequests();
   }
 
   void setPriorityFilter(RequestPriority? priorityFilter) {
@@ -56,45 +75,21 @@ class RequestListCubit extends Cubit<RequestListState> {
         currentPage: 1,
       ),
     );
-    _reapplyFilters();
+    loadRequests();
   }
 
   void setCategoryFilter(String categoryFilter) {
     safeEmit(state.copyWith(categoryFilter: categoryFilter, currentPage: 1));
-    _reapplyFilters();
+    loadRequests();
   }
 
   void setSearchQuery(String searchQuery) {
     safeEmit(state.copyWith(searchQuery: searchQuery, currentPage: 1));
-    _reapplyFilters();
+    loadRequests();
   }
 
   void setPage(int page) {
     safeEmit(state.copyWith(currentPage: page));
-    _reapplyFilters();
+    loadRequests();
   }
-
-  void _reapplyFilters() {
-    safeEmit(state.copyWith(requests: Success(_filtered())));
-  }
-
-  List<RequestSummaryResDm> _filtered() {
-    final filtered = _allRequests.where((r) {
-      final matchesStatus =
-          state.statusFilter == 'all' || r.status.name == state.statusFilter;
-      final matchesPriority =
-          state.priorityFilter == null || r.priority == state.priorityFilter;
-      final matchesCategory =
-          state.categoryFilter == 'all' || r.category == state.categoryFilter;
-      final matchesSearch = state.searchQuery.isEmpty ||
-          r.employeeName.toLowerCase().contains(state.searchQuery.toLowerCase()) ||
-          r.id.toLowerCase().contains(state.searchQuery.toLowerCase());
-      return matchesStatus && matchesPriority && matchesCategory && matchesSearch;
-    }).toList();
-    return filtered;
-  }
-
-  /// Full filtered list (pre-pagination) — used by the screen to compute
-  /// [TablePagination.totalItems] and to slice the current page.
-  List<RequestSummaryResDm> get filteredRequests => _filtered();
 }

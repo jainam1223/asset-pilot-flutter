@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/api_response/api_result.dart';
-import '../../../../repositories/remote_repository/extension_requests/models/decide_extension_req_dm.dart';
 import '../../../../repositories/remote_repository/extension_requests/models/extension_request_summary_res_dm.dart';
+import '../../../../values/enumeration/statuses.dart';
 import '../../../../repositories/remote_repository/manager/manager_repository.dart';
 import '../../../../utilities/api_utilities/error_manager.dart';
 import '../../../../utilities/network/network_state.dart';
@@ -38,8 +38,14 @@ class ManagerExtensionsCubit extends Cubit<ManagerExtensionsState> {
     }
   }
 
-  Future<bool> decide(DecideExtensionReqDm body) async {
-    final result = await ManagerRepository.instance.decideExtension(body);
+  Future<bool> decide({
+    required String extensionId,
+    required ExtensionStatus decision,
+  }) async {
+    final result = await ManagerRepository.instance.decideExtension(
+      extensionId: extensionId,
+      decision: decision,
+    );
     return switch (result) {
       ApiSuccess() => true,
       ApiFailure(:final error) => () {

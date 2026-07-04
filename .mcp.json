@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "swagger-explorer": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@ivotoby/openapi-mcp-server"
+      ],
+      "env": {
+        "API_BASE_URL": "https://gigahertz-superior-cupbearer.ngrok-free.dev",
+        "OPENAPI_SPEC_PATH": "https://gigahertz-superior-cupbearer.ngrok-free.dev/openapi.json",
+        "API_HEADERS": "ngrok-skip-browser-warning:true"
+      }
+    }
+  }
+}

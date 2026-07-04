@@ -6,8 +6,8 @@ class RequestDetailState extends Equatable {
     this.detail = const Idle(),
     this.suggestions = const Idle(),
     this.selectedDeviceId,
-    this.assignedFrom = '',
-    this.assignedTo = '',
+    this.assignedFrom,
+    this.assignedTo,
     this.workFromHome = false,
     this.submission = const Idle(),
   });
@@ -15,8 +15,8 @@ class RequestDetailState extends Equatable {
   final NetworkState<RequestDetailResDm> detail;
   final NetworkState<List<SuggestedDeviceResDm>> suggestions;
   final String? selectedDeviceId;
-  final String assignedFrom;
-  final String assignedTo;
+  final DateTime? assignedFrom;
+  final DateTime? assignedTo;
   final bool workFromHome;
   final NetworkState<void> submission;
 
@@ -24,8 +24,8 @@ class RequestDetailState extends Equatable {
     NetworkState<RequestDetailResDm>? detail,
     NetworkState<List<SuggestedDeviceResDm>>? suggestions,
     String? selectedDeviceId,
-    String? assignedFrom,
-    String? assignedTo,
+    DateTime? assignedFrom,
+    DateTime? assignedTo,
     bool? workFromHome,
     NetworkState<void>? submission,
   }) {

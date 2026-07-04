@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ExtensionRequestSummaryResDm {
 
- String get id; String get employeeName; String get deviceName; String get currentToDate; String get extendToDate; MgrApprovalStatus get mgrApprovalStatus; ExtensionStatus get status;
+ String get id;@JsonKey(name: 'requester_name') String get employeeName;@JsonKey(name: 'item_name') String get deviceName;@JsonKey(name: 'current_assigned_to') DateTime? get currentToDate;@JsonKey(name: 'extended_to') DateTime? get extendToDate;@JsonKey(name: 'mgr_approval_status') MgrApprovalStatus get mgrApprovalStatus; ExtensionStatus get status;
 /// Create a copy of ExtensionRequestSummaryResDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ExtensionRequestSummaryResDmCopyWith<$Res>  {
   factory $ExtensionRequestSummaryResDmCopyWith(ExtensionRequestSummaryResDm value, $Res Function(ExtensionRequestSummaryResDm) _then) = _$ExtensionRequestSummaryResDmCopyWithImpl;
 @useResult
 $Res call({
- String id, String employeeName, String deviceName, String currentToDate, String extendToDate, MgrApprovalStatus mgrApprovalStatus, ExtensionStatus status
+ String id,@JsonKey(name: 'requester_name') String employeeName,@JsonKey(name: 'item_name') String deviceName,@JsonKey(name: 'current_assigned_to') DateTime? currentToDate,@JsonKey(name: 'extended_to') DateTime? extendToDate,@JsonKey(name: 'mgr_approval_status') MgrApprovalStatus mgrApprovalStatus, ExtensionStatus status
 });
 
 
@@ -65,14 +65,14 @@ class _$ExtensionRequestSummaryResDmCopyWithImpl<$Res>
 
 /// Create a copy of ExtensionRequestSummaryResDm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? employeeName = null,Object? deviceName = null,Object? currentToDate = null,Object? extendToDate = null,Object? mgrApprovalStatus = null,Object? status = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? employeeName = null,Object? deviceName = null,Object? currentToDate = freezed,Object? extendToDate = freezed,Object? mgrApprovalStatus = null,Object? status = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,employeeName: null == employeeName ? _self.employeeName : employeeName // ignore: cast_nullable_to_non_nullable
 as String,deviceName: null == deviceName ? _self.deviceName : deviceName // ignore: cast_nullable_to_non_nullable
-as String,currentToDate: null == currentToDate ? _self.currentToDate : currentToDate // ignore: cast_nullable_to_non_nullable
-as String,extendToDate: null == extendToDate ? _self.extendToDate : extendToDate // ignore: cast_nullable_to_non_nullable
-as String,mgrApprovalStatus: null == mgrApprovalStatus ? _self.mgrApprovalStatus : mgrApprovalStatus // ignore: cast_nullable_to_non_nullable
+as String,currentToDate: freezed == currentToDate ? _self.currentToDate : currentToDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,extendToDate: freezed == extendToDate ? _self.extendToDate : extendToDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,mgrApprovalStatus: null == mgrApprovalStatus ? _self.mgrApprovalStatus : mgrApprovalStatus // ignore: cast_nullable_to_non_nullable
 as MgrApprovalStatus,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ExtensionStatus,
   ));
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String employeeName,  String deviceName,  String currentToDate,  String extendToDate,  MgrApprovalStatus mgrApprovalStatus,  ExtensionStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'requester_name')  String employeeName, @JsonKey(name: 'item_name')  String deviceName, @JsonKey(name: 'current_assigned_to')  DateTime? currentToDate, @JsonKey(name: 'extended_to')  DateTime? extendToDate, @JsonKey(name: 'mgr_approval_status')  MgrApprovalStatus mgrApprovalStatus,  ExtensionStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ExtensionRequestSummaryResDm() when $default != null:
 return $default(_that.id,_that.employeeName,_that.deviceName,_that.currentToDate,_that.extendToDate,_that.mgrApprovalStatus,_that.status);case _:
@@ -180,7 +180,7 @@ return $default(_that.id,_that.employeeName,_that.deviceName,_that.currentToDate
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String employeeName,  String deviceName,  String currentToDate,  String extendToDate,  MgrApprovalStatus mgrApprovalStatus,  ExtensionStatus status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'requester_name')  String employeeName, @JsonKey(name: 'item_name')  String deviceName, @JsonKey(name: 'current_assigned_to')  DateTime? currentToDate, @JsonKey(name: 'extended_to')  DateTime? extendToDate, @JsonKey(name: 'mgr_approval_status')  MgrApprovalStatus mgrApprovalStatus,  ExtensionStatus status)  $default,) {final _that = this;
 switch (_that) {
 case _ExtensionRequestSummaryResDm():
 return $default(_that.id,_that.employeeName,_that.deviceName,_that.currentToDate,_that.extendToDate,_that.mgrApprovalStatus,_that.status);case _:
@@ -200,7 +200,7 @@ return $default(_that.id,_that.employeeName,_that.deviceName,_that.currentToDate
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String employeeName,  String deviceName,  String currentToDate,  String extendToDate,  MgrApprovalStatus mgrApprovalStatus,  ExtensionStatus status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'requester_name')  String employeeName, @JsonKey(name: 'item_name')  String deviceName, @JsonKey(name: 'current_assigned_to')  DateTime? currentToDate, @JsonKey(name: 'extended_to')  DateTime? extendToDate, @JsonKey(name: 'mgr_approval_status')  MgrApprovalStatus mgrApprovalStatus,  ExtensionStatus status)?  $default,) {final _that = this;
 switch (_that) {
 case _ExtensionRequestSummaryResDm() when $default != null:
 return $default(_that.id,_that.employeeName,_that.deviceName,_that.currentToDate,_that.extendToDate,_that.mgrApprovalStatus,_that.status);case _:
@@ -215,15 +215,15 @@ return $default(_that.id,_that.employeeName,_that.deviceName,_that.currentToDate
 @JsonSerializable()
 
 class _ExtensionRequestSummaryResDm implements ExtensionRequestSummaryResDm {
-  const _ExtensionRequestSummaryResDm({this.id = '', this.employeeName = '', this.deviceName = '', this.currentToDate = '', this.extendToDate = '', this.mgrApprovalStatus = MgrApprovalStatus.pending, this.status = ExtensionStatus.pending});
+  const _ExtensionRequestSummaryResDm({this.id = '', @JsonKey(name: 'requester_name') this.employeeName = '', @JsonKey(name: 'item_name') this.deviceName = '', @JsonKey(name: 'current_assigned_to') this.currentToDate, @JsonKey(name: 'extended_to') this.extendToDate, @JsonKey(name: 'mgr_approval_status') this.mgrApprovalStatus = MgrApprovalStatus.pending, this.status = ExtensionStatus.pending});
   factory _ExtensionRequestSummaryResDm.fromJson(Map<String, dynamic> json) => _$ExtensionRequestSummaryResDmFromJson(json);
 
 @override@JsonKey() final  String id;
-@override@JsonKey() final  String employeeName;
-@override@JsonKey() final  String deviceName;
-@override@JsonKey() final  String currentToDate;
-@override@JsonKey() final  String extendToDate;
-@override@JsonKey() final  MgrApprovalStatus mgrApprovalStatus;
+@override@JsonKey(name: 'requester_name') final  String employeeName;
+@override@JsonKey(name: 'item_name') final  String deviceName;
+@override@JsonKey(name: 'current_assigned_to') final  DateTime? currentToDate;
+@override@JsonKey(name: 'extended_to') final  DateTime? extendToDate;
+@override@JsonKey(name: 'mgr_approval_status') final  MgrApprovalStatus mgrApprovalStatus;
 @override@JsonKey() final  ExtensionStatus status;
 
 /// Create a copy of ExtensionRequestSummaryResDm
@@ -259,7 +259,7 @@ abstract mixin class _$ExtensionRequestSummaryResDmCopyWith<$Res> implements $Ex
   factory _$ExtensionRequestSummaryResDmCopyWith(_ExtensionRequestSummaryResDm value, $Res Function(_ExtensionRequestSummaryResDm) _then) = __$ExtensionRequestSummaryResDmCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String employeeName, String deviceName, String currentToDate, String extendToDate, MgrApprovalStatus mgrApprovalStatus, ExtensionStatus status
+ String id,@JsonKey(name: 'requester_name') String employeeName,@JsonKey(name: 'item_name') String deviceName,@JsonKey(name: 'current_assigned_to') DateTime? currentToDate,@JsonKey(name: 'extended_to') DateTime? extendToDate,@JsonKey(name: 'mgr_approval_status') MgrApprovalStatus mgrApprovalStatus, ExtensionStatus status
 });
 
 
@@ -276,14 +276,14 @@ class __$ExtensionRequestSummaryResDmCopyWithImpl<$Res>
 
 /// Create a copy of ExtensionRequestSummaryResDm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? employeeName = null,Object? deviceName = null,Object? currentToDate = null,Object? extendToDate = null,Object? mgrApprovalStatus = null,Object? status = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? employeeName = null,Object? deviceName = null,Object? currentToDate = freezed,Object? extendToDate = freezed,Object? mgrApprovalStatus = null,Object? status = null,}) {
   return _then(_ExtensionRequestSummaryResDm(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,employeeName: null == employeeName ? _self.employeeName : employeeName // ignore: cast_nullable_to_non_nullable
 as String,deviceName: null == deviceName ? _self.deviceName : deviceName // ignore: cast_nullable_to_non_nullable
-as String,currentToDate: null == currentToDate ? _self.currentToDate : currentToDate // ignore: cast_nullable_to_non_nullable
-as String,extendToDate: null == extendToDate ? _self.extendToDate : extendToDate // ignore: cast_nullable_to_non_nullable
-as String,mgrApprovalStatus: null == mgrApprovalStatus ? _self.mgrApprovalStatus : mgrApprovalStatus // ignore: cast_nullable_to_non_nullable
+as String,currentToDate: freezed == currentToDate ? _self.currentToDate : currentToDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,extendToDate: freezed == extendToDate ? _self.extendToDate : extendToDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,mgrApprovalStatus: null == mgrApprovalStatus ? _self.mgrApprovalStatus : mgrApprovalStatus // ignore: cast_nullable_to_non_nullable
 as MgrApprovalStatus,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ExtensionStatus,
   ));

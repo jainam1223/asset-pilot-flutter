@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../repositories/remote_repository/extension_requests/models/decide_extension_req_dm.dart';
 import '../../../repositories/remote_repository/extension_requests/models/extension_request_summary_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/network/network_state.dart';
 import '../../../values/enumeration/statuses.dart';
 import '../../../widgets/widgets.dart';
 import 'cubit/manager_extensions_cubit.dart';
+
+final _extnDateFormat = DateFormat('dd MMM yyyy');
 
 /// Manager's Extension Approvals list (mockup M03) — device extension
 /// requests raised by direct reports, awaiting this manager's decision.
@@ -144,7 +146,7 @@ class _ExtensionCard extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  extension.currentToDate,
+                  _extnDateFormat.format(extension.currentToDate?.toLocal() ?? DateTime.now()),
                   style: context.appTextStyles.emphasisMedium.copyWith(
                     color: context.appColors.textSecondary,
                   ),
@@ -157,7 +159,7 @@ class _ExtensionCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  extension.extendToDate,
+                  _extnDateFormat.format(extension.extendToDate?.toLocal() ?? DateTime.now()),
                   style: context.appTextStyles.emphasisMedium.copyWith(
                     color: context.appColors.primary,
                     fontWeight: FontWeight.w700,
@@ -176,10 +178,8 @@ class _ExtensionCard extends StatelessWidget {
                   size: AppButtonSize.small,
                   onPressed: () async {
                     final ok = await cubit.decide(
-                      DecideExtensionReqDm(
-                        extensionId: extension.id,
-                        decision: ExtensionStatus.rejected,
-                      ),
+                      extensionId: extension.id,
+                      decision: ExtensionStatus.rejected,
                     );
                     if (context.mounted && ok) {
                       AppToast.success(
@@ -199,10 +199,8 @@ class _ExtensionCard extends StatelessWidget {
                   size: AppButtonSize.small,
                   onPressed: () async {
                     final ok = await cubit.decide(
-                      DecideExtensionReqDm(
-                        extensionId: extension.id,
-                        decision: ExtensionStatus.approved,
-                      ),
+                      extensionId: extension.id,
+                      decision: ExtensionStatus.approved,
                     );
                     if (context.mounted && ok) {
                       AppToast.success(

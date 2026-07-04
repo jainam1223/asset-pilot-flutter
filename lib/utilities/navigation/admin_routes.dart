@@ -14,6 +14,8 @@ import '../../modules/admin/inventory/list/inventory_list_screen.dart';
 import '../../modules/admin/chatbot/floating_chatbot.dart';
 import '../../modules/admin/inventory/timeline/cubit/inventory_timeline_cubit.dart';
 import '../../modules/admin/inventory/timeline/inventory_timeline_screen.dart';
+import '../../modules/admin/login/cubit/login_cubit.dart';
+import '../../modules/admin/login/login_screen.dart';
 import '../../modules/admin/maintenance/list/cubit/maintenance_list_cubit.dart';
 import '../../modules/admin/maintenance/list/maintenance_list_screen.dart';
 import '../../modules/admin/requests/detail/cubit/request_detail_cubit.dart';
@@ -31,10 +33,17 @@ import 'app_routes.dart';
 /// GoRouter for the IT Admin (web/desktop) variant.
 GoRouter buildAdminRouter() {
   return GoRouter(
-    initialLocation: Routes.adminDashboard.path,
+    initialLocation: Routes.login.path,
     errorBuilder: (context, state) =>
         InvalidRouteScreen(path: state.uri.toString()),
     routes: [
+      // Login sits outside the shell — no nav rail on the auth screen.
+      GoRoute(
+        path: Routes.login.path,
+        name: Routes.login.name,
+        builder: (context, state) =>
+            const AdminLoginScreen().withProvider((_) => AdminLoginCubit()),
+      ),
       // Persistent-chrome shell: the side nav is built once here and the
       // matched child (below) is swapped into the content area on navigation,
       // so switching destinations never rebuilds/re-navigates the whole page.

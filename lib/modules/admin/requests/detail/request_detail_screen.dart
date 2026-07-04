@@ -10,6 +10,7 @@ import '../../../../utilities/extensions/context_extensions.dart';
 import '../../../../utilities/navigation/app_routes.dart';
 import '../../../../utilities/network/network_state.dart';
 import '../../../../values/constants/app_constants.dart';
+import '../../../../values/enumeration/statuses.dart';
 import '../../../../widgets/widgets.dart';
 import '../../shell/admin_shell.dart';
 import '../request_status_x.dart';
@@ -88,8 +89,14 @@ class _RequestInfoPanel extends StatelessWidget {
 
   final RequestDetailResDm detail;
 
+  static final _dateFormat = DateFormat('dd MMM yyyy');
+
+  String _formatDate(DateTime? date) => date == null ? '—' : _dateFormat.format(date.toLocal());
+
   @override
   Widget build(BuildContext context) {
+    final managerApproved = detail.mgrApprovalStatus == MgrApprovalStatus.approved ||
+        detail.mgrApprovalStatus == MgrApprovalStatus.notRequired;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,17 +105,17 @@ class _RequestInfoPanel extends StatelessWidget {
           const Gap(14),
           Row(
             children: [
-              AppAvatar(name: detail.employeeName),
+              AppAvatar(name: detail.requesterName),
               const Gap(11),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    detail.employeeName,
+                    detail.requesterName,
                     style: context.appTextStyles.labelLarge,
                   ),
                   Text(
-                    detail.employeeDepartment,
+                    detail.managerName ?? '',
                     style: context.appTextStyles.bodySmall,
                   ),
                 ],
@@ -120,7 +127,7 @@ class _RequestInfoPanel extends StatelessWidget {
             rows: [
               InfoRow(
                 label: context.l10n.requestFieldCategory,
-                value: Text(detail.category),
+                value: Text(detail.categoryName),
               ),
               InfoRow(
                 label: context.l10n.requestFieldPriority,
@@ -140,7 +147,7 @@ class _RequestInfoPanel extends StatelessWidget {
               InfoRow(
                 label: context.l10n.requestFieldMgrApproval,
                 value: Text(
-                  detail.managerApproved
+                  managerApproved
                       ? context.l10n.requestApproved
                       : context.l10n.requestPending,
                 ),
@@ -154,7 +161,7 @@ class _RequestInfoPanel extends StatelessWidget {
           ),
           const Gap(5),
           Text(
-            '${detail.requestedFrom} – ${detail.requestedTo}',
+            '${_formatDate(detail.requestedFrom)} – ${_formatDate(detail.requestedTo)}',
             style: context.appTextStyles.labelLarge,
           ),
           const Gap(14),
@@ -163,7 +170,7 @@ class _RequestInfoPanel extends StatelessWidget {
             style: context.appTextStyles.bodySmall,
           ),
           const Gap(5),
-          Text(detail.note, style: context.appTextStyles.bodyMedium),
+          Text(detail.note ?? '', style: context.appTextStyles.bodyMedium),
         ],
       ),
     );
@@ -174,24 +181,18 @@ final _assignedDateFormat = DateFormat('dd MMM yyyy');
 
 Future<void> _pickAssignedDate({
   required BuildContext context,
-  required String initialText,
-  required ValueChanged<String> onPicked,
+  required DateTime? initial,
+  required ValueChanged<DateTime> onPicked,
 }) async {
   final now = DateTime.now();
-  DateTime initial;
-  try {
-    initial = _assignedDateFormat.parse(initialText);
-  } on FormatException {
-    initial = now;
-  }
   final picked = await showDatePicker(
     context: context,
-    initialDate: initial,
+    initialDate: initial ?? now,
     firstDate: DateTime(now.year - 1),
     lastDate: DateTime(now.year + 5),
   );
   if (picked == null) return;
-  onPicked(_assignedDateFormat.format(picked));
+  onPicked(picked);
 }
 
 class _SuggestionsPanel extends StatelessWidget {
@@ -224,13 +225,18 @@ class _SuggestionsPanel extends StatelessWidget {
                 separatorBuilder: (_, _) => const Gap(11),
                 itemBuilder: (context, index) {
                   final suggestion = suggestions[index];
+                  final freeUntil = suggestion.freeUntil;
+                  final subtitle = freeUntil == null
+                      ? context.l10n.requestSuggestedDevicesSubtitle
+                      : '${suggestion.activeBookingsCount} pending · free until '
+                          '${DateFormat('dd MMM').format(freeUntil.toLocal())}';
                   return SuggestionCard(
-                    rank: suggestion.rank,
-                    title: '${suggestion.name} · SN ${suggestion.serial}',
-                    subtitle: suggestion.reason,
+                    rank: index + 1,
+                    title: '${suggestion.name} · SN ${suggestion.serialNo}',
+                    subtitle: subtitle,
                     selectLabel: context.l10n.suggestionSelect,
-                    recommended: suggestion.deviceId == state.selectedDeviceId,
-                    onSelect: () => cubit.selectDevice(suggestion.deviceId),
+                    recommended: suggestion.itemId == state.selectedDeviceId,
+                    onSelect: () => cubit.selectDevice(suggestion.itemId),
                   );
                 },
               ),
@@ -244,11 +250,13 @@ class _SuggestionsPanel extends StatelessWidget {
               Expanded(
                 child: PickerField(
                   label: context.l10n.requestAssignedFrom,
-                  valueText: state.assignedFrom,
+                  valueText: state.assignedFrom == null
+                      ? ''
+                      : _assignedDateFormat.format(state.assignedFrom!.toLocal()),
                   trailingIcon: Icons.calendar_today_outlined,
                   onTap: () => _pickAssignedDate(
                     context: context,
-                    initialText: state.assignedFrom,
+                    initial: state.assignedFrom,
                     onPicked: cubit.updateAssignedFrom,
                   ),
                 ),
@@ -257,11 +265,13 @@ class _SuggestionsPanel extends StatelessWidget {
               Expanded(
                 child: PickerField(
                   label: context.l10n.requestAssignedTo,
-                  valueText: state.assignedTo,
+                  valueText: state.assignedTo == null
+                      ? ''
+                      : _assignedDateFormat.format(state.assignedTo!.toLocal()),
                   trailingIcon: Icons.calendar_today_outlined,
                   onTap: () => _pickAssignedDate(
                     context: context,
-                    initialText: state.assignedTo,
+                    initial: state.assignedTo,
                     onPicked: cubit.updateAssignedTo,
                   ),
                 ),

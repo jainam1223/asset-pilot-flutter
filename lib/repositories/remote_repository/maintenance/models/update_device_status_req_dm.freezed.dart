@@ -208,8 +208,8 @@ return $default(_that.deviceId,_that.newStatus,_that.note);case _:
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(includeIfNull: false)
 class _UpdateDeviceStatusReqDm implements UpdateDeviceStatusReqDm {
   const _UpdateDeviceStatusReqDm({required this.deviceId, required this.newStatus, this.note});
   factory _UpdateDeviceStatusReqDm.fromJson(Map<String, dynamic> json) => _$UpdateDeviceStatusReqDmFromJson(json);

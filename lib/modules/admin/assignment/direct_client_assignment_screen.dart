@@ -120,7 +120,7 @@ class _SelectDevicePanel extends StatelessWidget {
                         Text(device.name, style: context.appTextStyles.labelLarge),
                         const Gap(5),
                         Text(
-                          device.serial,
+                          device.serialNo,
                           style: context.appTextStyles.bodySmall.copyWith(
                             fontFamily: 'monospace',
                           ),

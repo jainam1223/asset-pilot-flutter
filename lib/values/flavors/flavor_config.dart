@@ -14,11 +14,13 @@ enum Flavor { dev, uat, prod }
 abstract final class FlavorConfig {
   static Flavor flavor = Flavor.dev;
 
-  // TODO(Vasu): CHANGE WITH ACTUAL BASE URLS FOR DEV/UAT/PROD
+  // TODO(Vasu): CHANGE WITH ACTUAL BASE URLS FOR DEV/UAT/PROD. The `/api/v1/`
+  // prefix is baked in here so endpoint paths in `ApiService` read as
+  // `admin/...` / `auth/...` without repeating the version segment.
   static const Map<Flavor, String> _baseUrls = {
-    Flavor.dev: 'http://172.16.5.165:3000/',
-    Flavor.uat: 'http://172.16.5.165:3000/',
-    Flavor.prod: 'http://172.16.5.165:3000/',
+    Flavor.dev: 'https://gigahertz-superior-cupbearer.ngrok-free.dev/api/v1/',
+    Flavor.uat: 'https://gigahertz-superior-cupbearer.ngrok-free.dev/api/v1/',
+    Flavor.prod: 'https://gigahertz-superior-cupbearer.ngrok-free.dev/api/v1/',
   };
 
   static String get baseUrl => _baseUrls[flavor]!;

@@ -2,47 +2,95 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../../../models/api_response/api_result.dart';
+import '../../../models/api_response/paginated_res_dm.dart';
 import '../../../utilities/api_utilities/my_call_adapter.dart';
+import '../../../values/enumeration/statuses.dart';
+import '../../../values/enumeration/user_role.dart';
 import '../auth/models/login_req_dm.dart';
+import '../auth/models/login_res_dm.dart';
+import '../auth/models/refresh_req_dm.dart';
 import '../common/models/handover_request_res_dm.dart';
 import '../common/models/item_category_res_dm.dart';
 import '../common/models/item_res_dm.dart';
 import '../common/models/request_res_dm.dart';
+import '../common/models/support_request_res_dm.dart';
 import '../common/models/user_res_dm.dart';
+import '../dashboard/models/dashboard_summary_res_dm.dart';
+import '../dashboard/models/open_support_snapshot_res_dm.dart';
+import '../dashboard/models/recent_request_res_dm.dart';
+import '../dropdowns/models/dropdown_option_res_dm.dart';
 import '../extension_requests/models/decide_extension_req_dm.dart';
+import '../extension_requests/models/extension_request_detail_res_dm.dart';
 import '../extension_requests/models/extension_request_summary_res_dm.dart';
 import '../handover/models/create_handover_request_req_dm.dart';
 import '../handover/models/device_handover_lookup_res_dm.dart';
+import '../inventory/models/change_item_status_req_dm.dart';
+import '../inventory/models/client_item_res_dm.dart';
+import '../inventory/models/create_item_req_dm.dart';
 import '../inventory/models/device_timeline_event_res_dm.dart';
-import '../inventory/models/inventory_detail_res_dm.dart';
+import '../inventory/models/direct_assign_req_dm.dart';
 import '../inventory/models/inventory_item_res_dm.dart';
-import '../maintenance/models/maintenance_item_res_dm.dart';
-import '../maintenance/models/update_device_status_req_dm.dart';
+import '../inventory/models/item_booking_res_dm.dart';
+import '../inventory/models/item_detail_raw_res_dm.dart';
+import '../inventory/models/update_item_req_dm.dart';
 import '../request/models/create_request_req_dm.dart';
 import '../requests/models/assign_device_req_dm.dart';
+import '../requests/models/booking_range_req_dm.dart';
+import '../requests/models/cancel_request_req_dm.dart';
+import '../requests/models/escalate_to_manager_req_dm.dart';
 import '../requests/models/reject_request_req_dm.dart';
 import '../requests/models/request_detail_res_dm.dart';
 import '../requests/models/request_summary_res_dm.dart';
 import '../requests/models/suggested_device_res_dm.dart';
+import '../shipping/models/complete_return_req_dm.dart';
+import '../shipping/models/ship_req_dm.dart';
+import '../support/models/resolve_support_req_dm.dart';
+import '../support/models/support_request_detail_res_dm.dart';
+import '../users/models/change_role_req_dm.dart';
+import '../users/models/create_user_req_dm.dart';
 
 part 'api_service.g.dart';
 
 /// Centralized Retrofit service — ALL backend endpoints are declared here.
 ///
 /// Endpoints return `Future<ApiResult<T>>`; the [ApiResultCallAdapter] unwraps
-/// the `APIResponse` envelope and converts success/error into ApiSuccess/
-/// ApiFailure. New endpoints are added here as modules are built.
+/// the response envelope and converts success/error into ApiSuccess/
+/// ApiFailure. [FlavorConfig.baseUrl] already carries the `/api/v1/` prefix,
+/// so paths below read as `auth/...` / `admin/...`.
 @RestApi(callAdapter: ApiResultCallAdapter)
 abstract class ApiService {
   factory ApiService(Dio dio, {String? baseUrl}) = _ApiService;
 
-  /// Authenticate a user with email.
+  // ---------------------------------------------------------------------
+  // Auth
+  // ---------------------------------------------------------------------
+
+  /// Admin authentication — email + password, returns a token pair only.
+  /// The user profile is fetched separately via [getMe]. Used by the IT
+  /// Admin login flow (bearer-token auth against the live backend).
+  @POST('auth/login')
+  Future<ApiResult<LoginResDm>> adminLogin(@Body() LoginReqDm body);
+
+  /// The signed-in user's profile.
+  @GET('auth/me')
+  Future<ApiResult<UserResDm>> getMe();
+
+  /// Exchange a refresh token for a new token pair.
+  @POST('auth/refresh')
+  Future<ApiResult<LoginResDm>> refresh(@Body() RefreshReqDm body);
+
+  /// Mobile authentication with email. The backend resolves role/manager
+  /// from the user row — there's no client-supplied role flag.
   @POST('/login')
   Future<ApiResult<UserResDm>> login(@Body() LoginReqDm body);
 
+  // ---------------------------------------------------------------------
+  // Mobile / employee
+  // ---------------------------------------------------------------------
+
   /// The signed-in employee's devices — `item` rows currently owned by
-  /// them. [userId] stands in for a bearer token until a real auth session
-  /// exists.
+  /// them. [userId] stands in for a bearer token until a real employee
+  /// auth session exists.
   @GET('/me/devices')
   Future<ApiResult<List<ItemResDm>>> getMyDevices(
     @Header('X-User-Id') String userId,
@@ -50,13 +98,13 @@ abstract class ApiService {
 
   /// The signed-in employee's `request` rows — every request they've raised,
   /// regardless of status (My Requests list, mockup E07 list).
-  @GET('/me/requests')
+  @GET('me/requests')
   Future<ApiResult<List<RequestResDm>>> getMyRequests(
     @Header('X-User-Id') String userId,
   );
 
   /// A single `request` row by id (Request Detail, mockup E07).
-  @GET('/me/requests/{requestId}')
+  @GET('me/requests/{requestId}')
   Future<ApiResult<RequestResDm>> getRequestDetail(
     @Header('X-User-Id') String userId,
     @Path('requestId') String requestId,
@@ -68,59 +116,198 @@ abstract class ApiService {
   Future<ApiResult<List<ItemCategoryResDm>>> getItemCategories();
 
   /// Raise a new device request (Request Device, mockup E04).
-  @POST('/me/requests')
+  @POST('me/requests')
   Future<ApiResult<RequestResDm>> createRequest(
     @Header('X-User-Id') String userId,
     @Body() CreateRequestReqDm body,
   );
 
-  /// List device requests for the admin Request Management table (A02).
-  /// TODO(backend): wire query params for status/priority/category/search
-  /// once the endpoint contract is finalized.
-  @GET('/admin/requests')
-  Future<ApiResult<List<RequestSummaryResDm>>> fetchRequests();
+  // ---------------------------------------------------------------------
+  // Dashboard (A01)
+  // ---------------------------------------------------------------------
+
+  @GET('admin/dashboard/summary')
+  Future<ApiResult<DashboardSummaryResDm>> fetchDashboardSummary();
+
+  @GET('admin/dashboard/recent-requests')
+  Future<ApiResult<List<RecentRequestResDm>>> fetchRecentRequests({
+    @Query('limit') int? limit,
+  });
+
+  @GET('admin/dashboard/open-support')
+  Future<ApiResult<List<OpenSupportSnapshotResDm>>> fetchOpenSupportSnapshot({
+    @Query('limit') int? limit,
+  });
+
+  // ---------------------------------------------------------------------
+  // Requests (A02, A03) + IT Approvals
+  // ---------------------------------------------------------------------
+
+  /// List device requests for the admin Request Management table (A02) —
+  /// server-side paginated + filtered.
+  @GET('admin/requests')
+  Future<ApiResult<PaginatedResDm<RequestSummaryResDm>>> fetchRequests({
+    @Query('status') RequestStatus? status,
+    @Query('category_id') String? categoryId,
+    @Query('priority') RequestPriority? priority,
+    @Query('requested_from') DateTime? requestedFrom,
+    @Query('requested_to') DateTime? requestedTo,
+    @Query('search') String? search,
+    @Query('page') int? page,
+    @Query('page_size') int? pageSize,
+    @Query('sort_by') String? sortBy,
+    @Query('sort_order') String? sortOrder,
+  });
+
+  /// The IT Approval queue — requests awaiting IT action.
+  @GET('admin/it/approvals')
+  Future<ApiResult<PaginatedResDm<RequestSummaryResDm>>> fetchItApprovals({
+    @Query('page') int? page,
+    @Query('page_size') int? pageSize,
+    @Query('sort_by') String? sortBy,
+    @Query('sort_order') String? sortOrder,
+  });
 
   /// Fetch full detail for a single request (A03).
-  @GET('/admin/requests/{id}')
+  @GET('admin/requests/{id}')
   Future<ApiResult<RequestDetailResDm>> fetchRequestDetail(
     @Path('id') String id,
   );
 
-  /// Fetch AI-ranked suggested devices for a request (A03).
-  @GET('/admin/requests/{id}/suggested-devices')
+  /// Fetch ranked available devices for a request (A03 "Suggested Devices").
+  @GET('admin/requests/{id}/suggested-devices')
   Future<ApiResult<List<SuggestedDeviceResDm>>> fetchSuggestedDevices(
     @Path('id') String id,
   );
 
+  /// The existing bookings on a device — feeds the A03 calendar overlay.
+  @GET('admin/items/{itemId}/bookings')
+  Future<ApiResult<List<ItemBookingResDm>>> fetchItemBookings(
+    @Path('itemId') String itemId,
+  );
+
+  /// Nudge a conflicting booking's date range (A03 calendar overlay).
+  @PATCH('admin/requests/{id}/booking-range')
+  Future<ApiResult<void>> adjustBookingRange(
+    @Path('id') String id,
+    @Body() BookingRangeReqDm body,
+  );
+
   /// Assign a device to a request (A03 "Assign Device").
-  @POST('/admin/requests/{id}/assign')
+  @POST('admin/requests/{id}/assign')
   Future<ApiResult<void>> assignDevice(
     @Path('id') String id,
     @Body() AssignDeviceReqDm body,
   );
 
   /// Reject a request (A03 "Reject").
-  @POST('/admin/requests/{id}/reject')
+  @PATCH('admin/requests/{id}/reject')
   Future<ApiResult<void>> rejectRequest(
     @Path('id') String id,
     @Body() RejectRequestReqDm body,
   );
 
-  /// List inventory devices for the admin Inventory Management table (A04).
-  @GET('/admin/inventory')
-  Future<ApiResult<List<InventoryItemResDm>>> fetchInventory();
-
-  /// Fetch full detail for a single device (A05).
-  @GET('/admin/inventory/{id}')
-  Future<ApiResult<InventoryDetailResDm>> fetchInventoryDetail(
+  /// Cancel a pending request (e.g. its category's only devices went
+  /// lost/retired before assignment).
+  @PATCH('admin/requests/{id}/cancel')
+  Future<ApiResult<void>> cancelRequest(
     @Path('id') String id,
+    @Body() CancelRequestReqDm body,
+  );
+
+  /// Late-escalate a request to manager approval.
+  @PATCH('admin/requests/{id}/escalate-to-manager')
+  Future<ApiResult<void>> escalateToManager(
+    @Path('id') String id,
+    @Body() EscalateToManagerReqDm body,
+  );
+
+  // ---------------------------------------------------------------------
+  // Direct Client Device Assignment (A07)
+  // ---------------------------------------------------------------------
+
+  @GET('admin/items/client-available')
+  Future<ApiResult<List<ClientItemResDm>>> fetchClientAvailableItems({
+    @Query('category_id') String? categoryId,
+    @Query('search') String? search,
+  });
+
+  @POST('admin/items/{itemId}/direct-assign')
+  Future<ApiResult<void>> directAssignItem(
+    @Path('itemId') String itemId,
+    @Body() DirectAssignReqDm body,
+  );
+
+  // ---------------------------------------------------------------------
+  // Inventory / Items (A04, A05, A06, A10)
+  // ---------------------------------------------------------------------
+
+  /// List inventory devices for the admin Inventory Management table (A04)
+  /// — server-side paginated + filtered. Also backs the Maintenance queue
+  /// (A10) by filtering `status`.
+  @GET('admin/items')
+  Future<ApiResult<PaginatedResDm<InventoryItemResDm>>> fetchItems({
+    @Query('category_id') String? categoryId,
+    @Query('status') DeviceStatus? status,
+    @Query('owner_type') OwnerType? ownerType,
+    @Query('search') String? search,
+    @Query('page') int? page,
+    @Query('page_size') int? pageSize,
+    @Query('sort_by') String? sortBy,
+    @Query('sort_order') String? sortOrder,
+  });
+
+  @POST('admin/items')
+  Future<ApiResult<InventoryItemResDm>> createItem(
+    @Body() CreateItemReqDm body,
+  );
+
+  /// Fetch full nested detail for a single device (A05) — `{ item, category,
+  /// current_owner, current_request, open_support[], active_handover }`.
+  @GET('admin/items/{id}')
+  Future<ApiResult<ItemDetailRawResDm>> fetchItemDetail(
+    @Path('id') String id,
+  );
+
+  @PATCH('admin/items/{id}')
+  Future<ApiResult<InventoryItemResDm>> updateItem(
+    @Path('id') String id,
+    @Body() UpdateItemReqDm body,
+  );
+
+  /// Change a device's status (A10 "Confirm", and generic admin status
+  /// transitions).
+  @PATCH('admin/items/{id}/status')
+  Future<ApiResult<InventoryItemResDm>> changeItemStatus(
+    @Path('id') String id,
+    @Body() ChangeItemStatusReqDm body,
   );
 
   /// Fetch the append-only audit-trail timeline for a device (A06).
-  @GET('/admin/inventory/{id}/timeline')
+  @GET('admin/items/{id}/timeline')
   Future<ApiResult<List<DeviceTimelineEventResDm>>> fetchDeviceTimeline(
+    @Path('id') String id, {
+    @Query('milestones_only') bool? milestonesOnly,
+  });
+
+  // ---------------------------------------------------------------------
+  // Support Requests (A08)
+  // ---------------------------------------------------------------------
+
+  @GET('admin/support-requests')
+  Future<ApiResult<List<SupportRequestResDm>>> fetchSupportRequests({
+    @Query('status') SupportStatus? status,
+    @Query('type') SupportType? type,
+    @Query('item_id') String? itemId,
+  });
+
+  @GET('admin/support-requests/{id}')
+  Future<ApiResult<SupportRequestDetailResDm>> fetchSupportRequestDetail(
     @Path('id') String id,
   );
+
+  @PATCH('admin/support-requests/{id}/start')
+  Future<ApiResult<void>> startSupportRequest(@Path('id') String id);
 
   /// Device detail + handover lookup for a single owned device (Device
   /// Detail mockup E03, Request Handover pre-fill mockup E13).
@@ -136,27 +323,114 @@ abstract class ApiService {
     @Body() CreateHandoverRequestReqDm body,
   );
 
-  /// List devices under repair/maintenance for the admin Maintenance queue
-  /// (A10).
-  @GET('/admin/maintenance')
-  Future<ApiResult<List<MaintenanceItemResDm>>> fetchMaintenanceQueue();
-
-  /// Change a device's status from the Maintenance screen (A10 "Confirm").
-  @POST('/admin/maintenance/{deviceId}/status')
-  Future<ApiResult<void>> updateDeviceStatus(
-    @Path('deviceId') String deviceId,
-    @Body() UpdateDeviceStatusReqDm body,
+  @PATCH('admin/support-requests/{id}/resolve')
+  Future<ApiResult<void>> resolveSupportRequest(
+    @Path('id') String id,
+    @Body() ResolveSupportReqDm body,
   );
 
-  /// List extension requests for the admin Extension Requests table (A11).
-  @GET('/admin/extension-requests')
-  Future<ApiResult<List<ExtensionRequestSummaryResDm>>>
-  fetchExtensionRequests();
+  // ---------------------------------------------------------------------
+  // WFH Shipping & Returns (A09)
+  // ---------------------------------------------------------------------
 
-  /// Approve or reject an extension request (A11 "Approve"/"Reject").
-  @POST('/admin/extension-requests/{id}/decide')
-  Future<ApiResult<void>> decideExtension(
+  @GET('admin/shipping/outbound')
+  Future<ApiResult<List<RequestSummaryResDm>>> fetchOutboundShippingQueue();
+
+  @GET('admin/shipping/returns')
+  Future<ApiResult<List<RequestSummaryResDm>>> fetchReturnQueue();
+
+  @POST('admin/requests/{id}/ship')
+  Future<ApiResult<void>> shipRequest(
+    @Path('id') String id,
+    @Body() ShipReqDm body,
+  );
+
+  @POST('admin/requests/{id}/confirm-delivery')
+  Future<ApiResult<void>> confirmDelivery(@Path('id') String id);
+
+  @POST('admin/requests/{id}/complete-return')
+  Future<ApiResult<void>> completeReturn(
+    @Path('id') String id,
+    @Body() CompleteReturnReqDm body,
+  );
+
+  // ---------------------------------------------------------------------
+  // Extension Requests (A11)
+  // ---------------------------------------------------------------------
+
+  @GET('admin/extension-requests')
+  Future<ApiResult<List<ExtensionRequestSummaryResDm>>>
+      fetchExtensionRequests({
+    @Query('status') ExtensionStatus? status,
+  });
+
+  @GET('admin/extension-requests/{id}')
+  Future<ApiResult<ExtensionRequestDetailResDm>> fetchExtensionRequestDetail(
+    @Path('id') String id,
+  );
+
+  @PATCH('admin/extension-requests/{id}/approve')
+  Future<ApiResult<void>> approveExtension(
     @Path('id') String id,
     @Body() DecideExtensionReqDm body,
   );
+
+  @PATCH('admin/extension-requests/{id}/reject')
+  Future<ApiResult<void>> rejectExtension(
+    @Path('id') String id,
+    @Body() DecideExtensionReqDm body,
+  );
+
+  // ---------------------------------------------------------------------
+  // Temporary Handovers (A12) — read-only audit for IT
+  // ---------------------------------------------------------------------
+
+  @GET('admin/handover-requests')
+  Future<ApiResult<List<HandoverRequestResDm>>> fetchHandoverRequests({
+    @Query('status') HandoverStatus? status,
+    @Query('item_id') String? itemId,
+  });
+
+  // ---------------------------------------------------------------------
+  // User Management (A14)
+  // ---------------------------------------------------------------------
+
+  @GET('admin/users')
+  Future<ApiResult<PaginatedResDm<UserResDm>>> fetchUsers({
+    @Query('role') UserRole? role,
+    @Query('is_active') bool? isActive,
+    @Query('search') String? search,
+    @Query('page') int? page,
+    @Query('page_size') int? pageSize,
+    @Query('sort_by') String? sortBy,
+    @Query('sort_order') String? sortOrder,
+  });
+
+  @POST('admin/users')
+  Future<ApiResult<UserResDm>> createUser(@Body() CreateUserReqDm body);
+
+  @PATCH('admin/users/{id}/role')
+  Future<ApiResult<UserResDm>> changeUserRole(
+    @Path('id') String id,
+    @Body() ChangeRoleReqDm body,
+  );
+
+  @PATCH('admin/users/{id}/activate')
+  Future<ApiResult<UserResDm>> activateUser(@Path('id') String id);
+
+  @PATCH('admin/users/{id}/deactivate')
+  Future<ApiResult<UserResDm>> deactivateUser(@Path('id') String id);
+
+  // ---------------------------------------------------------------------
+  // Dropdowns
+  // ---------------------------------------------------------------------
+
+  @GET('admin/dropdowns/item-categories')
+  Future<ApiResult<List<ItemCategoryResDm>>> fetchItemCategoryDropdown();
+
+  @GET('admin/dropdowns/managers')
+  Future<ApiResult<List<DropdownOptionResDm>>> fetchManagerDropdown();
+
+  @GET('admin/dropdowns/employees')
+  Future<ApiResult<List<DropdownOptionResDm>>> fetchEmployeeDropdown();
 }

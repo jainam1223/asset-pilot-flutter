@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RejectRequestReqDm {
 
- String get requestId; String? get note;
+@JsonKey(name: 'rejected_reason') String get rejectedReason;@JsonKey(name: 'it_decision_note') String? get itDecisionNote;
 /// Create a copy of RejectRequestReqDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RejectRequestReqDmCopyWith<RejectRequestReqDm> get copyWith => _$RejectRequestR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RejectRequestReqDm&&(identical(other.requestId, requestId) || other.requestId == requestId)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RejectRequestReqDm&&(identical(other.rejectedReason, rejectedReason) || other.rejectedReason == rejectedReason)&&(identical(other.itDecisionNote, itDecisionNote) || other.itDecisionNote == itDecisionNote));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,requestId,note);
+int get hashCode => Object.hash(runtimeType,rejectedReason,itDecisionNote);
 
 @override
 String toString() {
-  return 'RejectRequestReqDm(requestId: $requestId, note: $note)';
+  return 'RejectRequestReqDm(rejectedReason: $rejectedReason, itDecisionNote: $itDecisionNote)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RejectRequestReqDmCopyWith<$Res>  {
   factory $RejectRequestReqDmCopyWith(RejectRequestReqDm value, $Res Function(RejectRequestReqDm) _then) = _$RejectRequestReqDmCopyWithImpl;
 @useResult
 $Res call({
- String requestId, String? note
+@JsonKey(name: 'rejected_reason') String rejectedReason,@JsonKey(name: 'it_decision_note') String? itDecisionNote
 });
 
 
@@ -65,10 +65,10 @@ class _$RejectRequestReqDmCopyWithImpl<$Res>
 
 /// Create a copy of RejectRequestReqDm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? requestId = null,Object? note = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? rejectedReason = null,Object? itDecisionNote = freezed,}) {
   return _then(_self.copyWith(
-requestId: null == requestId ? _self.requestId : requestId // ignore: cast_nullable_to_non_nullable
-as String,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+rejectedReason: null == rejectedReason ? _self.rejectedReason : rejectedReason // ignore: cast_nullable_to_non_nullable
+as String,itDecisionNote: freezed == itDecisionNote ? _self.itDecisionNote : itDecisionNote // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -154,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String requestId,  String? note)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'rejected_reason')  String rejectedReason, @JsonKey(name: 'it_decision_note')  String? itDecisionNote)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RejectRequestReqDm() when $default != null:
-return $default(_that.requestId,_that.note);case _:
+return $default(_that.rejectedReason,_that.itDecisionNote);case _:
   return orElse();
 
 }
@@ -175,10 +175,10 @@ return $default(_that.requestId,_that.note);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String requestId,  String? note)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'rejected_reason')  String rejectedReason, @JsonKey(name: 'it_decision_note')  String? itDecisionNote)  $default,) {final _that = this;
 switch (_that) {
 case _RejectRequestReqDm():
-return $default(_that.requestId,_that.note);case _:
+return $default(_that.rejectedReason,_that.itDecisionNote);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +195,10 @@ return $default(_that.requestId,_that.note);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String requestId,  String? note)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'rejected_reason')  String rejectedReason, @JsonKey(name: 'it_decision_note')  String? itDecisionNote)?  $default,) {final _that = this;
 switch (_that) {
 case _RejectRequestReqDm() when $default != null:
-return $default(_that.requestId,_that.note);case _:
+return $default(_that.rejectedReason,_that.itDecisionNote);case _:
   return null;
 
 }
@@ -210,11 +210,11 @@ return $default(_that.requestId,_that.note);case _:
 
 @JsonSerializable(includeIfNull: false)
 class _RejectRequestReqDm implements RejectRequestReqDm {
-  const _RejectRequestReqDm({required this.requestId, this.note});
+  const _RejectRequestReqDm({@JsonKey(name: 'rejected_reason') required this.rejectedReason, @JsonKey(name: 'it_decision_note') this.itDecisionNote});
   factory _RejectRequestReqDm.fromJson(Map<String, dynamic> json) => _$RejectRequestReqDmFromJson(json);
 
-@override final  String requestId;
-@override final  String? note;
+@override@JsonKey(name: 'rejected_reason') final  String rejectedReason;
+@override@JsonKey(name: 'it_decision_note') final  String? itDecisionNote;
 
 /// Create a copy of RejectRequestReqDm
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RejectRequestReqDm&&(identical(other.requestId, requestId) || other.requestId == requestId)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RejectRequestReqDm&&(identical(other.rejectedReason, rejectedReason) || other.rejectedReason == rejectedReason)&&(identical(other.itDecisionNote, itDecisionNote) || other.itDecisionNote == itDecisionNote));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,requestId,note);
+int get hashCode => Object.hash(runtimeType,rejectedReason,itDecisionNote);
 
 @override
 String toString() {
-  return 'RejectRequestReqDm(requestId: $requestId, note: $note)';
+  return 'RejectRequestReqDm(rejectedReason: $rejectedReason, itDecisionNote: $itDecisionNote)';
 }
 
 
@@ -249,7 +249,7 @@ abstract mixin class _$RejectRequestReqDmCopyWith<$Res> implements $RejectReques
   factory _$RejectRequestReqDmCopyWith(_RejectRequestReqDm value, $Res Function(_RejectRequestReqDm) _then) = __$RejectRequestReqDmCopyWithImpl;
 @override @useResult
 $Res call({
- String requestId, String? note
+@JsonKey(name: 'rejected_reason') String rejectedReason,@JsonKey(name: 'it_decision_note') String? itDecisionNote
 });
 
 
@@ -266,10 +266,10 @@ class __$RejectRequestReqDmCopyWithImpl<$Res>
 
 /// Create a copy of RejectRequestReqDm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? requestId = null,Object? note = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? rejectedReason = null,Object? itDecisionNote = freezed,}) {
   return _then(_RejectRequestReqDm(
-requestId: null == requestId ? _self.requestId : requestId // ignore: cast_nullable_to_non_nullable
-as String,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+rejectedReason: null == rejectedReason ? _self.rejectedReason : rejectedReason // ignore: cast_nullable_to_non_nullable
+as String,itDecisionNote: freezed == itDecisionNote ? _self.itDecisionNote : itDecisionNote // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

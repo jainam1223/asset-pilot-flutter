@@ -9,6 +9,7 @@ class RequestListState extends Equatable {
     this.categoryFilter = 'all',
     this.searchQuery = '',
     this.currentPage = 1,
+    this.totalItems = 0,
   });
 
   final NetworkState<List<RequestSummaryResDm>> requests;
@@ -17,10 +18,13 @@ class RequestListState extends Equatable {
   final String statusFilter;
   final RequestPriority? priorityFilter;
 
-  /// One of the request categories (e.g. `'Laptop'`), or `'all'`.
+  /// A category id, or `'all'`.
   final String categoryFilter;
   final String searchQuery;
   final int currentPage;
+
+  /// Total matching rows on the server, from `meta.pagination.total_items`.
+  final int totalItems;
 
   RequestListState copyWith({
     NetworkState<List<RequestSummaryResDm>>? requests,
@@ -30,6 +34,7 @@ class RequestListState extends Equatable {
     String? categoryFilter,
     String? searchQuery,
     int? currentPage,
+    int? totalItems,
   }) {
     return RequestListState(
       requests: requests ?? this.requests,
@@ -38,6 +43,7 @@ class RequestListState extends Equatable {
       categoryFilter: categoryFilter ?? this.categoryFilter,
       searchQuery: searchQuery ?? this.searchQuery,
       currentPage: currentPage ?? this.currentPage,
+      totalItems: totalItems ?? this.totalItems,
     );
   }
 
@@ -49,5 +55,6 @@ class RequestListState extends Equatable {
         categoryFilter,
         searchQuery,
         currentPage,
+        totalItems,
       ];
 }
