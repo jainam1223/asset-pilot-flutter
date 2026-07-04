@@ -1,7 +1,7 @@
 import '../../../models/api_response/api_result.dart';
 import '../../../values/app_global/current_user.dart';
 import '../api_repository/api_repository.dart';
-import '../common/models/request_res_dm.dart';
+import '../common/models/item_res_dm.dart';
 
 /// Repository for the signed-in employee's devices.
 class DeviceRepository extends Repository {
@@ -9,8 +9,8 @@ class DeviceRepository extends Repository {
 
   static final DeviceRepository instance = DeviceRepository._();
 
-  /// Fetch devices currently assigned/shipping/in-repair for [CurrentUser.id].
-  Future<ApiResult<List<RequestResDm>>> getMyDevices() {
+  /// Fetch `item` rows currently owned by [CurrentUser.id].
+  Future<ApiResult<List<ItemResDm>>> getMyDevices() {
     return apiService.getMyDevices(CurrentUser.id);
   }
 }

@@ -176,9 +176,12 @@ class _CategoryField extends StatelessWidget {
     final selected = await showModalBottomSheet<ItemCategoryResDm>(
       context: context,
       showDragHandle: true,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.sizeOf(context).height * 0.7,
+      ),
       builder: (sheetContext) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: ListView(
+          shrinkWrap: true,
           children: [
             for (final category in categories)
               ListTile(

@@ -10,11 +10,11 @@ import 'models/create_request_req_dm.dart';
 /// Repository for the signed-in employee's requests (My Requests list,
 /// Request Detail, and Request Device create, mockups E04/E07).
 ///
-/// NOTE: not wired to a live backend yet — every method returns MOCKED
-/// data. TODO(api): replace each mock body with the real [ApiService] call
-/// (`getMyRequests` / `getRequestDetail` / `getItemCategories` /
-/// `createRequest`, all already declared on [ApiService]) once the backend
-/// exists. Cubit/UI layers don't change.
+/// [createRequest] and [getItemCategories] are wired to their live endpoints.
+/// NOTE: `getMyRequests` / `getRequestDetail` are not wired to a live backend
+/// yet — they return MOCKED data. TODO(api): replace each mock body with the
+/// real [ApiService] call once the backend exists. Cubit/UI layers don't
+/// change.
 class RequestRepository extends Repository {
   RequestRepository._();
 
@@ -44,57 +44,13 @@ class RequestRepository extends Repository {
   }
 
   /// Active `item_category` rows for the Request Device category picker.
-  Future<ApiResult<List<ItemCategoryResDm>>> getItemCategories() async {
-    // --- MOCK ---------------------------------------------------------------
-    await Future<void>.delayed(const Duration(milliseconds: 300));
-    return ApiSuccess<List<ItemCategoryResDm>>(_mockCategories);
-    // --- REAL (enable when backend exists) ----------------------------------
-    // return apiService.getItemCategories();
-  }
+  Future<ApiResult<List<ItemCategoryResDm>>> getItemCategories() =>
+      apiService.getItemCategories();
 
   /// Raise a new device request (Request Device, mockup E04).
-  Future<ApiResult<RequestResDm>> createRequest(
-    CreateRequestReqDm body,
-  ) async {
-    // --- MOCK ---------------------------------------------------------------
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-    final category = _mockCategories
-        .where((c) => c.id == body.categoryId)
-        .firstOrNull;
-    final created = RequestResDm(
-      id: 'req_${1000 + _mockRequests.length}',
-      requesterId: CurrentUser.id,
-      categoryId: body.categoryId,
-      status: 'requested',
-      priority: body.priority,
-      note: body.note,
-      isWfh: body.isWfh,
-      requestedFrom: body.requestedFrom,
-      requestedTo: body.requestedTo,
-      requiresMgrApproval: category?.requiresMgrApproval ?? false,
-      mgrApprovalStatus: (category?.requiresMgrApproval ?? false)
-          ? 'pending'
-          : 'not_required',
-      managerId: CurrentUser.managerId,
-      category: category,
-    );
-    _mockRequests.insert(0, created);
-    return ApiSuccess<RequestResDm>(created);
-    // --- REAL (enable when backend exists) ----------------------------------
-    // return apiService.createRequest(CurrentUser.id, body);
-  }
+  Future<ApiResult<RequestResDm>> createRequest(CreateRequestReqDm body) =>
+      apiService.createRequest(CurrentUser.id, body);
 }
-
-final _mockCategories = <ItemCategoryResDm>[
-  const ItemCategoryResDm(
-    id: 'cat_laptop',
-    name: 'Laptop',
-    requiresMgrApproval: true,
-  ),
-  const ItemCategoryResDm(id: 'cat_monitor', name: 'Monitor'),
-  const ItemCategoryResDm(id: 'cat_mobile', name: 'Mobile'),
-  const ItemCategoryResDm(id: 'cat_accessory', name: 'Accessory'),
-];
 
 final _mockRequests = <RequestResDm>[
   RequestResDm(
