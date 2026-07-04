@@ -81,8 +81,7 @@ Admin desktop/web layout adapts by width via `Responsive.of(context)` (`lib/util
 - All endpoints are declared in one place: `lib/repositories/remote_repository/api_repository/api_service.dart` (Retrofit interface). Every module repo extends the base `Repository` class in `api_repository.dart`.
 - `ApiResultCallAdapter` (`lib/utilities/api_utilities/my_call_adapter.dart`) converts Retrofit calls into `ApiResult<T>` (`ApiSuccess` / `ApiFailure`); endpoints are typed as `Future<ApiResult<ResDm>>`.
 - `AuthRepository` (`lib/repositories/remote_repository/auth/auth_repository.dart`) currently returns **mocked** data — there is no live backend. The real Retrofit call is commented out inline. When a backend exists, swap the mock body for the real call; Cubit/UI layers don't change.
-- Base URL comes from `Env.current.baseUrl` (`lib/env/env.dart`), keyed by `Flavor` (`dev`/`uat`/`prod`). Flavors are not wired yet — `Env.current` always resolves to `dev`. `lib/values/flavors/flavor_config.dart` is a placeholder for when flavored `main_*` entries are introduced.
-- `Env` sources `BASE_URL` at **compile time** via `envied` (not a runtime-loaded `.env`): `_Env` in `env.dart` is `@Envied`-annotated and generates an obfuscated `lib/env/env.g.dart` from the gitignored `.env` file. Copy `.env.example` to `.env` locally, then run `dart run build_runner build --delete-conflicting-outputs` to regenerate `env.g.dart` after editing `.env`. There is no `Env.load()` call in `main_mobile.dart`/`main_admin.dart` — the value is baked in at build time.
+- Base URL comes from `FlavorConfig.baseUrl` (`lib/values/flavors/flavor_config.dart`), a hardcoded `Map<Flavor, String>` keyed by `Flavor` (`dev`/`uat`/`prod`). Flavors are not wired yet — `FlavorConfig.flavor` always resolves to `dev`. No env-file loading or code generation is involved; the URLs are plain constants, swapped for real config when flavors are introduced.
 
 ### Routing — GoRouter
 
