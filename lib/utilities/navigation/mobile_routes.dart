@@ -1,7 +1,9 @@
 import 'package:go_router/go_router.dart';
 
+import '../../modules/mobile/device_detail/device_detail_screen.dart';
 import '../../modules/mobile/login/cubit/login_cubit.dart';
 import '../../modules/mobile/login/login_screen.dart';
+import '../../modules/mobile/my_devices/cubit/my_devices_cubit.dart';
 import '../../modules/mobile/requests/create_request_screen.dart';
 import '../../modules/mobile/requests/cubit/create_request_cubit.dart';
 import '../../modules/mobile/requests/cubit/request_detail_cubit.dart';
@@ -57,6 +59,21 @@ GoRouter buildMobileRouter() {
           return RequestDetailScreen(
             requestId: requestId,
           ).withProvider((_) => RequestDetailCubit(requestId));
+        },
+      ),
+      GoRoute(
+        path: Routes.deviceDetail.path,
+        name: Routes.deviceDetail.name,
+        builder: (context, state) {
+          final device = state.extra! as MyDevice;
+          return DeviceDetailScreen(
+            item: device.item,
+            categoryName: device.categoryName,
+            assignedFrom: device.item.assignedFrom,
+            assignedTo: device.item.assignedTo,
+            isWfh: device.item.isWfh,
+            shipTrackingUrl: device.item.shipTrackingUrl,
+          );
         },
       ),
       GoRoute(

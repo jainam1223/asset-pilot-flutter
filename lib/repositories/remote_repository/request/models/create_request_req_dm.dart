@@ -8,12 +8,12 @@ part 'create_request_req_dm.g.dart';
 abstract class CreateRequestReqDm with _$CreateRequestReqDm {
   @JsonSerializable(includeIfNull: false)
   const factory CreateRequestReqDm({
-    @JsonKey(name: 'category_id') required String categoryId,
-    @JsonKey(name: 'requested_from') required DateTime requestedFrom,
-    @JsonKey(name: 'requested_to') required DateTime requestedTo,
+    required String categoryId,
+    required DateTime requestedFrom,
+    required DateTime requestedTo,
     required String priority,
     String? note,
-    @JsonKey(name: 'is_wfh') required bool isWfh,
+    required bool isWfh,
   }) = _CreateRequestReqDm;
 
   factory CreateRequestReqDm.fromJson(Map<String, dynamic> json) =>

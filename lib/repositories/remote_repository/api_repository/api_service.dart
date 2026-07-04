@@ -5,6 +5,7 @@ import '../../../models/api_response/api_result.dart';
 import '../../../utilities/api_utilities/my_call_adapter.dart';
 import '../auth/models/login_req_dm.dart';
 import '../common/models/item_category_res_dm.dart';
+import '../common/models/item_res_dm.dart';
 import '../common/models/request_res_dm.dart';
 import '../common/models/user_res_dm.dart';
 import '../request/models/create_request_req_dm.dart';
@@ -32,11 +33,11 @@ abstract class ApiService {
   @POST('/auth/login')
   Future<ApiResult<UserResDm>> login(@Body() LoginReqDm body);
 
-  /// The signed-in employee's devices — active `request` rows (joined with
-  /// their assigned `item`). [userId] stands in for a bearer token until a
-  /// real auth session exists.
+  /// The signed-in employee's devices — `item` rows currently owned by
+  /// them. [userId] stands in for a bearer token until a real auth session
+  /// exists.
   @GET('/me/devices')
-  Future<ApiResult<List<RequestResDm>>> getMyDevices(
+  Future<ApiResult<List<ItemResDm>>> getMyDevices(
     @Header('X-User-Id') String userId,
   );
 
@@ -56,7 +57,7 @@ abstract class ApiService {
 
   /// Active `item_category` rows, for the category picker on Request
   /// Device (mockup E04).
-  @GET('/item-categories')
+  @GET('/items-category')
   Future<ApiResult<List<ItemCategoryResDm>>> getItemCategories();
 
   /// Raise a new device request (Request Device, mockup E04).

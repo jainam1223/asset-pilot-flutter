@@ -12,6 +12,7 @@ enum Routes {
   mobileShell(path: '/home', name: 'mobileShell'),
   createRequest(path: '/requests/new', name: 'createRequest'),
   requestDetail(path: '/requests/:id', name: 'requestDetail'),
+  deviceDetail(path: '/devices/:id', name: 'deviceDetail'),
 
   // Admin (IT)
   adminDashboard(path: '/dashboard', name: 'adminDashboard'),
