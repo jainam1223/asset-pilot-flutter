@@ -599,5 +599,19 @@
   "teamDevicesEmptyTitle": "No direct reports",
   "@teamDevicesEmptyTitle": {},
   "teamDevicesEmptyMessage": "Devices assigned to your direct reports will show up here.",
-  "@teamDevicesEmptyMessage": {}
+  "@teamDevicesEmptyMessage": {},
+  "chatbotTitle": "AI Assistant",
+  "@chatbotTitle": {},
+  "chatbotTooltip": "Ask AI Assistant",
+  "@chatbotTooltip": {},
+  "chatbotClose": "Close",
+  "@chatbotClose": {},
+  "chatbotEmptyMessage": "Hi! Ask me anything about your assets.",
+  "@chatbotEmptyMessage": {},
+  "chatbotInputHint": "Type your message…",
+  "@chatbotInputHint": {},
+  "chatbotSend": "Send",
+  "@chatbotSend": {},
+  "chatbotError": "Something went wrong. Please try again.",
+  "@chatbotError": {}
 }

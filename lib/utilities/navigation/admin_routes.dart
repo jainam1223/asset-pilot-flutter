@@ -11,6 +11,7 @@ import '../../modules/admin/inventory/detail/cubit/inventory_detail_cubit.dart';
 import '../../modules/admin/inventory/detail/inventory_detail_screen.dart';
 import '../../modules/admin/inventory/list/cubit/inventory_list_cubit.dart';
 import '../../modules/admin/inventory/list/inventory_list_screen.dart';
+import '../../modules/admin/chatbot/floating_chatbot.dart';
 import '../../modules/admin/inventory/timeline/cubit/inventory_timeline_cubit.dart';
 import '../../modules/admin/inventory/timeline/inventory_timeline_screen.dart';
 import '../../modules/admin/maintenance/list/cubit/maintenance_list_cubit.dart';
@@ -40,10 +41,18 @@ GoRouter buildAdminRouter() {
       ShellRoute(
         builder: (context, state, child) => Scaffold(
           backgroundColor: context.appColors.adminCanvas,
-          body: Row(
+          // The floating chatbot is overlaid on top of the whole shell via a
+          // Stack, so it stays fixed on the right and is independent of which
+          // dashboard page the router swaps into `child`.
+          body: Stack(
             children: [
-              const AdminNavRail(),
-              Expanded(child: child),
+              Row(
+                children: [
+                  const AdminNavRail(),
+                  Expanded(child: child),
+                ],
+              ),
+              const FloatingChatbot(),
             ],
           ),
         ),
