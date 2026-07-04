@@ -18,6 +18,8 @@ import '../../modules/admin/requests/detail/cubit/request_detail_cubit.dart';
 import '../../modules/admin/requests/detail/request_detail_screen.dart';
 import '../../modules/admin/requests/list/cubit/request_list_cubit.dart';
 import '../../modules/admin/requests/list/request_list_screen.dart';
+import '../../modules/admin/support/list/cubit/support_list_cubit.dart';
+import '../../modules/admin/support/list/support_list_screen.dart';
 import '../../views/component_showcase/component_showcase_screen.dart';
 import '../../views/invalid_route/invalid_route_screen.dart';
 import 'app_routes.dart';
@@ -92,6 +94,12 @@ GoRouter buildAdminRouter() {
         name: Routes.adminAssignment.name,
         builder: (context, state) => const DirectClientAssignmentScreen()
             .withProvider((_) => ClientAssignmentCubit()),
+      ),
+      GoRoute(
+        path: Routes.adminSupport.path,
+        name: Routes.adminSupport.name,
+        builder: (context, state) =>
+            const SupportListScreen().withProvider((_) => SupportListCubit()),
       ),
       GoRoute(
         path: Routes.componentShowcase.path,
