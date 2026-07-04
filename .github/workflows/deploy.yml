@@ -1,0 +1,37 @@
+name: Deploy Flutter Web to Azure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          
+      - name: Install Dependencies & Code Gen
+        run: |
+          flutter pub get
+          flutter gen-l10n
+          dart run build_runner build --delete-conflicting-outputs
+          
+      - name: Build Web App
+        run: flutter build web -t lib/main_admin.dart --release
+        
+      - name: Deploy to Azure Storage
+        run: |
+          az storage blob upload-batch \
+            --source build/web \
+            --destination "\$web" \
+            --account-name assetpilotwebadmin123 \
+            --account-key ${{ secrets.AZURE_STORAGE_KEY }} \
+            --overwrite true

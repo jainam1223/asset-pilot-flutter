@@ -27,7 +27,6 @@ data "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_storage_account" "web" {
-  # Storage account names must be unique, lowercase, alphanumeric, 3-24 chars.
   name                     = "assetpilotwebadmin123"
   resource_group_name      = data.azurerm_resource_group.rg.name
   location                 = var.location
