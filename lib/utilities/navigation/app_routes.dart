@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// path string is needed (e.g. `context.go(Routes.login.path)`).
 enum Routes {
   // Mobile (Employee/Manager)
+  splash(path: '/splash', name: 'splash'),
   login(path: '/login', name: 'login'),
   mobileShell(path: '/home', name: 'mobileShell'),
 
