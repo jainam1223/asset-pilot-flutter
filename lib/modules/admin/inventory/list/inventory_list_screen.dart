@@ -93,46 +93,56 @@ class _FiltersRow extends StatefulWidget {
 class _FiltersRowState extends State<_FiltersRow> {
   final _statusChipKey = GlobalKey();
   final _categoryChipKey = GlobalKey();
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<InventoryListCubit, InventoryListState>(
-      builder: (context, state) {
-        final cubit = context.read<InventoryListCubit>();
-        return Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            FilterDropdownChip(
-              key: _statusChipKey,
-              label: context.l10n.inventoryFilterStatus,
-              valueLabel: state.statusFilter == 'all'
-                  ? context.l10n.inventoryFilterAll
-                  : DeviceStatus.values
-                      .firstWhere((s) => s.name == state.statusFilter)
-                      .label,
-              onTap: () => _showStatusMenu(context, cubit),
-            ),
-            // TODO(category-filter): category filtering by id needs the
-            // categories dropdown endpoint wired to a picker; stubbed as
-            // display-only until that UI exists.
-            FilterDropdownChip(
-              key: _categoryChipKey,
-              label: context.l10n.inventoryFilterCategory,
-              valueLabel: context.l10n.inventoryFilterAll,
-              onTap: () => AppToast.info(context, context.l10n.comingSoon),
-            ),
-            SizedBox(
-              width: 280,
-              child: AppSearchField(
-                hintText: context.l10n.inventorySearchHint,
-                onChanged: cubit.setSearchQuery,
-              ),
-            ),
-          ],
-        );
-      },
+    final cubit = context.read<InventoryListCubit>();
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        // Only the filter chips depend on cubit state, so scope the rebuild
+        // to them — the search field keeps its own controller and must not be
+        // rebuilt on every keystroke (that reflow is what made it "shake").
+        BlocBuilder<InventoryListCubit, InventoryListState>(
+          buildWhen: (prev, curr) => prev.statusFilter != curr.statusFilter,
+          builder: (context, state) => FilterDropdownChip(
+            key: _statusChipKey,
+            label: context.l10n.inventoryFilterStatus,
+            valueLabel: state.statusFilter == 'all'
+                ? context.l10n.inventoryFilterAll
+                : DeviceStatus.values
+                    .firstWhere((s) => s.name == state.statusFilter)
+                    .label,
+            onTap: () => _showStatusMenu(context, cubit),
+          ),
+        ),
+        // TODO(category-filter): category filtering by id needs the
+        // categories dropdown endpoint wired to a picker; stubbed as
+        // display-only until that UI exists.
+        FilterDropdownChip(
+          key: _categoryChipKey,
+          label: context.l10n.inventoryFilterCategory,
+          valueLabel: context.l10n.inventoryFilterAll,
+          onTap: () => AppToast.info(context, context.l10n.comingSoon),
+        ),
+        SizedBox(
+          width: 280,
+          child: AppSearchField(
+            controller: _searchController,
+            hintText: context.l10n.inventorySearchHint,
+            onChanged: cubit.setSearchQuery,
+          ),
+        ),
+      ],
     );
   }
 

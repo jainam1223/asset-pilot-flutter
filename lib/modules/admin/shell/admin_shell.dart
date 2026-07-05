@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../repositories/remote_repository/auth/auth_repository.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/helpers/responsive.dart';
 import '../../../utilities/navigation/app_routes.dart';
-import '../../../widgets/nav/app_side_nav.dart';
-import '../../../widgets/nav/nav_item.dart';
+import '../../../widgets/widgets.dart';
 import '../chatbot/floating_chatbot.dart';
 
 /// Persistent left navigation rail for the IT Admin (web/desktop) variant.
@@ -69,7 +70,13 @@ class AdminNavRail extends StatelessWidget {
       onSelected: (id) => _onSelected(context, id),
       brandLabel: 'ASSETPILOT',
       expanded: expanded,
-      footer: _ChatLauncher(expanded: expanded),
+      footer: Column(
+        children: [
+          _ChatLauncher(expanded: expanded),
+          const Gap(8),
+          _LogoutButton(expanded: expanded),
+        ],
+      ),
     );
   }
 
@@ -87,6 +94,7 @@ class AdminNavRail extends StatelessWidget {
       'extension-requests': 'extensionRequests',
       'assignment': 'assignment',
       'support': 'support',
+      'settings': 'settings',
     };
     final segment = Uri.parse(location).pathSegments.firstOrNull;
     return segmentToId[segment];
@@ -101,6 +109,7 @@ class AdminNavRail extends StatelessWidget {
       'extensionRequests' => Routes.adminExtensionRequests.path,
       'assignment' => Routes.adminAssignment.path,
       'support' => Routes.adminSupport.path,
+      'settings' => Routes.adminSettings.path,
       _ => null,
     };
     if (path != null) context.go(path);
@@ -148,6 +157,38 @@ class _ChatLauncher extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Red logout action pinned to the bottom of the admin nav rail. Clears the
+/// session ([AuthRepository.logout]) and routes back to login. Collapses to an
+/// icon-only button when the rail is collapsed.
+class _LogoutButton extends StatelessWidget {
+  const _LogoutButton({required this.expanded});
+
+  final bool expanded;
+
+  Future<void> _logout(BuildContext context) async {
+    await AuthRepository.instance.logout();
+    if (context.mounted) context.pushReplacement(Routes.login.path);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!expanded) {
+      return IconButton(
+        tooltip: context.l10n.profileLogout,
+        onPressed: () => _logout(context),
+        icon: Icon(Icons.logout, color: context.appColors.errorFg),
+      );
+    }
+    return AppButton(
+      label: context.l10n.profileLogout,
+      variant: AppButtonVariant.destructive,
+      leadingIcon: Icons.logout,
+      expand: true,
+      onPressed: () => _logout(context),
     );
   }
 }

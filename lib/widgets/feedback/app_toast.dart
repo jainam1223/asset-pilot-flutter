@@ -137,12 +137,17 @@ class SnackBarToastPresenter implements ToastPresenter {
   }
 }
 
-/// Top-right stacked toast — idiomatic for the admin web/desktop shell
-/// (fixed sidebar + top bar make a bottom SnackBar easy to miss). Register
-/// in `main_admin.dart`. Requires a root [Overlay] in the widget tree
+/// Top-right toast — idiomatic for the admin web/desktop shell (fixed
+/// sidebar + top bar make a bottom SnackBar easy to miss). Register in
+/// `main_admin.dart`. Requires a root [Overlay] in the widget tree
 /// (provided by [MaterialApp]).
+///
+/// Only ever shows a single toast at a time: a new [show] call replaces the
+/// currently visible toast rather than stacking beneath it. This keeps
+/// repeated triggers (e.g. tapping a "coming soon" action several times)
+/// from piling up lingering overlays.
 class OverlayToastPresenter implements ToastPresenter {
-  final List<OverlayEntry> _entries = [];
+  OverlayEntry? _current;
 
   @override
   void show(
@@ -153,28 +158,31 @@ class OverlayToastPresenter implements ToastPresenter {
     VoidCallback? onAction,
   }) {
     final overlay = Overlay.of(context, rootOverlay: true);
+    // Replace any visible toast so only the latest one is ever shown.
+    _current?.remove();
+    _current = null;
+
     late final OverlayEntry entry;
     entry = OverlayEntry(
       builder: (context) => _ToastStack(
-        index: _entries.length,
         message: message,
         kind: kind,
         actionLabel: actionLabel,
         onAction: onAction,
         onDismiss: () {
-          entry.remove();
-          _entries.remove(entry);
+          // Guard against removing an entry that was already replaced.
+          if (identical(_current, entry)) _current = null;
+          if (entry.mounted) entry.remove();
         },
       ),
     );
-    _entries.add(entry);
+    _current = entry;
     overlay.insert(entry);
   }
 }
 
 class _ToastStack extends StatefulWidget {
   const _ToastStack({
-    required this.index,
     required this.message,
     required this.kind,
     required this.onDismiss,
@@ -182,7 +190,6 @@ class _ToastStack extends StatefulWidget {
     this.onAction,
   });
 
-  final int index;
   final String message;
   final ToastKind kind;
   final String? actionLabel;
@@ -212,7 +219,7 @@ class _ToastStackState extends State<_ToastStack> {
   Widget build(BuildContext context) {
     final colors = widget.kind.semantic.colors(context);
     return Positioned(
-      top: 20 + (widget.index * 64),
+      top: 20,
       right: 20,
       child: Material(
         color: Colors.transparent,

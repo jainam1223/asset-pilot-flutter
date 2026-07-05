@@ -45,6 +45,14 @@ class _InventoryTimelineScreenState extends State<InventoryTimelineScreen> {
             return NetworkStateView<List<DeviceTimelineEventResDm>>(
               state: state.events,
               isEmpty: (data) => data.isEmpty,
+              onRetry: () =>
+                  context.read<InventoryTimelineCubit>().loadTimeline(),
+              emptyBuilder: (context) => EmptyStateView(
+                icon: Icons.history_toggle_off_outlined,
+                title: context.l10n.inventoryTimelineEmptyTitle,
+                message: context.l10n.inventoryTimelineEmptyMessage,
+                semantic: AppSemantic.neutral,
+              ),
               onData: (context, events) => SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

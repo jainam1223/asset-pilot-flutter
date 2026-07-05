@@ -128,34 +128,44 @@ class _FiltersRow extends StatefulWidget {
 
 class _FiltersRowState extends State<_FiltersRow> {
   final _typeChipKey = GlobalKey();
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SupportListCubit, SupportListState>(
-      builder: (context, state) {
-        final cubit = context.read<SupportListCubit>();
-        return Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            FilterDropdownChip(
-              key: _typeChipKey,
-              label: context.l10n.supportFilterType,
-              valueLabel:
-                  state.typeFilter?.label ?? context.l10n.supportFilterAll,
-              onTap: () => _showTypeMenu(context, cubit),
-            ),
-            SizedBox(
-              width: 260,
-              child: AppSearchField(
-                hintText: context.l10n.supportSearchHint,
-                onChanged: cubit.setSearchQuery,
-              ),
-            ),
-          ],
-        );
-      },
+    final cubit = context.read<SupportListCubit>();
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        // Only the type chip depends on cubit state, so scope the rebuild to
+        // it — the search field keeps its own controller and must not be
+        // rebuilt on every keystroke (that reflow is what made it "shake").
+        BlocBuilder<SupportListCubit, SupportListState>(
+          buildWhen: (prev, curr) => prev.typeFilter != curr.typeFilter,
+          builder: (context, state) => FilterDropdownChip(
+            key: _typeChipKey,
+            label: context.l10n.supportFilterType,
+            valueLabel:
+                state.typeFilter?.label ?? context.l10n.supportFilterAll,
+            onTap: () => _showTypeMenu(context, cubit),
+          ),
+        ),
+        SizedBox(
+          width: 260,
+          child: AppSearchField(
+            controller: _searchController,
+            hintText: context.l10n.supportSearchHint,
+            onChanged: cubit.setSearchQuery,
+          ),
+        ),
+      ],
     );
   }
 

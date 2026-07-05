@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
           listenWhen: (prev, curr) => prev.login != curr.login,
           listener: (context, state) {
             if (state.login case Success<UserResDm>(:final data)) {
-              context.go(Routes.mobileShell.path, extra: data);
+              context.pushReplacement(Routes.mobileShell.path, extra: data);
             }
           },
           builder: (context, state) {

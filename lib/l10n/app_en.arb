@@ -235,6 +235,10 @@
       "deviceName": {"type": "String"}
     }
   },
+  "inventoryTimelineEmptyTitle": "No timeline events",
+  "@inventoryTimelineEmptyTitle": {},
+  "inventoryTimelineEmptyMessage": "Lifecycle events for this device will show up here.",
+  "@inventoryTimelineEmptyMessage": {},
   "inventoryFilterStatus": "Status",
   "@inventoryFilterStatus": {},
   "inventoryFilterCategory": "Category",
