@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
+import '../../../repositories/remote_repository/dashboard/models/open_support_snapshot_res_dm.dart';
+import '../../../repositories/remote_repository/dashboard/models/recent_request_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/network/network_state.dart';
 import '../../../values/constants/app_constants.dart';
+import '../../../values/enumeration/statuses.dart';
+import '../../../widgets/widgets.dart';
+import '../inventory/inventory_status_x.dart';
+import '../requests/request_status_x.dart';
 import '../shell/admin_shell.dart';
+import '../support/support_status_x.dart';
 import 'cubit/dashboard_cubit.dart';
 
-/// IT Admin dashboard (mockup A01). KPI data is mocked via [DashboardCubit].
+/// IT Admin dashboard (mockup A01): KPIs, device status breakdown, pending
+/// actions, recent requests, and open support — all live via [DashboardCubit].
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -20,31 +28,105 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<DashboardCubit>().loadKpis();
+    context.read<DashboardCubit>().loadDashboard();
   }
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<DashboardCubit>();
     return AdminShell(
       title: context.l10n.adminDashboard,
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(AppConstants.screenPadding),
-        child:
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BlocSelector<DashboardCubit, DashboardState, NetworkState<DashboardKpis>>(
+              selector: (state) => state.kpis,
+              builder: (context, kpis) {
+                return NetworkStateView<DashboardKpis>(
+                  state: kpis,
+                  onRetry: cubit.loadKpis,
+                  onData: (context, data) => _KpiRow(kpis: data),
+                );
+              },
+            ),
+            const Gap(18),
+            BlocSelector<DashboardCubit, DashboardState, NetworkState<DashboardKpis>>(
+              selector: (state) => state.kpis,
+              builder: (context, kpis) {
+                return NetworkStateView<DashboardKpis>(
+                  state: kpis,
+                  onRetry: cubit.loadKpis,
+                  onData: (context, data) => _StatusBreakdownCard(kpis: data),
+                );
+              },
+            ),
+            const Gap(18),
+            BlocSelector<DashboardCubit, DashboardState, NetworkState<DashboardKpis>>(
+              selector: (state) => state.kpis,
+              builder: (context, kpis) {
+                return NetworkStateView<DashboardKpis>(
+                  state: kpis,
+                  onRetry: cubit.loadKpis,
+                  onData: (context, data) => _PendingActionsCard(kpis: data),
+                );
+              },
+            ),
+            const Gap(18),
+            Text(
+              context.l10n.dashboardRecentRequestsTitle,
+              style: context.appTextStyles.h3,
+            ),
+            const Gap(12),
             BlocSelector<
               DashboardCubit,
               DashboardState,
-              NetworkState<DashboardKpis>
+              NetworkState<List<RecentRequestResDm>>
             >(
-              selector: (state) => state.kpis,
-              builder: (context, kpis) {
-                return switch (kpis) {
-                  Idle() ||
-                  Loading() => const Center(child: CircularProgressIndicator()),
-                  Success(:final data) => _KpiRow(kpis: data),
-                  Error(:final message) => Center(child: Text(message)),
-                };
+              selector: (state) => state.recentRequests,
+              builder: (context, recentRequests) {
+                return NetworkStateView<List<RecentRequestResDm>>(
+                  state: recentRequests,
+                  isEmpty: (data) => data.isEmpty,
+                  onRetry: cubit.loadRecentRequests,
+                  emptyBuilder: (context) => EmptyStateView(
+                    icon: Icons.assignment_outlined,
+                    title: context.l10n.dashboardRecentRequestsEmptyTitle,
+                    message: context.l10n.dashboardRecentRequestsEmptyMessage,
+                  ),
+                  onData: (context, data) => _RecentRequestsTable(rows: data),
+                );
               },
             ),
+            const Gap(18),
+            Text(
+              context.l10n.dashboardOpenSupportTitle,
+              style: context.appTextStyles.h3,
+            ),
+            const Gap(12),
+            BlocSelector<
+              DashboardCubit,
+              DashboardState,
+              NetworkState<List<OpenSupportSnapshotResDm>>
+            >(
+              selector: (state) => state.openSupport,
+              builder: (context, openSupport) {
+                return NetworkStateView<List<OpenSupportSnapshotResDm>>(
+                  state: openSupport,
+                  isEmpty: (data) => data.isEmpty,
+                  onRetry: cubit.loadOpenSupport,
+                  emptyBuilder: (context) => EmptyStateView(
+                    icon: Icons.support_agent_outlined,
+                    title: context.l10n.dashboardOpenSupportEmptyTitle,
+                    message: context.l10n.dashboardOpenSupportEmptyMessage,
+                  ),
+                  onData: (context, data) => _OpenSupportTable(rows: data),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -57,58 +139,185 @@ class _KpiRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cards = <(String, int, Color)>[
-      ('Total devices', kpis.totalDevices, context.appColors.textPrimary),
-      ('Assigned', kpis.assigned, context.appColors.successFg),
-      ('Pending requests', kpis.pendingRequests, context.appColors.warningFg),
-      ('Open support', kpis.openSupport, context.appColors.errorFg),
-    ];
-    return Wrap(
-      spacing: 14,
-      runSpacing: 14,
-      children: [
-        for (final (label, value, color) in cards)
-          _KpiCard(label: label, value: value, color: color),
+    return StatTileRow(
+      tiles: [
+        StatTile(
+          label: context.l10n.dashboardKpiTotalDevices,
+          value: '${kpis.totalDevices}',
+        ),
+        StatTile(
+          label: context.l10n.dashboardKpiAssigned,
+          value: '${kpis.assigned}',
+          semantic: AppSemantic.success,
+        ),
+        StatTile(
+          label: context.l10n.dashboardKpiPendingRequests,
+          value: '${kpis.pendingRequests}',
+          semantic: AppSemantic.warning,
+        ),
+        StatTile(
+          label: context.l10n.dashboardKpiOpenSupport,
+          value: '${kpis.openSupport}',
+          semantic: AppSemantic.danger,
+        ),
       ],
     );
   }
 }
 
-class _KpiCard extends StatelessWidget {
-  const _KpiCard({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
+/// One labeled progress bar per [DeviceStatus] present in
+/// [DashboardKpis.statusBreakdown], proportional to the device total
+/// (mockup A01's "Device Status Breakdown" panel).
+class _StatusBreakdownCard extends StatelessWidget {
+  const _StatusBreakdownCard({required this.kpis});
 
-  final String label;
-  final int value;
-  final Color color;
+  final DashboardKpis kpis;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: context.appColors.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: context.appColors.borderSubtle),
-      ),
+    final total = kpis.totalDevices;
+    final rows = <Widget>[];
+    for (final status in DeviceStatus.values) {
+      final count = kpis.statusBreakdown[status.toJson()];
+      if (count == null) continue;
+      if (rows.isNotEmpty) rows.add(const Gap(13));
+      rows.add(
+        AppProgressBar(
+          label: status.label,
+          value: total == 0 ? 0 : count / total,
+          valueLabel: '$count',
+          semantic: status.semantic,
+        ),
+      );
+    }
+
+    return AppCard(
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: context.appTextStyles.bodySmall),
-          const Gap(8),
           Text(
-            '$value',
-            style: context.appTextStyles.h1.copyWith(
-              color: color,
-              fontSize: 26,
-            ),
+            context.l10n.dashboardStatusBreakdownTitle,
+            style: context.appTextStyles.h3,
+          ),
+          const Gap(16),
+          ...rows,
+        ],
+      ),
+    );
+  }
+}
+
+/// Single-counter "Pending Actions" panel (mockup A01). Only "Approvals to
+/// review" is backed by a real field on [DashboardSummaryResDm] today; the
+/// mockup's other two counters (awaiting shipment / returns to confirm) are
+/// intentionally omitted rather than sourced from extra network calls.
+class _PendingActionsCard extends StatelessWidget {
+  const _PendingActionsCard({required this.kpis});
+
+  final DashboardKpis kpis;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            context.l10n.dashboardPendingActionsTitle,
+            style: context.appTextStyles.h3,
+          ),
+          const Gap(14),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                context.l10n.dashboardPendingActionsApprovals,
+                style: context.appTextStyles.bodyMedium,
+              ),
+              StatusPill(
+                semantic: AppSemantic.warning,
+                label: '${kpis.pendingRequests}',
+              ),
+            ],
           ),
         ],
       ),
+    );
+  }
+}
+
+class _RecentRequestsTable extends StatelessWidget {
+  const _RecentRequestsTable({required this.rows});
+
+  final List<RecentRequestResDm> rows;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppDataTable<RecentRequestResDm>(
+      columns: [
+        TableColumn<RecentRequestResDm>(
+          header: context.l10n.dashboardColumnId,
+          cellBuilder: (context, row) => Text(row.id),
+        ),
+        TableColumn<RecentRequestResDm>(
+          header: context.l10n.dashboardColumnRequester,
+          flex: 2,
+          cellBuilder: (context, row) => Text(row.requesterName),
+        ),
+        TableColumn<RecentRequestResDm>(
+          header: context.l10n.columnCategory,
+          cellBuilder: (context, row) => Text(row.categoryName),
+        ),
+        TableColumn<RecentRequestResDm>(
+          header: context.l10n.columnStatus,
+          cellBuilder: (context, row) => StatusPill(
+            semantic: row.status.semantic,
+            label: row.status.label,
+            dense: true,
+          ),
+        ),
+      ],
+      rows: rows,
+    );
+  }
+}
+
+class _OpenSupportTable extends StatelessWidget {
+  const _OpenSupportTable({required this.rows});
+
+  final List<OpenSupportSnapshotResDm> rows;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppDataTable<OpenSupportSnapshotResDm>(
+      columns: [
+        TableColumn<OpenSupportSnapshotResDm>(
+          header: context.l10n.dashboardColumnId,
+          cellBuilder: (context, row) => Text(row.id),
+        ),
+        TableColumn<OpenSupportSnapshotResDm>(
+          header: context.l10n.dashboardColumnItem,
+          flex: 2,
+          cellBuilder: (context, row) => Text(row.itemName),
+        ),
+        TableColumn<OpenSupportSnapshotResDm>(
+          header: context.l10n.dashboardColumnType,
+          cellBuilder: (context, row) => Text(row.type.label),
+        ),
+        TableColumn<OpenSupportSnapshotResDm>(
+          header: context.l10n.columnStatus,
+          cellBuilder: (context, row) => StatusPill(
+            semantic: row.status.semantic,
+            label: row.status.label,
+            dense: true,
+          ),
+        ),
+      ],
+      rows: rows,
     );
   }
 }
