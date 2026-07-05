@@ -174,24 +174,10 @@ class _DetailHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              AppIconButton(
-                icon: Icons.arrow_back,
-                variant: AppButtonVariant.primary,
-                onPressed: () => context.pop(),
-              ),
-              const SizedBox(width: 12),
-              Flexible(
-                child: Text(
-                  request.id,
-                  style: context.appTextStyles.labelXLarge.copyWith(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
+          AppIconButton(
+            icon: Icons.arrow_back,
+            variant: AppButtonVariant.primary,
+            onPressed: () => context.pop(),
           ),
           const SizedBox(height: 16),
           Row(
