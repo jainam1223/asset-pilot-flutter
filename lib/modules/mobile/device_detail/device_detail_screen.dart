@@ -149,7 +149,7 @@ class _SectionLabel extends StatelessWidget {
     return Text(
       label.toUpperCase(),
       style: context.appTextStyles.label.copyWith(
-        color: context.appColors.textTertiary,
+          color:Colors.black
       ),
     );
   }
@@ -199,6 +199,7 @@ class _DeviceDetailHeader extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: context.appTextStyles.labelXLarge.copyWith(
                     color: Colors.white,
+                    fontSize:20,
                   ),
                 ),
               ),
@@ -232,7 +233,8 @@ class _DeviceDetailHeader extends StatelessWidget {
                         categoryName,
                       ),
                       style: context.appTextStyles.bodySmall.copyWith(
-                        color: AppColors.textOnDarkMuted,
+                        color: Colors.white,
+                        fontSize:12,
                       ),
                     ),
                     const SizedBox(height: 8),

@@ -55,7 +55,7 @@ class GradientHeader extends StatelessWidget {
                 Text(
                   greeting,
                   style: context.appTextStyles.bodyLarge.copyWith(
-                    color: AppColors.textOnDarkMuted,
+                    color:Colors.white,
                   ),
                 ),
                 const SizedBox(height: 4),

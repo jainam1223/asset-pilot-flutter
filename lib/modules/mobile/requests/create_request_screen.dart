@@ -145,6 +145,7 @@ class _CreateRequestAppBar extends StatelessWidget {
             context.l10n.createRequestTitle,
             style: context.appTextStyles.labelXLarge.copyWith(
               color: Colors.white,
+              fontSize:20,
             ),
           ),
         ],
@@ -184,7 +185,7 @@ class _CategoryField extends StatelessWidget {
           shrinkWrap: true,
           children: [
             for (final category in categories)
-              ListTile(
+              Column(children:[ListTile(
                 title: Text(
                   category.name,
                   style: context.appTextStyles.labelXLarge,
@@ -194,6 +195,8 @@ class _CategoryField extends StatelessWidget {
                     : null,
                 onTap: () => Navigator.of(sheetContext).pop(category),
               ),
+              Divider(thickness:2,color:context.appColors.divider),
+              ],),
           ],
         ),
       ),
@@ -319,7 +322,7 @@ class _PriorityOption extends StatelessWidget {
         child: Text(
           priority.label,
           style: context.appTextStyles.labelMedium.copyWith(
-            color: selected ? colors.fg : context.appColors.textTertiary,
+            color: selected ? colors.fg : Colors.black,
           ),
         ),
       ),
@@ -381,7 +384,7 @@ class _ReportingManagerCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
       decoration: BoxDecoration(
-        color: context.appColors.surfaceMuted,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -396,6 +399,7 @@ class _ReportingManagerCard extends StatelessWidget {
                 context.l10n.createRequestReportingManager,
                 style: context.appTextStyles.bodySmall.copyWith(
                   color: context.appColors.textTertiary,
+                  fontSize:12,
                 ),
               ),
               const SizedBox(height: 3),

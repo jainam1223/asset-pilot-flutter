@@ -36,14 +36,16 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Text(
                 context.l10n.profileReportingManager,
-                style: context.appTextStyles.overline,
+                style: context.appTextStyles.overline.copyWith(
+                fontSize:14
+                ),
               ),
               const Gap(10),
               const _ReportingManagerField(),
               const Gap(20),
               Text(
                 context.l10n.profileChangePassword,
-                style: context.appTextStyles.overline,
+                style: context.appTextStyles.overline.copyWith(fontSize:14),
               ),
               const Gap(10),
               _StaticPasswordField(label: context.l10n.profileCurrentPassword),
@@ -146,7 +148,8 @@ class _ProfileHeader extends StatelessWidget {
           Text(
             '$email · $roleLabel',
             style: context.appTextStyles.bodySmall.copyWith(
-              color: context.appColors.textOnDarkMuted,
+              color: Colors.white,
+              fontSize:12,
             ),
           ),
         ],

@@ -13,7 +13,7 @@ import '../widget_enums.dart';
 /// Visually distinct from [PriorityTag] (rounded-rect, no dot) so the two
 /// are never confused when they appear in the same table row.
 class StatusPill extends StatelessWidget {
-  const StatusPill({
+  const  StatusPill({
     super.key,
     required this.semantic,
     required this.label,

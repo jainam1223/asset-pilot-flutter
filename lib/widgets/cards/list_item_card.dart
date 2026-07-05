@@ -56,6 +56,7 @@ class ListItemCard extends StatelessWidget {
                         title,
                         style: context.appTextStyles.labelXLarge.copyWith(
                           color: context.appColors.textPrimary,
+                          fontSize:18,
                         ),
                       ),
                     ),
@@ -71,6 +72,7 @@ class ListItemCard extends StatelessWidget {
                     subtitle!,
                     style: context.appTextStyles.bodyXSmall.copyWith(
                       color: context.appColors.textTertiary,
+                      fontSize: 12,
                     ),
                   ),
                 ],

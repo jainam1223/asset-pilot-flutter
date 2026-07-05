@@ -187,6 +187,7 @@ class _DetailHeader extends StatelessWidget {
                   request.id,
                   style: context.appTextStyles.labelXLarge.copyWith(
                     color: Colors.white,
+                    fontSize: 14,
                   ),
                 ),
               ),
@@ -246,7 +247,7 @@ class _NoteCard extends StatelessWidget {
           Text(
             note,
             style: context.appTextStyles.bodyLarge.copyWith(
-              color: context.appColors.textSecondary,
+              color: Colors.black,
               height: 1.5,
             ),
           ),

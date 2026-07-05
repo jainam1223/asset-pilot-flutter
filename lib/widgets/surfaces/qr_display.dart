@@ -51,6 +51,7 @@ class QrDisplay extends StatelessWidget {
                     title!,
                     style: context.appTextStyles.labelMedium.copyWith(
                       color: context.appColors.textPrimary,
+                      fontSize:16
                     ),
                   ),
                 const SizedBox(height: 6),
@@ -87,6 +88,7 @@ class QrDisplay extends StatelessWidget {
             textAlign: TextAlign.center,
             style: context.appTextStyles.labelMedium.copyWith(
               color: context.appColors.textPrimary,
+              fontSize:16,
             ),
           ),
         if (subtitle != null) ...[

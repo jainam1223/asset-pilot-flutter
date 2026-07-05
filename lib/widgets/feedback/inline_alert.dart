@@ -40,7 +40,7 @@ class InlineAlert extends StatelessWidget {
         vertical: dense ? 10 : 12,
       ),
       decoration: BoxDecoration(
-        color: colors.bg,
+        color: Colors.grey.shade300,
         borderRadius: BorderRadius.circular(11),
       ),
       child: Row(
