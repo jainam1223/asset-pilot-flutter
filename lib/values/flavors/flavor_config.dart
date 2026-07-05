@@ -64,5 +64,15 @@ abstract final class FlavorConfig {
   /// backend sends proper CORS headers.
   static String get chatBaseUrl => kIsWeb ? _chatWebProxyUrl : _chatDirectUrl;
 
+  // Direct base URL for the mobile AI chatbot service (independent of the main API).
+  // TODO: CHANGE WITH ACTUAL MOBILE AI CHATBOT BASE URL.
+  static const String _mobileChatDirectUrl = 'https://app-asset-pilot-ai.azurewebsites.net/';
+
+  // Local dev CORS proxy for mobile chatbot.
+  static const String _mobileChatWebProxyUrl = 'https://app-asset-pilot-ai.azure websites.net/';
+
+  /// Base URL the mobile chatbot posts `/chat` to.
+  static String get mobileChatBaseUrl => kIsWeb ? _mobileChatWebProxyUrl : _mobileChatDirectUrl;
+
   static void apply(Flavor flavor) => FlavorConfig.flavor = flavor;
 }
