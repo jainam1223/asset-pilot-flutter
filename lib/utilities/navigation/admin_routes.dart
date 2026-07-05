@@ -23,10 +23,12 @@ import '../../modules/admin/requests/detail/cubit/request_detail_cubit.dart';
 import '../../modules/admin/requests/detail/request_detail_screen.dart';
 import '../../modules/admin/requests/list/cubit/request_list_cubit.dart';
 import '../../modules/admin/requests/list/request_list_screen.dart';
+import '../../modules/admin/shell/admin_empty_screen.dart';
 import '../../modules/admin/shell/admin_shell.dart';
 import '../../modules/admin/support/list/cubit/support_list_cubit.dart';
 import '../../modules/admin/support/list/support_list_screen.dart';
 import '../../utilities/extensions/context_extensions.dart';
+import '../../values/app_global/admin_session.dart';
 import '../../views/component_showcase/component_showcase_screen.dart';
 import '../../views/invalid_route/invalid_route_screen.dart';
 import 'app_routes.dart';
@@ -37,6 +39,18 @@ GoRouter buildAdminRouter() {
     initialLocation: Routes.login.path,
     errorBuilder: (context, state) =>
         InvalidRouteScreen(path: state.uri.toString()),
+    // Auth guard: on the web the browser back button can revisit any URL in
+    // history, so replacing the nav stack isn't enough. Gate every route on
+    // the session — a logged-out user hitting a shell route (e.g. via back to
+    // /dashboard) is bounced to login, and a logged-in user on /login is sent
+    // to the dashboard.
+    redirect: (context, state) {
+      final loggedIn = AdminSession.isLoggedIn;
+      final onLogin = state.matchedLocation == Routes.login.path;
+      if (!loggedIn && !onLogin) return Routes.login.path;
+      if (loggedIn && onLogin) return Routes.adminDashboard.path;
+      return null;
+    },
     routes: [
       // Login sits outside the shell — no nav rail on the auth screen.
       GoRoute(
@@ -165,6 +179,16 @@ GoRouter buildAdminRouter() {
             pageBuilder: (context, state) => NoTransitionPage(
               child: const SupportListScreen().withProvider(
                 (_) => SupportListCubit(),
+              ),
+            ),
+          ),
+          GoRoute(
+            path: Routes.adminSettings.path,
+            name: Routes.adminSettings.name,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: AdminEmptyScreen(
+                title: context.l10n.adminSettings,
+                icon: Icons.settings_outlined,
               ),
             ),
           ),

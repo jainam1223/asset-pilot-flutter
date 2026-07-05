@@ -36,16 +36,14 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Text(
                 context.l10n.profileReportingManager,
-                style: context.appTextStyles.overline.copyWith(
-                fontSize:14
-                ),
+                style: context.appTextStyles.overline.copyWith(fontSize: 14),
               ),
               const Gap(10),
               const _ReportingManagerField(),
               const Gap(20),
               Text(
                 context.l10n.profileChangePassword,
-                style: context.appTextStyles.overline.copyWith(fontSize:14),
+                style: context.appTextStyles.overline.copyWith(fontSize: 14),
               ),
               const Gap(10),
               _StaticPasswordField(label: context.l10n.profileCurrentPassword),
@@ -98,7 +96,7 @@ class ProfileScreen extends StatelessWidget {
     );
     if (confirmed == true && context.mounted) {
       await SharedPref.instance.clearUser();
-      if (context.mounted) context.go(Routes.login.path);
+      if (context.mounted) context.pushReplacement(Routes.login.path);
     }
   }
 }
@@ -149,7 +147,7 @@ class _ProfileHeader extends StatelessWidget {
             '$email · $roleLabel',
             style: context.appTextStyles.bodySmall.copyWith(
               color: Colors.white,
-              fontSize:12,
+              fontSize: 12,
             ),
           ),
         ],
