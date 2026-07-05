@@ -5,65 +5,19 @@ import 'package:gpt_markdown/gpt_markdown.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import 'cubit/chatbot_cubit.dart';
 
-/// Floating AI chatbot that lives in the admin shell overlay: a launcher button
-/// pinned to the bottom-right that expands into a sender/receiver chat panel.
+/// Opens the AI chatbot as a centered modal dialog (with scrim), owning its
+/// own [ChatbotCubit] for the lifetime of the dialog.
 ///
-/// Self-contained — it owns its own [ChatbotCubit] and open/closed state so it
-/// can sit in the shell `Stack` independent of dashboard navigation.
-class FloatingChatbot extends StatefulWidget {
-  const FloatingChatbot({super.key});
-
-  @override
-  State<FloatingChatbot> createState() => _FloatingChatbotState();
-}
-
-class _FloatingChatbotState extends State<FloatingChatbot> {
-  bool _open = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      right: 24,
-      bottom: 24,
-      child: _open
-          ? BlocProvider(
-              create: (_) => ChatbotCubit(),
-              child: _ChatPanel(onClose: () => setState(() => _open = false)),
-            )
-          : _LauncherButton(onTap: () => setState(() => _open = true)),
-    );
-  }
-}
-
-class _LauncherButton extends StatelessWidget {
-  const _LauncherButton({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Tooltip(
-      message: context.l10n.chatbotTooltip,
-      child: Material(
-        color: colors.primary,
-        shape: const CircleBorder(),
-        elevation: 4,
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: onTap,
-          child: const SizedBox(
-            width: 56,
-            height: 56,
-            child: Icon(
-              Icons.chat_bubble_outline_rounded,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+/// Called from the admin left nav rail's launcher button — it no longer lives
+/// in a shell-level `Stack`, so it can't overlap page content.
+void showChatbotDialog(BuildContext context) {
+  showDialog<void>(
+    context: context,
+    builder: (dialogContext) => BlocProvider(
+      create: (_) => ChatbotCubit(),
+      child: _ChatPanel(onClose: () => Navigator.of(dialogContext).pop()),
+    ),
+  );
 }
 
 class _ChatPanel extends StatefulWidget {
@@ -105,14 +59,13 @@ class _ChatPanelState extends State<_ChatPanel> {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return Material(
-      color: colors.surface,
-      elevation: 8,
-      borderRadius: BorderRadius.circular(16),
+    return Dialog(
+      backgroundColor: colors.surface,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 380, maxHeight: 520),
+        constraints: const BoxConstraints(maxWidth: 420, maxHeight: 560),
         child: SizedBox(
-          width: 380,
+          width: 420,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

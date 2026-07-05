@@ -6,6 +6,7 @@ import '../../../utilities/helpers/responsive.dart';
 import '../../../utilities/navigation/app_routes.dart';
 import '../../../widgets/nav/app_side_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
+import '../chatbot/floating_chatbot.dart';
 
 /// Persistent left navigation rail for the IT Admin (web/desktop) variant.
 ///
@@ -68,6 +69,7 @@ class AdminNavRail extends StatelessWidget {
       onSelected: (id) => _onSelected(context, id),
       brandLabel: 'ASSETPILOT',
       expanded: expanded,
+      footer: _ChatLauncher(expanded: expanded),
     );
   }
 
@@ -102,6 +104,51 @@ class AdminNavRail extends StatelessWidget {
       _ => null,
     };
     if (path != null) context.go(path);
+  }
+}
+
+/// Chat launcher pinned to the bottom of [AdminNavRail], styled to match the
+/// rail's nav items. Opens the AI assistant as a centered modal dialog.
+class _ChatLauncher extends StatelessWidget {
+  const _ChatLauncher({required this.expanded});
+
+  final bool expanded;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Tooltip(
+      message: l10n.chatbotTooltip,
+      child: InkWell(
+        onTap: () => showChatbotDialog(context),
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 5),
+          padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 13),
+          child: Row(
+            children: [
+              Icon(
+                Icons.chat_bubble_outline_rounded,
+                size: 19,
+                color: context.appColors.primaryAccent,
+              ),
+              if (expanded) ...[
+                const SizedBox(width: 11),
+                Expanded(
+                  child: Text(
+                    l10n.chatbotTooltip,
+                    style: context.appTextStyles.bodyLarge.copyWith(
+                      fontSize: 13,
+                      color: context.appColors.primaryAccent,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

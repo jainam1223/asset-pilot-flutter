@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import '../../../repositories/remote_repository/dashboard/models/open_support_snapshot_res_dm.dart';
 import '../../../repositories/remote_repository/dashboard/models/recent_request_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
+import '../../../utilities/helpers/responsive.dart';
 import '../../../utilities/network/network_state.dart';
 import '../../../values/constants/app_constants.dart';
 import '../../../values/enumeration/statuses.dart';
@@ -41,61 +42,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Single NetworkStateView for the whole `kpis` slice: the KPI
+            // row, status breakdown, and pending-actions panel all render
+            // the same fetch, so they load/error/retry as one unit instead
+            // of each showing its own spinner for one underlying request.
             BlocSelector<DashboardCubit, DashboardState, NetworkState<DashboardKpis>>(
               selector: (state) => state.kpis,
               builder: (context, kpis) {
                 return NetworkStateView<DashboardKpis>(
                   state: kpis,
                   onRetry: cubit.loadKpis,
-                  onData: (context, data) => _KpiRow(kpis: data),
-                );
-              },
-            ),
-            const Gap(18),
-            BlocSelector<DashboardCubit, DashboardState, NetworkState<DashboardKpis>>(
-              selector: (state) => state.kpis,
-              builder: (context, kpis) {
-                return NetworkStateView<DashboardKpis>(
-                  state: kpis,
-                  onRetry: cubit.loadKpis,
-                  onData: (context, data) => _StatusBreakdownCard(kpis: data),
-                );
-              },
-            ),
-            const Gap(18),
-            BlocSelector<DashboardCubit, DashboardState, NetworkState<DashboardKpis>>(
-              selector: (state) => state.kpis,
-              builder: (context, kpis) {
-                return NetworkStateView<DashboardKpis>(
-                  state: kpis,
-                  onRetry: cubit.loadKpis,
-                  onData: (context, data) => _PendingActionsCard(kpis: data),
-                );
-              },
-            ),
-            const Gap(18),
-            Text(
-              context.l10n.dashboardRecentRequestsTitle,
-              style: context.appTextStyles.h3,
-            ),
-            const Gap(12),
-            BlocSelector<
-              DashboardCubit,
-              DashboardState,
-              NetworkState<List<RecentRequestResDm>>
-            >(
-              selector: (state) => state.recentRequests,
-              builder: (context, recentRequests) {
-                return NetworkStateView<List<RecentRequestResDm>>(
-                  state: recentRequests,
-                  isEmpty: (data) => data.isEmpty,
-                  onRetry: cubit.loadRecentRequests,
-                  emptyBuilder: (context) => EmptyStateView(
-                    icon: Icons.assignment_outlined,
-                    title: context.l10n.dashboardRecentRequestsEmptyTitle,
-                    message: context.l10n.dashboardRecentRequestsEmptyMessage,
+                  onData: (context, data) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _KpiRow(kpis: data),
+                      const Gap(18),
+                      // Recent Requests (left, wide) beside the status/
+                      // pending-actions rail (right, narrow) on desktop —
+                      // mirrors mockup A01's panel grid; stacks full-width
+                      // on narrower layouts. `data` is already resolved
+                      // here, so the rail never re-subscribes to `kpis`.
+                      Responsive.isDesktop(context)
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: _buildRecentRequests(context, cubit),
+                                ),
+                                const Gap(18),
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    children: [
+                                      _StatusBreakdownCard(kpis: data),
+                                      const Gap(18),
+                                      _PendingActionsCard(kpis: data),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildRecentRequests(context, cubit),
+                                const Gap(18),
+                                _StatusBreakdownCard(kpis: data),
+                                const Gap(18),
+                                _PendingActionsCard(kpis: data),
+                              ],
+                            ),
+                    ],
                   ),
-                  onData: (context, data) => _RecentRequestsTable(rows: data),
                 );
               },
             ),
@@ -114,13 +113,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               builder: (context, openSupport) {
                 return NetworkStateView<List<OpenSupportSnapshotResDm>>(
                   state: openSupport,
-                  isEmpty: (data) => data.isEmpty,
                   onRetry: cubit.loadOpenSupport,
-                  emptyBuilder: (context) => EmptyStateView(
-                    icon: Icons.support_agent_outlined,
-                    title: context.l10n.dashboardOpenSupportEmptyTitle,
-                    message: context.l10n.dashboardOpenSupportEmptyMessage,
-                  ),
                   onData: (context, data) => _OpenSupportTable(rows: data),
                 );
               },
@@ -130,6 +123,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
+
+  Widget _buildRecentRequests(BuildContext context, DashboardCubit cubit) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.dashboardRecentRequestsTitle,
+          style: context.appTextStyles.h3,
+        ),
+        const Gap(12),
+        BlocSelector<
+          DashboardCubit,
+          DashboardState,
+          NetworkState<List<RecentRequestResDm>>
+        >(
+          selector: (state) => state.recentRequests,
+          builder: (context, recentRequests) {
+            return NetworkStateView<List<RecentRequestResDm>>(
+              state: recentRequests,
+              onRetry: cubit.loadRecentRequests,
+              onData: (context, data) => _RecentRequestsTable(rows: data),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
 }
 
 class _KpiRow extends StatelessWidget {
@@ -282,6 +303,11 @@ class _RecentRequestsTable extends StatelessWidget {
         ),
       ],
       rows: rows,
+      emptyState: EmptyStateView(
+        icon: Icons.assignment_outlined,
+        title: context.l10n.dashboardRecentRequestsEmptyTitle,
+        message: context.l10n.dashboardRecentRequestsEmptyMessage,
+      ),
     );
   }
 }
@@ -318,6 +344,11 @@ class _OpenSupportTable extends StatelessWidget {
         ),
       ],
       rows: rows,
+      emptyState: EmptyStateView(
+        icon: Icons.support_agent_outlined,
+        title: context.l10n.dashboardOpenSupportEmptyTitle,
+        message: context.l10n.dashboardOpenSupportEmptyMessage,
+      ),
     );
   }
 }
