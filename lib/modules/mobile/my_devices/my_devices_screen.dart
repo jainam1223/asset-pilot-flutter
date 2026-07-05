@@ -46,9 +46,8 @@ class MyDevicesScreen extends StatelessWidget {
                           child: ErrorStateView(
                             title: context.l10n.somethingWentWrong,
                             message: message,
-                            onRetry: () => context
-                                .read<MyDevicesCubit>()
-                                .fetchMyDevices(),
+                            onRetry: () =>
+                                context.read<MyDevicesCubit>().fetchMyDevices(),
                           ),
                         ),
                         Success(:final data) => _DeviceListSliver(
@@ -91,13 +90,18 @@ class _DeviceListSliver extends StatelessWidget {
         separatorBuilder: (_, _) => const SizedBox(height: 13),
         itemBuilder: (context, index) => _DeviceCard(
           device: devices[index],
-          onTap: () => context.push(
-            Routes.deviceDetail.path.replaceFirst(
-              ':id',
-              devices[index].item.id,
-            ),
-            extra: devices[index],
-          ),
+          onTap: () async {
+            await context.push(
+              Routes.deviceDetail.path.replaceFirst(
+                ':id',
+                devices[index].item.id,
+              ),
+              extra: devices[index],
+            );
+            if (context.mounted) {
+              context.read<MyDevicesCubit>().fetchMyDevices();
+            }
+          },
         ),
       ),
     );

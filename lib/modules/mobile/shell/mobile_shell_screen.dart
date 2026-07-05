@@ -42,7 +42,22 @@ class MobileShellScreen extends StatefulWidget {
 class _MobileShellScreenState extends State<MobileShellScreen> {
   int _index = 0;
 
+  // Bumped whenever a pushed route (e.g. the FAB's Create Request / Handover
+  // flow) reports a successful mutation. It's folded into the active tab's
+  // BlocProvider key so the tab's cubit is recreated — and thus re-fetches —
+  // instead of showing stale data on return.
+  int _refreshTick = 0;
+
   bool get _isManager => widget.user?.role == 'manager';
+
+  /// Awaits a pushed mutation flow and refreshes the current tab if it
+  /// reported success (popped `true`).
+  Future<void> _pushAndRefresh(String path) async {
+    final changed = await context.push<bool>(path);
+    if (changed == true && mounted) {
+      setState(() => _refreshTick++);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +96,17 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
         children: [
           switch (_index) {
             _devicesTabIndex => BlocProvider(
+              key: ValueKey('devices-$_refreshTick'),
               create: (_) => MyDevicesCubit(),
               child: const MyDevicesScreen(),
             ),
             _requestsTabIndex => BlocProvider(
+              key: ValueKey('requests-$_refreshTick'),
               create: (_) => RequestsCubit(),
               child: const RequestsScreen(),
             ),
             _handoverTabIndex => BlocProvider(
+              key: ValueKey('handover-$_refreshTick'),
               create: (_) => HandoverListCubit(),
               child: const HandoverDetailsScreen(),
             ),
@@ -118,14 +136,14 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
       _devicesTabIndex ||
       _requestsTabIndex => FloatingActionButton(
         tooltip: l10n.createRequestFabTooltip,
-        onPressed: () => context.push(Routes.createRequest.path),
+        onPressed: () => _pushAndRefresh(Routes.createRequest.path),
         backgroundColor: context.appColors.primary,
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
       ),
       _handoverTabIndex => FloatingActionButton(
         tooltip: l10n.deviceDetailHandover,
-        onPressed: () => context.push(Routes.handoverScan.path),
+        onPressed: () => _pushAndRefresh(Routes.handoverScan.path),
         backgroundColor: context.appColors.primary,
         foregroundColor: Colors.white,
         child: const Icon(Icons.swap_horiz),

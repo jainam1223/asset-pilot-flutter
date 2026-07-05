@@ -1,41 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 
 import '../../../utilities/extensions/context_extensions.dart';
+import '../../../utilities/navigation/app_routes.dart';
 import 'cubit/chatbot_cubit.dart';
 
-/// Floating AI chatbot that lives in the mobile shell overlay: a launcher button
-/// pinned to the bottom-left that expands into a sender/receiver chat panel.
-///
-/// Self-contained — it owns its own [ChatbotCubit] and open/closed state so it
-/// can sit in the shell `Stack` independent of dashboard navigation.
-class FloatingChatbot extends StatefulWidget {
+/// Launcher button for the AI chatbot in the mobile shell overlay: a button
+/// pinned to the bottom-right that opens the full-screen [ChatbotScreen].
+class FloatingChatbot extends StatelessWidget {
   const FloatingChatbot({this.showAboveFab = false, super.key});
 
   final bool showAboveFab;
 
   @override
-  State<FloatingChatbot> createState() => _FloatingChatbotState();
-}
-
-class _FloatingChatbotState extends State<FloatingChatbot> {
-  bool _open = false;
-
-  @override
   Widget build(BuildContext context) {
     return Positioned(
       right: 16,
-      bottom: widget.showAboveFab ? 88 : 16,
-      child: _open
-          ? TapRegion(
-              onTapOutside: (_) => setState(() => _open = false),
-              child: BlocProvider(
-                create: (_) => ChatbotCubit(),
-                child: _ChatPanel(onClose: () => setState(() => _open = false)),
-              ),
-            )
-          : _LauncherButton(onTap: () => setState(() => _open = true)),
+      bottom: showAboveFab ? 88 : 16,
+      child: _LauncherButton(
+        onTap: () => context.push(Routes.chatbot.path),
+      ),
     );
   }
 }
@@ -72,16 +58,16 @@ class _LauncherButton extends StatelessWidget {
   }
 }
 
-class _ChatPanel extends StatefulWidget {
-  const _ChatPanel({required this.onClose});
-
-  final VoidCallback onClose;
+/// Full-screen AI chatbot page (pushed from the shell launcher). Owns its own
+/// [ChatbotCubit] via the route's `.withProvider()`.
+class ChatbotScreen extends StatefulWidget {
+  const ChatbotScreen({super.key});
 
   @override
-  State<_ChatPanel> createState() => _ChatPanelState();
+  State<ChatbotScreen> createState() => _ChatbotScreenState();
 }
 
-class _ChatPanelState extends State<_ChatPanel> {
+class _ChatbotScreenState extends State<ChatbotScreen> {
   final _inputController = TextEditingController();
   final _scrollController = ScrollController();
 
@@ -111,78 +97,42 @@ class _ChatPanelState extends State<_ChatPanel> {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final screenHeight = MediaQuery.sizeOf(context).height;
-
-    // Responsive sizing for mobile screens.
-    final panelWidth = (screenWidth - 32).clamp(280.0, 360.0);
-    final panelHeight = (screenHeight * 0.6).clamp(320.0, 480.0);
-
-    return Material(
-      color: colors.surface,
-      elevation: 8,
-      borderRadius: BorderRadius.circular(16),
-      child: SizedBox(
-        width: panelWidth,
-        height: panelHeight,
-        child: Column(
+    return Scaffold(
+      backgroundColor: colors.surface,
+      appBar: AppBar(
+        backgroundColor: colors.primary,
+        foregroundColor: Colors.white,
+        title: Row(
           children: [
-            _Header(onClose: widget.onClose),
-            Expanded(
-              child: BlocConsumer<ChatbotCubit, ChatbotState>(
-                listener: (context, state) {
-                  WidgetsBinding.instance.addPostFrameCallback(
-                    (_) => _scrollToBottom(),
-                  );
-                },
-                builder: (context, state) => _MessageList(
-                  state: state,
-                  controller: _scrollController,
-                ),
-              ),
-            ),
-            _Composer(controller: _inputController, onSend: _send),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header({required this.onClose});
-
-  final VoidCallback onClose;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
-      decoration: BoxDecoration(
-        color: colors.primary,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.smart_toy_outlined,
-            color: Colors.white,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
+            const Icon(Icons.smart_toy_outlined, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            Text(
               context.l10n.chatbotTitle,
               style: context.appTextStyles.emphasisMedium.copyWith(
                 color: Colors.white,
               ),
             ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: BlocConsumer<ChatbotCubit, ChatbotState>(
+              listener: (context, state) {
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (_) => _scrollToBottom(),
+                );
+              },
+              builder: (context, state) => _MessageList(
+                state: state,
+                controller: _scrollController,
+              ),
+            ),
           ),
-          IconButton(
-            tooltip: context.l10n.chatbotClose,
-            icon: const Icon(Icons.close, color: Colors.white, size: 20),
-            onPressed: onClose,
+          SafeArea(
+            top: false,
+            child: _Composer(controller: _inputController, onSend: _send),
           ),
         ],
       ),
@@ -251,7 +201,7 @@ class _MessageBubble extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.sizeOf(context).width * 0.7,
+          maxWidth: MediaQuery.sizeOf(context).width * 0.75,
         ),
         decoration: BoxDecoration(
           color: isUser ? colors.primary : colors.surfaceMuted,

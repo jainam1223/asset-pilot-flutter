@@ -11,5 +11,6 @@ abstract final class CurrentUser {
 
   /// The signed-in user's own display name in the reporting-manager context
   /// (a manager viewing their own approvals screen). Alias of [name].
-  static String get managerName => name;
+  static String get managerName =>
+      SharedPref.instance.user?.manager?.name ?? '';
 }

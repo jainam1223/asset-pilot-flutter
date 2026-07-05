@@ -186,10 +186,13 @@ class _ApprovalCard extends StatelessWidget {
           },
         ),
       ],
-      onTap: () => context.push(
-        Routes.approvalDetail.path.replaceFirst(':id', approval.id),
-        extra: approval,
-      ),
+      onTap: () async {
+        final decided = await context.push<bool>(
+          Routes.approvalDetail.path.replaceFirst(':id', approval.id),
+          extra: approval,
+        );
+        if (decided == true) cubit.fetchPendingApprovals();
+      },
     );
   }
 }

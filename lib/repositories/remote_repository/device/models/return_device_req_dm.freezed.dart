@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReturnDeviceReqDm {
 
-@JsonKey(name: 'return_tracking_url') String get returnTrackingUrl;
+@JsonKey(name: 'item_id') String get itemId;@JsonKey(name: 'return_tracking_url') String get returnTrackingUrl;
 /// Create a copy of ReturnDeviceReqDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ReturnDeviceReqDmCopyWith<ReturnDeviceReqDm> get copyWith => _$ReturnDeviceReqD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReturnDeviceReqDm&&(identical(other.returnTrackingUrl, returnTrackingUrl) || other.returnTrackingUrl == returnTrackingUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReturnDeviceReqDm&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.returnTrackingUrl, returnTrackingUrl) || other.returnTrackingUrl == returnTrackingUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,returnTrackingUrl);
+int get hashCode => Object.hash(runtimeType,itemId,returnTrackingUrl);
 
 @override
 String toString() {
-  return 'ReturnDeviceReqDm(returnTrackingUrl: $returnTrackingUrl)';
+  return 'ReturnDeviceReqDm(itemId: $itemId, returnTrackingUrl: $returnTrackingUrl)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ReturnDeviceReqDmCopyWith<$Res>  {
   factory $ReturnDeviceReqDmCopyWith(ReturnDeviceReqDm value, $Res Function(ReturnDeviceReqDm) _then) = _$ReturnDeviceReqDmCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'return_tracking_url') String returnTrackingUrl
+@JsonKey(name: 'item_id') String itemId,@JsonKey(name: 'return_tracking_url') String returnTrackingUrl
 });
 
 
@@ -65,9 +65,10 @@ class _$ReturnDeviceReqDmCopyWithImpl<$Res>
 
 /// Create a copy of ReturnDeviceReqDm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? returnTrackingUrl = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? itemId = null,Object? returnTrackingUrl = null,}) {
   return _then(_self.copyWith(
-returnTrackingUrl: null == returnTrackingUrl ? _self.returnTrackingUrl : returnTrackingUrl // ignore: cast_nullable_to_non_nullable
+itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
+as String,returnTrackingUrl: null == returnTrackingUrl ? _self.returnTrackingUrl : returnTrackingUrl // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'return_tracking_url')  String returnTrackingUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  String itemId, @JsonKey(name: 'return_tracking_url')  String returnTrackingUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReturnDeviceReqDm() when $default != null:
-return $default(_that.returnTrackingUrl);case _:
+return $default(_that.itemId,_that.returnTrackingUrl);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.returnTrackingUrl);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'return_tracking_url')  String returnTrackingUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  String itemId, @JsonKey(name: 'return_tracking_url')  String returnTrackingUrl)  $default,) {final _that = this;
 switch (_that) {
 case _ReturnDeviceReqDm():
-return $default(_that.returnTrackingUrl);case _:
+return $default(_that.itemId,_that.returnTrackingUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.returnTrackingUrl);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'return_tracking_url')  String returnTrackingUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'item_id')  String itemId, @JsonKey(name: 'return_tracking_url')  String returnTrackingUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _ReturnDeviceReqDm() when $default != null:
-return $default(_that.returnTrackingUrl);case _:
+return $default(_that.itemId,_that.returnTrackingUrl);case _:
   return null;
 
 }
@@ -209,9 +210,10 @@ return $default(_that.returnTrackingUrl);case _:
 
 @JsonSerializable(includeIfNull: false)
 class _ReturnDeviceReqDm implements ReturnDeviceReqDm {
-  const _ReturnDeviceReqDm({@JsonKey(name: 'return_tracking_url') required this.returnTrackingUrl});
+  const _ReturnDeviceReqDm({@JsonKey(name: 'item_id') required this.itemId, @JsonKey(name: 'return_tracking_url') required this.returnTrackingUrl});
   factory _ReturnDeviceReqDm.fromJson(Map<String, dynamic> json) => _$ReturnDeviceReqDmFromJson(json);
 
+@override@JsonKey(name: 'item_id') final  String itemId;
 @override@JsonKey(name: 'return_tracking_url') final  String returnTrackingUrl;
 
 /// Create a copy of ReturnDeviceReqDm
@@ -227,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReturnDeviceReqDm&&(identical(other.returnTrackingUrl, returnTrackingUrl) || other.returnTrackingUrl == returnTrackingUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReturnDeviceReqDm&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.returnTrackingUrl, returnTrackingUrl) || other.returnTrackingUrl == returnTrackingUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,returnTrackingUrl);
+int get hashCode => Object.hash(runtimeType,itemId,returnTrackingUrl);
 
 @override
 String toString() {
-  return 'ReturnDeviceReqDm(returnTrackingUrl: $returnTrackingUrl)';
+  return 'ReturnDeviceReqDm(itemId: $itemId, returnTrackingUrl: $returnTrackingUrl)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$ReturnDeviceReqDmCopyWith<$Res> implements $ReturnDeviceR
   factory _$ReturnDeviceReqDmCopyWith(_ReturnDeviceReqDm value, $Res Function(_ReturnDeviceReqDm) _then) = __$ReturnDeviceReqDmCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'return_tracking_url') String returnTrackingUrl
+@JsonKey(name: 'item_id') String itemId,@JsonKey(name: 'return_tracking_url') String returnTrackingUrl
 });
 
 
@@ -264,9 +266,10 @@ class __$ReturnDeviceReqDmCopyWithImpl<$Res>
 
 /// Create a copy of ReturnDeviceReqDm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? returnTrackingUrl = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? itemId = null,Object? returnTrackingUrl = null,}) {
   return _then(_ReturnDeviceReqDm(
-returnTrackingUrl: null == returnTrackingUrl ? _self.returnTrackingUrl : returnTrackingUrl // ignore: cast_nullable_to_non_nullable
+itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
+as String,returnTrackingUrl: null == returnTrackingUrl ? _self.returnTrackingUrl : returnTrackingUrl // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

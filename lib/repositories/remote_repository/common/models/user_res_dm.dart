@@ -16,12 +16,18 @@ abstract class UserResDm with _$UserResDm {
     @Default('') String name,
     @Default('') String email,
     @Default('') String role,
-    @JsonKey(name: 'manager_id') String? managerId,
-    @Default(true) @JsonKey(name: 'is_active') bool isActive,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
-    @JsonKey(name: 'updated_at') DateTime? updatedAt,
+    String? managerId,
+    @Default(true) bool isActive,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    UserResDm? manager,
   }) = _UserResDm;
+
+  const UserResDm._();
 
   factory UserResDm.fromJson(Map<String, dynamic> json) =>
       _$UserResDmFromJson(json);
+
+  /// The reporting manager's display name, if joined in.
+  String? get managerName => manager?.name;
 }

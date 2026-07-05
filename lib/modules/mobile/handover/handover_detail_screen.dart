@@ -195,8 +195,12 @@ class _HandoverCard extends StatefulWidget {
 class _HandoverCardState extends State<_HandoverCard> {
   bool _submitting = false;
 
-  bool get _isOwner => CurrentUser.id == widget.request.owner?.id;
-  bool get _isBorrower => CurrentUser.id == widget.request.borrower?.id;
+  // The list is filtered server-side by role (?role=owner|borrower), so the
+  // active tab is the source of truth for which side the current user is on —
+  // don't re-derive it from an id compare, whose owner/borrower rows may not
+  // carry an id that matches CurrentUser.
+  bool get _isOwner => !widget.asBorrower;
+  bool get _isBorrower => widget.asBorrower;
 
   Future<void> _run(
     Future<bool> Function(String id) action,

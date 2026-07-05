@@ -30,8 +30,10 @@ class RequestHandoverScreen extends StatelessWidget {
                   context,
                   context.l10n.requestHandoverSuccessToast,
                 );
+                // Pop both this screen and the Scan screen, signalling `true`
+                // up to the shell so the Handover tab refreshes.
                 context.pop();
-                context.pop();
+                context.pop(true);
               case Error(:final message):
                 AppToast.error(context, message);
               case Idle() || Loading():
@@ -157,35 +159,33 @@ class _DeviceCard extends StatelessWidget {
   }
 }
 
-class _DurationField extends StatelessWidget {
+class _DurationField extends StatefulWidget {
   const _DurationField();
 
   @override
+  State<_DurationField> createState() => _DurationFieldState();
+}
+
+class _DurationFieldState extends State<_DurationField> {
+  late final TextEditingController _controller = TextEditingController(
+    text: '$kDefaultHandoverDurationHours',
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-      decoration: BoxDecoration(
-        color: context.appColors.surface,
-        border: Border.all(color: context.appColors.border, width: 1.4),
-        borderRadius: BorderRadius.circular(11),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            context.l10n.requestHandoverDurationValue(
-              kDefaultHandoverDurationHours,
-            ),
-            style: context.appTextStyles.labelXLarge,
-          ),
-          Text(
-            context.l10n.requestHandoverDurationInformational,
-            style: context.appTextStyles.bodySmall.copyWith(
-              color: context.appColors.textHint,
-            ),
-          ),
-        ],
-      ),
+    return AppTextField(
+      label: context.l10n.requestHandoverDurationLabel,
+      hintText: context.l10n.requestHandoverDurationHint,
+      controller: _controller,
+      keyboardType: TextInputType.number,
+      leadingIcon: Icons.schedule_outlined,
+      onChanged: context.read<RequestHandoverCubit>().setDuration,
     );
   }
 }

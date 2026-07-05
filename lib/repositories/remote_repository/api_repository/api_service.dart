@@ -16,6 +16,7 @@ import '../common/models/user_res_dm.dart';
 import '../dashboard/models/dashboard_summary_res_dm.dart';
 import '../dashboard/models/open_support_snapshot_res_dm.dart';
 import '../dashboard/models/recent_request_res_dm.dart';
+import '../device/models/return_device_non_wfh_req_dm.dart';
 import '../device/models/return_device_req_dm.dart';
 import '../dropdowns/models/dropdown_option_res_dm.dart';
 import '../extension_requests/models/decide_extension_req_dm.dart';
@@ -104,6 +105,7 @@ abstract class ApiService {
   /// until IT confirms receipt (Return Device mockup E09).
   @POST('/me/devices/{itemId}/return')
   Future<ApiResult<void>> returnDevice(
+    @Header('X-User-Id') String userId,
     @Path('itemId') String itemId,
     @Body() ReturnDeviceReqDm body,
   );
@@ -111,7 +113,11 @@ abstract class ApiService {
   /// Instantly complete a non-WFH (office-based) return — no tracking URL,
   /// device goes straight back to available (Device Detail mockup E03).
   @POST('/me/devices/{itemId}/return-non-wfh')
-  Future<ApiResult<void>> returnDeviceNonWfh(@Path('itemId') String itemId);
+  Future<ApiResult<void>> returnDeviceNonWfh(
+    @Header('X-User-Id') String userId,
+    @Path('itemId') String itemId,
+    @Body() ReturnDeviceNonWfhReqDm body,
+  );
 
   /// The signed-in employee's `request` rows — every request they've raised,
   /// regardless of status (My Requests list, mockup E07 list).
