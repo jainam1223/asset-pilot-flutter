@@ -15,7 +15,6 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  FlavorConfig.applyVariant(AppVariant.mobile);
   currentAppVariant = AppVariant.mobile;
   await SharedPref.instance.init();
   AppToast.configure(SnackBarToastPresenter());
