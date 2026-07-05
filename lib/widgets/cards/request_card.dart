@@ -9,7 +9,7 @@ import 'app_card.dart';
 class RequestCard extends StatelessWidget {
   const RequestCard({
     super.key,
-    required this.avatarName,
+    this.avatarName,
     required this.title,
     this.statusBadge,
     this.metaLine,
@@ -18,7 +18,7 @@ class RequestCard extends StatelessWidget {
     this.onTap,
   });
 
-  final String avatarName;
+  final String? avatarName;
   final String title;
 
   /// Typically a [StatusPill] or [PriorityTag].
@@ -38,19 +38,21 @@ class RequestCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  AppAvatar(name: avatarName, size: AppAvatarSize.sm),
-                  const SizedBox(width: 11),
-                  Text(
-                    title,
-                    style: context.appTextStyles.labelLarge.copyWith(
-                      color: context.appColors.textPrimary,
-                    ),
+              if (avatarName != null) ...[
+                AppAvatar(name: avatarName!, size: AppAvatarSize.sm),
+                const SizedBox(width: 11),
+              ],
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.appTextStyles.labelLarge.copyWith(
+                    color: context.appColors.textPrimary,
                   ),
-                ],
+                ),
               ),
-              const Spacer(),
+              if (statusBadge != null) const SizedBox(width: 8),
               ?statusBadge,
             ],
           ),

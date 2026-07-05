@@ -335,7 +335,7 @@ class _ActiveHandoverCard extends StatelessWidget {
                     children: [
                       Text(
                         context.l10n.inventoryHandoverBorrower(
-                          handover.borrowerName,
+                          handover.borrower?.name ?? '',
                         ),
                         style: context.appTextStyles.labelLarge,
                       ),

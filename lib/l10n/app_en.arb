@@ -434,6 +434,20 @@
   "@deviceDetailReturn": {},
   "deviceDetailHandover": "Handover",
   "@deviceDetailHandover": {},
+  "returnDeviceTitle": "Return Device",
+  "@returnDeviceTitle": {},
+  "returnDeviceTrackingUrlLabel": "Return tracking URL",
+  "@returnDeviceTrackingUrlLabel": {},
+  "returnDeviceTrackingUrlHint": "bluedart.in/track/RT-88213",
+  "@returnDeviceTrackingUrlHint": {},
+  "returnDeviceShippingNotice": "The device enters return shipping and stays assigned to you until IT confirms receipt.",
+  "@returnDeviceShippingNotice": {},
+  "returnDeviceInitiateButton": "Initiate Return",
+  "@returnDeviceInitiateButton": {},
+  "returnDeviceInitiateSuccessToast": "Return initiated",
+  "@returnDeviceInitiateSuccessToast": {},
+  "returnDeviceNonWfhSuccessToast": "Device returned successfully",
+  "@returnDeviceNonWfhSuccessToast": {},
   "somethingWentWrong": "Something went wrong",
   "@somethingWentWrong": {},
   "myRequestsTitle": "My Requests",
@@ -613,5 +627,52 @@
   "chatbotSend": "Send",
   "@chatbotSend": {},
   "chatbotError": "Something went wrong. Please try again.",
-  "@chatbotError": {}
+  "@chatbotError": {},
+  "myHandoversGreeting": "Hi, {name} 👋",
+  "@myHandoversGreeting": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "myHandoversTitle": "My Handovers",
+  "@myHandoversTitle": {},
+  "noHandoversTitle": "No handovers yet",
+  "@noHandoversTitle": {},
+  "noHandoversAssigned": "Handovers performed you will show up here.",
+  "@noHandoversAssigned": {},
+  "handoversDetailAppBarTitle": "Handovers Detail",
+  "@handoversDetailAppBarTitle": {},
+  "myHandoversAsBorrower": "As Borrower",
+  "@myHandoversAsBorrower": {},
+  "myHandoversAsOwner": "As Owner",
+  "@myHandoversAsOwner": {},
+  "handoverActionAccept": "Accept",
+  "@handoverActionAccept": {},
+  "handoverActionReject": "Reject",
+  "@handoverActionReject": {},
+  "handoverActionCancel": "Cancel request",
+  "@handoverActionCancel": {},
+  "handoverActionComplete": "Mark completed",
+  "@handoverActionComplete": {},
+  "handoverAcceptedToast": "Handover accepted.",
+  "@handoverAcceptedToast": {},
+  "handoverRejectedToast": "Handover rejected.",
+  "@handoverRejectedToast": {},
+  "handoverCancelledToast": "Handover request cancelled.",
+  "@handoverCancelledToast": {},
+  "handoverCompletedToast": "Handover marked complete.",
+  "@handoverCompletedToast": {},
+  "handoverRequestedMeta": "{hours} h · requested {date}",
+  "@handoverRequestedMeta": {
+    "placeholders": {
+      "hours": {"type": "String"},
+      "date": {"type": "String"}
+    }
+  },
+  "handoverRequestedMetaNoDuration": "Requested {date}",
+  "@handoverRequestedMetaNoDuration": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  }
 }

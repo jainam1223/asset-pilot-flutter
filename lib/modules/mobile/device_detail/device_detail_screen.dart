@@ -5,7 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../repositories/remote_repository/common/models/item_res_dm.dart';
+import '../../../repositories/remote_repository/device/device_repository.dart';
+import '../../../utilities/api_utilities/error_manager.dart';
 import '../../../utilities/extensions/context_extensions.dart';
+import '../../../utilities/navigation/app_routes.dart';
 import '../../../values/app_theme/app_colors.dart';
 import '../../../values/enumeration/statuses.dart';
 import '../../../widgets/widgets.dart';
@@ -18,7 +21,7 @@ import '../my_devices/device_status_x.dart';
 /// [shipTrackingUrl]) are nullable — `GET /me/devices` doesn't return them
 /// yet, so this screen renders whatever it's handed and hides the
 /// "Current Assignment" card entirely when none of them are present.
-class DeviceDetailScreen extends StatelessWidget {
+class DeviceDetailScreen extends StatefulWidget {
   const DeviceDetailScreen({
     super.key,
     required this.item,
@@ -37,8 +40,42 @@ class DeviceDetailScreen extends StatelessWidget {
   final String? shipTrackingUrl;
 
   @override
+  State<DeviceDetailScreen> createState() => _DeviceDetailScreenState();
+}
+
+class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
+  bool _returning = false;
+
+  Future<void> _onReturnPressed() async {
+    if (widget.isWfh) {
+      final returned = await context.push<bool>(
+        Routes.returnDevice.path,
+        extra: (widget.item.id, widget.item.name),
+      );
+      if (returned == true && mounted) context.pop();
+      return;
+    }
+    setState(() => _returning = true);
+    final result = await DeviceRepository.instance.returnDeviceNonWfh(
+      widget.item.id,
+    );
+    if (!mounted) return;
+    setState(() => _returning = false);
+    result.when(
+      success: (_) {
+        AppToast.success(context, context.l10n.returnDeviceNonWfhSuccessToast);
+        context.pop();
+      },
+      failure: (error) {
+        errorManager.handle(error);
+        AppToast.error(context, error.message);
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final status = deviceStatusFromWire(item.status);
+    final status = deviceStatusFromWire(widget.item.status);
     return Scaffold(
       backgroundColor: context.appColors.scaffoldAlt,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -46,32 +83,32 @@ class DeviceDetailScreen extends StatelessWidget {
         child: Column(
           children: [
             _DeviceDetailHeader(
-              item: item,
-              categoryName: categoryName,
+              item: widget.item,
+              categoryName: widget.categoryName,
               status: status,
             ),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                 children: [
-                  if (assignedFrom != null ||
-                      assignedTo != null ||
-                      isWfh ||
-                      shipTrackingUrl != null) ...[
+                  if (widget.assignedFrom != null ||
+                      widget.assignedTo != null ||
+                      widget.isWfh ||
+                      widget.shipTrackingUrl != null) ...[
                     _SectionLabel(context.l10n.deviceDetailCurrentAssignment),
                     const SizedBox(height: 10),
                     _CurrentAssignmentCard(
-                      assignedFrom: assignedFrom,
-                      assignedTo: assignedTo,
-                      isWfh: isWfh,
-                      shipTrackingUrl: shipTrackingUrl,
+                      assignedFrom: widget.assignedFrom,
+                      assignedTo: widget.assignedTo,
+                      isWfh: widget.isWfh,
+                      shipTrackingUrl: widget.shipTrackingUrl,
                     ),
                     const SizedBox(height: 16),
                   ],
                   AppCard(
                     child: QrDisplay(
                       qrImage: QrImageView(
-                        data: item.assignedItemId,
+                        data: widget.item.assignedItemId,
                         backgroundColor: Colors.white,
                         eyeStyle: QrEyeStyle(
                           color: context.appColors.textPrimary,
@@ -80,7 +117,7 @@ class DeviceDetailScreen extends StatelessWidget {
                           color: context.appColors.textPrimary,
                         ),
                       ),
-                      token: item.qrCodeToken,
+                      token: widget.item.qrCodeToken,
                       tokenLabel: context.l10n.deviceDetailToken,
                       title: context.l10n.deviceDetailScanToVerify,
                     ),
@@ -88,7 +125,13 @@ class DeviceDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const _ActionButtonGrid(),
+            _ActionButtonGrid(
+              isReturning: _returning,
+              onReturnPressed: _onReturnPressed,
+              canReturn: widget.assignedFrom != null ||
+                  widget.assignedTo != null ||
+                  widget.isWfh,
+            ),
           ],
         ),
       ),
@@ -285,7 +328,15 @@ class _CurrentAssignmentCard extends StatelessWidget {
 }
 
 class _ActionButtonGrid extends StatelessWidget {
-  const _ActionButtonGrid();
+  const _ActionButtonGrid({
+    required this.isReturning,
+    required this.onReturnPressed,
+    required this.canReturn,
+  });
+
+  final bool isReturning;
+  final VoidCallback onReturnPressed;
+  final bool canReturn;
 
   @override
   Widget build(BuildContext context) {
@@ -316,20 +367,23 @@ class _ActionButtonGrid extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          AppButton(
-            label: context.l10n.deviceDetailReturn,
-            variant: AppButtonVariant.secondary,
-            expand: true,
-            onPressed: () => _showComingSoon(context),
-          ),
+          if (canReturn) ...[
+            const SizedBox(height: 12),
+            AppButton(
+              label: context.l10n.deviceDetailReturn,
+              variant: AppButtonVariant.secondary,
+              expand: true,
+              isLoading: isReturning,
+              onPressed: isReturning ? null : onReturnPressed,
+            ),
+          ],
         ],
       ),
     );
   }
 
-  // TODO(api): wire to real Support/Extend/Return flows once their
-  // endpoints and screens exist.
+  // TODO(api): wire to real Support/Extend flows once their endpoints and
+  // screens exist.
   void _showComingSoon(BuildContext context) =>
       AppToast.info(context, context.l10n.comingSoon);
 }

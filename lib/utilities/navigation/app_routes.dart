@@ -14,6 +14,8 @@ enum Routes {
   createRequest(path: '/requests/new', name: 'createRequest'),
   requestDetail(path: '/requests/:id', name: 'requestDetail'),
   deviceDetail(path: '/devices/:id', name: 'deviceDetail'),
+  returnDevice(path: '/devices/return', name: 'returnDevice'),
+  handoverDetail(path: '/handover', name: 'handoverDetail'),
   handoverScan(path: '/handover/scan', name: 'handoverScan'),
   requestHandover(path: '/handover/new', name: 'requestHandover'),
   approvalDetail(path: '/manager/approvals/:id', name: 'approvalDetail'),
