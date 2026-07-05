@@ -31,8 +31,8 @@ class SupportRepository extends Repository {
     String? itemId,
   }) async {
     final result = await apiService.fetchSupportRequests(
-      status: status,
-      type: type,
+      status: status?.toJson(),
+      type: type?.toJson(),
       itemId: itemId,
     );
     return result.when(
@@ -70,7 +70,7 @@ class SupportRepository extends Repository {
   /// filtered to `available` supplies the candidates.)
   Future<ApiResult<List<SwapTargetDeviceResDm>>> fetchSwapTargets() async {
     final result = await apiService.fetchItems(
-      status: DeviceStatus.available,
+      status: DeviceStatus.available.toJson(),
       pageSize: 100,
     );
     return result.when(

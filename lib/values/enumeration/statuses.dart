@@ -1,5 +1,84 @@
 import 'package:json_annotation/json_annotation.dart';
 
+/// Wire-value getters for enums passed as Retrofit `@Query` params —
+/// Retrofit serializes query values via `toString()`, not the `@JsonValue`-
+/// driven `fromJson`/`toJson` used for body/response fields, so these
+/// mirror the `@JsonValue` strings above by hand for query-string use.
+extension DeviceStatusWireValue on DeviceStatus {
+  String toJson() => switch (this) {
+    DeviceStatus.available => 'available',
+    DeviceStatus.assigned => 'assigned',
+    DeviceStatus.shippingPending => 'shipping_pending',
+    DeviceStatus.returnShippingPending => 'return_shipping_pending',
+    DeviceStatus.underRepair => 'under_repair',
+    DeviceStatus.maintenance => 'maintenance',
+    DeviceStatus.lost => 'lost',
+    DeviceStatus.retired => 'retired',
+    DeviceStatus.returnedToClient => 'returned_to_client',
+  };
+}
+
+extension RequestStatusWireValue on RequestStatus {
+  String toJson() => switch (this) {
+    RequestStatus.requested => 'requested',
+    RequestStatus.pendingMgrApproval => 'pending_mgr_approval',
+    RequestStatus.pendingItApproval => 'pending_it_approval',
+    RequestStatus.assigned => 'assigned',
+    RequestStatus.completed => 'completed',
+    RequestStatus.rejected => 'rejected',
+    RequestStatus.cancelled => 'cancelled',
+  };
+}
+
+extension SupportStatusWireValue on SupportStatus {
+  String toJson() => switch (this) {
+    SupportStatus.open => 'open',
+    SupportStatus.inProgress => 'in_progress',
+    SupportStatus.resolved => 'resolved',
+  };
+}
+
+extension SupportTypeWireValue on SupportType {
+  String toJson() => switch (this) {
+    SupportType.update => 'update',
+    SupportType.damage => 'damage',
+    SupportType.lost => 'lost',
+  };
+}
+
+extension ExtensionStatusWireValue on ExtensionStatus {
+  String toJson() => switch (this) {
+    ExtensionStatus.pending => 'pending',
+    ExtensionStatus.approved => 'approved',
+    ExtensionStatus.rejected => 'rejected',
+  };
+}
+
+extension HandoverStatusWireValue on HandoverStatus {
+  String toJson() => switch (this) {
+    HandoverStatus.requested => 'requested',
+    HandoverStatus.accepted => 'accepted',
+    HandoverStatus.rejected => 'rejected',
+    HandoverStatus.completed => 'completed',
+    HandoverStatus.cancelled => 'cancelled',
+  };
+}
+
+extension RequestPriorityWireValue on RequestPriority {
+  String toJson() => switch (this) {
+    RequestPriority.low => 'low',
+    RequestPriority.medium => 'medium',
+    RequestPriority.high => 'high',
+  };
+}
+
+extension OwnerTypeWireValue on OwnerType {
+  String toJson() => switch (this) {
+    OwnerType.company => 'company',
+    OwnerType.client => 'client',
+  };
+}
+
 /// Lifecycle status of a device/asset (from the inventory & device screens).
 ///
 /// Mirrors `device_status` in schema_v3.dbml exactly — values map 1:1 to the

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'generated/l10n/app_localizations.dart';
 import 'utilities/navigation/admin_routes.dart';
+import 'utilities/navigation/app_routes.dart';
 import 'utilities/navigation/mobile_routes.dart';
 import 'values/app_theme/app_theme.dart';
 import 'values/enumeration/app_variant.dart';
@@ -24,6 +25,12 @@ class _AssetPilotAppState extends State<AssetPilotApp> {
     AppVariant.mobile => buildMobileRouter(),
     AppVariant.admin => buildAdminRouter(),
   };
+
+  @override
+  void initState() {
+    super.initState();
+    appRouter = _router;
+  }
 
   @override
   Widget build(BuildContext context) {

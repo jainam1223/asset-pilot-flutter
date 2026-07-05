@@ -10,3 +10,9 @@ enum AppVariant {
   /// IT Admin experience — web/desktop.
   admin,
 }
+
+/// The variant this process is running as — set once at startup by each
+/// entry point's `main()`, before `runApp`. [DioClient] reads this to build
+/// the right base URL and interceptor set; a single process only ever runs
+/// one variant, so this never changes after startup.
+AppVariant currentAppVariant = AppVariant.mobile;

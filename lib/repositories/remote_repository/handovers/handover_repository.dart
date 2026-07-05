@@ -16,6 +16,9 @@ class HandoverRepository extends Repository {
     HandoverStatus? status,
     String? itemId,
   }) {
-    return apiService.fetchHandoverRequests(status: status, itemId: itemId);
+    return apiService.fetchHandoverRequests(
+      status: status?.toJson(),
+      itemId: itemId,
+    );
   }
 }

@@ -66,16 +66,20 @@ class ClientAssignmentCubit extends Cubit<ClientAssignmentState> {
     );
   }
 
-  void updateAssignedFrom(String value) => safeEmit(state.copyWith(assignedFrom: value));
+  void updateAssignedFrom(DateTime value) => safeEmit(state.copyWith(assignedFrom: value));
 
-  void updateAssignedTo(String value) => safeEmit(state.copyWith(assignedTo: value));
+  void updateAssignedTo(DateTime value) => safeEmit(state.copyWith(assignedTo: value));
 
   void updateNotes(String value) => safeEmit(state.copyWith(notes: value));
 
   Future<void> submit() async {
     final deviceId = state.selectedDeviceId;
     final employeeId = state.selectedEmployeeId;
-    if (deviceId == null || employeeId == null) return;
+    final assignedFrom = state.assignedFrom;
+    final assignedTo = state.assignedTo;
+    if (deviceId == null || employeeId == null || assignedFrom == null || assignedTo == null) {
+      return;
+    }
 
     safeEmit(state.copyWith(submission: const Loading()));
     try {
@@ -83,8 +87,8 @@ class ClientAssignmentCubit extends Cubit<ClientAssignmentState> {
         ClientAssignmentReqDm(
           deviceId: deviceId,
           employeeId: employeeId,
-          assignedFrom: state.assignedFrom,
-          assignedTo: state.assignedTo,
+          assignedFrom: assignedFrom,
+          assignedTo: assignedTo,
           notes: state.notes.isEmpty ? null : state.notes,
         ),
       );

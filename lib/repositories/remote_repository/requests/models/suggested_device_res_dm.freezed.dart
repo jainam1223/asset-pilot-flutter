@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SuggestedDeviceResDm {
 
-@JsonKey(name: 'item_id') String get itemId; String get name;@JsonKey(name: 'serial_no') String get serialNo;@JsonKey(name: 'active_bookings_count') int get activeBookingsCount;@JsonKey(name: 'free_until') DateTime? get freeUntil;
+ String get id; String get name;@JsonKey(name: 'serial_no') String get serialNo;@JsonKey(name: 'active_bookings_count') int get activeBookingsCount;@JsonKey(name: 'free_until') DateTime? get freeUntil;
 /// Create a copy of SuggestedDeviceResDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SuggestedDeviceResDmCopyWith<SuggestedDeviceResDm> get copyWith => _$SuggestedD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SuggestedDeviceResDm&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.name, name) || other.name == name)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.activeBookingsCount, activeBookingsCount) || other.activeBookingsCount == activeBookingsCount)&&(identical(other.freeUntil, freeUntil) || other.freeUntil == freeUntil));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SuggestedDeviceResDm&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.activeBookingsCount, activeBookingsCount) || other.activeBookingsCount == activeBookingsCount)&&(identical(other.freeUntil, freeUntil) || other.freeUntil == freeUntil));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,itemId,name,serialNo,activeBookingsCount,freeUntil);
+int get hashCode => Object.hash(runtimeType,id,name,serialNo,activeBookingsCount,freeUntil);
 
 @override
 String toString() {
-  return 'SuggestedDeviceResDm(itemId: $itemId, name: $name, serialNo: $serialNo, activeBookingsCount: $activeBookingsCount, freeUntil: $freeUntil)';
+  return 'SuggestedDeviceResDm(id: $id, name: $name, serialNo: $serialNo, activeBookingsCount: $activeBookingsCount, freeUntil: $freeUntil)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SuggestedDeviceResDmCopyWith<$Res>  {
   factory $SuggestedDeviceResDmCopyWith(SuggestedDeviceResDm value, $Res Function(SuggestedDeviceResDm) _then) = _$SuggestedDeviceResDmCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'item_id') String itemId, String name,@JsonKey(name: 'serial_no') String serialNo,@JsonKey(name: 'active_bookings_count') int activeBookingsCount,@JsonKey(name: 'free_until') DateTime? freeUntil
+ String id, String name,@JsonKey(name: 'serial_no') String serialNo,@JsonKey(name: 'active_bookings_count') int activeBookingsCount,@JsonKey(name: 'free_until') DateTime? freeUntil
 });
 
 
@@ -65,9 +65,9 @@ class _$SuggestedDeviceResDmCopyWithImpl<$Res>
 
 /// Create a copy of SuggestedDeviceResDm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? itemId = null,Object? name = null,Object? serialNo = null,Object? activeBookingsCount = null,Object? freeUntil = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? serialNo = null,Object? activeBookingsCount = null,Object? freeUntil = freezed,}) {
   return _then(_self.copyWith(
-itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,serialNo: null == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
 as String,activeBookingsCount: null == activeBookingsCount ? _self.activeBookingsCount : activeBookingsCount // ignore: cast_nullable_to_non_nullable
@@ -157,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  String itemId,  String name, @JsonKey(name: 'serial_no')  String serialNo, @JsonKey(name: 'active_bookings_count')  int activeBookingsCount, @JsonKey(name: 'free_until')  DateTime? freeUntil)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(name: 'serial_no')  String serialNo, @JsonKey(name: 'active_bookings_count')  int activeBookingsCount, @JsonKey(name: 'free_until')  DateTime? freeUntil)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SuggestedDeviceResDm() when $default != null:
-return $default(_that.itemId,_that.name,_that.serialNo,_that.activeBookingsCount,_that.freeUntil);case _:
+return $default(_that.id,_that.name,_that.serialNo,_that.activeBookingsCount,_that.freeUntil);case _:
   return orElse();
 
 }
@@ -178,10 +178,10 @@ return $default(_that.itemId,_that.name,_that.serialNo,_that.activeBookingsCount
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  String itemId,  String name, @JsonKey(name: 'serial_no')  String serialNo, @JsonKey(name: 'active_bookings_count')  int activeBookingsCount, @JsonKey(name: 'free_until')  DateTime? freeUntil)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(name: 'serial_no')  String serialNo, @JsonKey(name: 'active_bookings_count')  int activeBookingsCount, @JsonKey(name: 'free_until')  DateTime? freeUntil)  $default,) {final _that = this;
 switch (_that) {
 case _SuggestedDeviceResDm():
-return $default(_that.itemId,_that.name,_that.serialNo,_that.activeBookingsCount,_that.freeUntil);case _:
+return $default(_that.id,_that.name,_that.serialNo,_that.activeBookingsCount,_that.freeUntil);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +198,10 @@ return $default(_that.itemId,_that.name,_that.serialNo,_that.activeBookingsCount
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'item_id')  String itemId,  String name, @JsonKey(name: 'serial_no')  String serialNo, @JsonKey(name: 'active_bookings_count')  int activeBookingsCount, @JsonKey(name: 'free_until')  DateTime? freeUntil)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name, @JsonKey(name: 'serial_no')  String serialNo, @JsonKey(name: 'active_bookings_count')  int activeBookingsCount, @JsonKey(name: 'free_until')  DateTime? freeUntil)?  $default,) {final _that = this;
 switch (_that) {
 case _SuggestedDeviceResDm() when $default != null:
-return $default(_that.itemId,_that.name,_that.serialNo,_that.activeBookingsCount,_that.freeUntil);case _:
+return $default(_that.id,_that.name,_that.serialNo,_that.activeBookingsCount,_that.freeUntil);case _:
   return null;
 
 }
@@ -213,10 +213,10 @@ return $default(_that.itemId,_that.name,_that.serialNo,_that.activeBookingsCount
 @JsonSerializable()
 
 class _SuggestedDeviceResDm implements SuggestedDeviceResDm {
-  const _SuggestedDeviceResDm({@JsonKey(name: 'item_id') this.itemId = '', this.name = '', @JsonKey(name: 'serial_no') this.serialNo = '', @JsonKey(name: 'active_bookings_count') this.activeBookingsCount = 0, @JsonKey(name: 'free_until') this.freeUntil});
+  const _SuggestedDeviceResDm({this.id = '', this.name = '', @JsonKey(name: 'serial_no') this.serialNo = '', @JsonKey(name: 'active_bookings_count') this.activeBookingsCount = 0, @JsonKey(name: 'free_until') this.freeUntil});
   factory _SuggestedDeviceResDm.fromJson(Map<String, dynamic> json) => _$SuggestedDeviceResDmFromJson(json);
 
-@override@JsonKey(name: 'item_id') final  String itemId;
+@override@JsonKey() final  String id;
 @override@JsonKey() final  String name;
 @override@JsonKey(name: 'serial_no') final  String serialNo;
 @override@JsonKey(name: 'active_bookings_count') final  int activeBookingsCount;
@@ -235,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SuggestedDeviceResDm&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.name, name) || other.name == name)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.activeBookingsCount, activeBookingsCount) || other.activeBookingsCount == activeBookingsCount)&&(identical(other.freeUntil, freeUntil) || other.freeUntil == freeUntil));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SuggestedDeviceResDm&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.activeBookingsCount, activeBookingsCount) || other.activeBookingsCount == activeBookingsCount)&&(identical(other.freeUntil, freeUntil) || other.freeUntil == freeUntil));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,itemId,name,serialNo,activeBookingsCount,freeUntil);
+int get hashCode => Object.hash(runtimeType,id,name,serialNo,activeBookingsCount,freeUntil);
 
 @override
 String toString() {
-  return 'SuggestedDeviceResDm(itemId: $itemId, name: $name, serialNo: $serialNo, activeBookingsCount: $activeBookingsCount, freeUntil: $freeUntil)';
+  return 'SuggestedDeviceResDm(id: $id, name: $name, serialNo: $serialNo, activeBookingsCount: $activeBookingsCount, freeUntil: $freeUntil)';
 }
 
 
@@ -255,7 +255,7 @@ abstract mixin class _$SuggestedDeviceResDmCopyWith<$Res> implements $SuggestedD
   factory _$SuggestedDeviceResDmCopyWith(_SuggestedDeviceResDm value, $Res Function(_SuggestedDeviceResDm) _then) = __$SuggestedDeviceResDmCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'item_id') String itemId, String name,@JsonKey(name: 'serial_no') String serialNo,@JsonKey(name: 'active_bookings_count') int activeBookingsCount,@JsonKey(name: 'free_until') DateTime? freeUntil
+ String id, String name,@JsonKey(name: 'serial_no') String serialNo,@JsonKey(name: 'active_bookings_count') int activeBookingsCount,@JsonKey(name: 'free_until') DateTime? freeUntil
 });
 
 
@@ -272,9 +272,9 @@ class __$SuggestedDeviceResDmCopyWithImpl<$Res>
 
 /// Create a copy of SuggestedDeviceResDm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? itemId = null,Object? name = null,Object? serialNo = null,Object? activeBookingsCount = null,Object? freeUntil = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? serialNo = null,Object? activeBookingsCount = null,Object? freeUntil = freezed,}) {
   return _then(_SuggestedDeviceResDm(
-itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,serialNo: null == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
 as String,activeBookingsCount: null == activeBookingsCount ? _self.activeBookingsCount : activeBookingsCount // ignore: cast_nullable_to_non_nullable

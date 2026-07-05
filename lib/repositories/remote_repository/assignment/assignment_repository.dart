@@ -57,8 +57,8 @@ class AssignmentRepository extends Repository {
       request.deviceId,
       DirectAssignReqDm(
         employeeId: request.employeeId,
-        assignedFrom: DateTime.parse(request.assignedFrom),
-        assignedTo: DateTime.parse(request.assignedTo),
+        assignedFrom: request.assignedFrom,
+        assignedTo: request.assignedTo,
         note: request.notes,
       ),
     );

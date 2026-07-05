@@ -12,8 +12,8 @@ abstract class ClientAssignmentReqDm with _$ClientAssignmentReqDm {
   const factory ClientAssignmentReqDm({
     required String deviceId,
     required String employeeId,
-    required String assignedFrom,
-    required String assignedTo,
+    required DateTime assignedFrom,
+    required DateTime assignedTo,
     String? notes,
   }) = _ClientAssignmentReqDm;
 

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ClientAssignmentReqDm {
 
- String get deviceId; String get employeeId; String get assignedFrom; String get assignedTo; String? get notes;
+ String get deviceId; String get employeeId; DateTime get assignedFrom; DateTime get assignedTo; String? get notes;
 /// Create a copy of ClientAssignmentReqDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ClientAssignmentReqDmCopyWith<$Res>  {
   factory $ClientAssignmentReqDmCopyWith(ClientAssignmentReqDm value, $Res Function(ClientAssignmentReqDm) _then) = _$ClientAssignmentReqDmCopyWithImpl;
 @useResult
 $Res call({
- String deviceId, String employeeId, String assignedFrom, String assignedTo, String? notes
+ String deviceId, String employeeId, DateTime assignedFrom, DateTime assignedTo, String? notes
 });
 
 
@@ -70,8 +70,8 @@ class _$ClientAssignmentReqDmCopyWithImpl<$Res>
 deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,employeeId: null == employeeId ? _self.employeeId : employeeId // ignore: cast_nullable_to_non_nullable
 as String,assignedFrom: null == assignedFrom ? _self.assignedFrom : assignedFrom // ignore: cast_nullable_to_non_nullable
-as String,assignedTo: null == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
-as String,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as DateTime,assignedTo: null == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
+as DateTime,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String deviceId,  String employeeId,  String assignedFrom,  String assignedTo,  String? notes)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String deviceId,  String employeeId,  DateTime assignedFrom,  DateTime assignedTo,  String? notes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ClientAssignmentReqDm() when $default != null:
 return $default(_that.deviceId,_that.employeeId,_that.assignedFrom,_that.assignedTo,_that.notes);case _:
@@ -178,7 +178,7 @@ return $default(_that.deviceId,_that.employeeId,_that.assignedFrom,_that.assigne
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String deviceId,  String employeeId,  String assignedFrom,  String assignedTo,  String? notes)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String deviceId,  String employeeId,  DateTime assignedFrom,  DateTime assignedTo,  String? notes)  $default,) {final _that = this;
 switch (_that) {
 case _ClientAssignmentReqDm():
 return $default(_that.deviceId,_that.employeeId,_that.assignedFrom,_that.assignedTo,_that.notes);case _:
@@ -198,7 +198,7 @@ return $default(_that.deviceId,_that.employeeId,_that.assignedFrom,_that.assigne
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String deviceId,  String employeeId,  String assignedFrom,  String assignedTo,  String? notes)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String deviceId,  String employeeId,  DateTime assignedFrom,  DateTime assignedTo,  String? notes)?  $default,) {final _that = this;
 switch (_that) {
 case _ClientAssignmentReqDm() when $default != null:
 return $default(_that.deviceId,_that.employeeId,_that.assignedFrom,_that.assignedTo,_that.notes);case _:
@@ -218,8 +218,8 @@ class _ClientAssignmentReqDm implements ClientAssignmentReqDm {
 
 @override final  String deviceId;
 @override final  String employeeId;
-@override final  String assignedFrom;
-@override final  String assignedTo;
+@override final  DateTime assignedFrom;
+@override final  DateTime assignedTo;
 @override final  String? notes;
 
 /// Create a copy of ClientAssignmentReqDm
@@ -255,7 +255,7 @@ abstract mixin class _$ClientAssignmentReqDmCopyWith<$Res> implements $ClientAss
   factory _$ClientAssignmentReqDmCopyWith(_ClientAssignmentReqDm value, $Res Function(_ClientAssignmentReqDm) _then) = __$ClientAssignmentReqDmCopyWithImpl;
 @override @useResult
 $Res call({
- String deviceId, String employeeId, String assignedFrom, String assignedTo, String? notes
+ String deviceId, String employeeId, DateTime assignedFrom, DateTime assignedTo, String? notes
 });
 
 
@@ -277,8 +277,8 @@ class __$ClientAssignmentReqDmCopyWithImpl<$Res>
 deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,employeeId: null == employeeId ? _self.employeeId : employeeId // ignore: cast_nullable_to_non_nullable
 as String,assignedFrom: null == assignedFrom ? _self.assignedFrom : assignedFrom // ignore: cast_nullable_to_non_nullable
-as String,assignedTo: null == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
-as String,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as DateTime,assignedTo: null == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
+as DateTime,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

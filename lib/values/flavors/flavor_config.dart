@@ -7,40 +7,43 @@ import '../enumeration/app_variant.dart';
 /// startup.
 enum Flavor { dev, uat, prod }
 
-/// Build-flavor configuration, including the per-flavor API base URL.
+/// Build-flavor configuration, including the per-flavor, per-variant API
+/// base URL.
 ///
 /// Flavors (dev/uat/prod) are DEFERRED in this scaffold — [flavor] defaults
 /// to [Flavor.dev] and only the dev base URL is realistic today. When
 /// flavored entry points are introduced, each will call [FlavorConfig.apply]
 /// before `runApp`.
+///
+/// Admin and mobile are separate backends/deployments in principle, so each
+/// gets its own base-URL map even though they currently point at the same
+/// dev tunnel.
 abstract final class FlavorConfig {
   static Flavor flavor = Flavor.dev;
-
-  /// Which product variant is running — each entry point (`main_mobile.dart`/
-  /// `main_admin.dart`) sets this via [applyVariant] before `runApp`, so
-  /// [baseUrl] can pick the right URL map without threading [AppVariant]
-  /// through the Dio/repository layers.
-  static AppVariant variant = AppVariant.mobile;
 
   // TODO(Vasu): CHANGE WITH ACTUAL BASE URLS FOR DEV/UAT/PROD. The `/api/v1/`
   // prefix is baked in here so endpoint paths in `ApiService` read as
   // `admin/...` / `auth/...` without repeating the version segment.
-  static const Map<Flavor, String> _baseUrlsMobile = {
-    Flavor.dev: 'http://172.16.5.165:3000/',
-    Flavor.uat: 'http://172.16.5.165:3000/',
-    Flavor.prod: 'http://172.16.5.165:3000/',
-  };
-
-  static const Map<Flavor, String> _baseUrlsAdmin = {
+  static const Map<Flavor, String> _adminBaseUrls = {
     Flavor.dev: 'https://gigahertz-superior-cupbearer.ngrok-free.dev/api/v1/',
     Flavor.uat: 'https://gigahertz-superior-cupbearer.ngrok-free.dev/api/v1/',
     Flavor.prod: 'https://gigahertz-superior-cupbearer.ngrok-free.dev/api/v1/',
   };
 
-  /// The active variant's base URL for the current [flavor].
-  static String get baseUrl => switch (variant) {
-    AppVariant.mobile => _baseUrlsMobile[flavor]!,
-    AppVariant.admin => _baseUrlsAdmin[flavor]!,
+  static const Map<Flavor, String> _mobileBaseUrls = {
+    Flavor.dev: 'http://172.16.5.165:3000/',
+    Flavor.uat: 'http://172.16.5.165:3000/',
+    Flavor.prod: 'http://172.16.5.165:3000/',
+  };
+
+  static String get adminBaseUrl => _adminBaseUrls[flavor]!;
+
+  static String get mobileBaseUrl => _mobileBaseUrls[flavor]!;
+
+  /// Base URL for whichever variant this process is running as.
+  static String get baseUrl => switch (currentAppVariant) {
+    AppVariant.admin => adminBaseUrl,
+    AppVariant.mobile => mobileBaseUrl,
   };
 
   // Direct base URL for the AI chatbot service (independent of the main API).
@@ -58,7 +61,4 @@ abstract final class FlavorConfig {
   static String get chatBaseUrl => kIsWeb ? _chatWebProxyUrl : _chatDirectUrl;
 
   static void apply(Flavor flavor) => FlavorConfig.flavor = flavor;
-
-  static void applyVariant(AppVariant variant) =>
-      FlavorConfig.variant = variant;
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 /// All named routes across both variants.
 ///
@@ -43,6 +44,12 @@ enum Routes {
   final String path;
   final String name;
 }
+
+/// The single [GoRouter] for whichever variant is running — assigned once by
+/// [AssetPilotApp] at startup. Lets non-widget code (the Dio 401 interceptor)
+/// force navigation back to [Routes.login] without threading a
+/// [BuildContext] down into `DioClient`.
+GoRouter? appRouter;
 
 /// Wraps a screen widget in a [BlocProvider] for its cubit, so cubits are
 /// scoped per-route (the DI convention when `get_it` is not used).

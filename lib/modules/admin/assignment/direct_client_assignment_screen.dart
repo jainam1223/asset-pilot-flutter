@@ -146,24 +146,18 @@ final _assignedDateFormat = DateFormat('dd MMM yyyy');
 
 Future<void> _pickAssignedDate({
   required BuildContext context,
-  required String initialText,
-  required ValueChanged<String> onPicked,
+  required DateTime? initial,
+  required ValueChanged<DateTime> onPicked,
 }) async {
   final now = DateTime.now();
-  DateTime initial;
-  try {
-    initial = _assignedDateFormat.parse(initialText);
-  } on FormatException {
-    initial = now;
-  }
   final picked = await showDatePicker(
     context: context,
-    initialDate: initial,
+    initialDate: initial ?? now,
     firstDate: DateTime(now.year - 1),
     lastDate: DateTime(now.year + 5),
   );
   if (picked == null) return;
-  onPicked(_assignedDateFormat.format(picked));
+  onPicked(picked);
 }
 
 class _AssignmentFormPanel extends StatelessWidget {
@@ -174,7 +168,10 @@ class _AssignmentFormPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<ClientAssignmentCubit>();
-    final canSubmit = state.selectedDeviceId != null && state.selectedEmployeeId != null;
+    final canSubmit = state.selectedDeviceId != null &&
+        state.selectedEmployeeId != null &&
+        state.assignedFrom != null &&
+        state.assignedTo != null;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,11 +205,13 @@ class _AssignmentFormPanel extends StatelessWidget {
               Expanded(
                 child: PickerField(
                   label: context.l10n.assignmentAssignedFrom,
-                  valueText: state.assignedFrom,
+                  valueText: state.assignedFrom == null
+                      ? ''
+                      : _assignedDateFormat.format(state.assignedFrom!.toLocal()),
                   trailingIcon: Icons.calendar_today_outlined,
                   onTap: () => _pickAssignedDate(
                     context: context,
-                    initialText: state.assignedFrom,
+                    initial: state.assignedFrom,
                     onPicked: cubit.updateAssignedFrom,
                   ),
                 ),
@@ -221,11 +220,13 @@ class _AssignmentFormPanel extends StatelessWidget {
               Expanded(
                 child: PickerField(
                   label: context.l10n.assignmentAssignedTo,
-                  valueText: state.assignedTo,
+                  valueText: state.assignedTo == null
+                      ? ''
+                      : _assignedDateFormat.format(state.assignedTo!.toLocal()),
                   trailingIcon: Icons.calendar_today_outlined,
                   onTap: () => _pickAssignedDate(
                     context: context,
-                    initialText: state.assignedTo,
+                    initial: state.assignedTo,
                     onPicked: cubit.updateAssignedTo,
                   ),
                 ),

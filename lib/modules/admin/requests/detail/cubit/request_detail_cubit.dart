@@ -54,7 +54,7 @@ class RequestDetailCubit extends Cubit<RequestDetailState> {
         success: (data) => safeEmit(
           state.copyWith(
             suggestions: Success(data),
-            selectedDeviceId: data.isNotEmpty ? data.first.itemId : null,
+            selectedDeviceId: data.isNotEmpty ? data.first.id : null,
           ),
         ),
         failure: (error) {
