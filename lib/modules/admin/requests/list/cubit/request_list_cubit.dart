@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../repositories/remote_repository/requests/models/request_summary_res_dm.dart';
 import '../../../../../repositories/remote_repository/requests/request_repository.dart';
 import '../../../../../utilities/api_utilities/error_manager.dart';
+import '../../../../../utilities/helpers/debouncer.dart';
 import '../../../../../utilities/network/network_state.dart';
 import '../../../../../utilities/network/safe_emit.dart';
 import '../../../../../values/enumeration/statuses.dart';
@@ -21,8 +22,17 @@ const int kRequestListPageSize = 10;
 class RequestListCubit extends Cubit<RequestListState> {
   RequestListCubit() : super(const RequestListState());
 
-  Future<void> loadRequests() async {
-    safeEmit(state.copyWith(requests: const Loading()));
+  final _searchDebouncer = Debouncer();
+
+  /// Loads a page of requests. When [keepData] is true (filter/search/page
+  /// changes that already have a table on screen), the current [Success] rows
+  /// stay visible during the fetch instead of collapsing to a centered
+  /// spinner — this avoids the table "jumping" to a loader and back. A full
+  /// [Loading] is only shown on the first load when there's nothing to keep.
+  Future<void> loadRequests({bool keepData = false}) async {
+    if (!keepData || state.requests.dataOrNull == null) {
+      safeEmit(state.copyWith(requests: const Loading()));
+    }
     try {
       final result = await RequestRepository.instance.fetchRequests(
         status: _statusFromFilter(state.statusFilter),
@@ -64,7 +74,7 @@ class RequestListCubit extends Cubit<RequestListState> {
 
   void setStatusFilter(String statusFilter) {
     safeEmit(state.copyWith(statusFilter: statusFilter, currentPage: 1));
-    loadRequests();
+    loadRequests(keepData: true);
   }
 
   void setPriorityFilter(RequestPriority? priorityFilter) {
@@ -75,21 +85,27 @@ class RequestListCubit extends Cubit<RequestListState> {
         currentPage: 1,
       ),
     );
-    loadRequests();
+    loadRequests(keepData: true);
   }
 
   void setCategoryFilter(String categoryFilter) {
     safeEmit(state.copyWith(categoryFilter: categoryFilter, currentPage: 1));
-    loadRequests();
+    loadRequests(keepData: true);
   }
 
   void setSearchQuery(String searchQuery) {
     safeEmit(state.copyWith(searchQuery: searchQuery, currentPage: 1));
-    loadRequests();
+    _searchDebouncer.run(() => loadRequests(keepData: true));
   }
 
   void setPage(int page) {
     safeEmit(state.copyWith(currentPage: page));
-    loadRequests();
+    loadRequests(keepData: true);
+  }
+
+  @override
+  Future<void> close() {
+    _searchDebouncer.dispose();
+    return super.close();
   }
 }

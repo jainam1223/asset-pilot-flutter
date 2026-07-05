@@ -43,7 +43,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                 listenWhen: (prev, curr) => prev.login != curr.login,
                 listener: (context, state) {
                   if (state.login is Success<UserResDm>) {
-                    context.go(Routes.adminDashboard.path);
+                    context.pushReplacement(Routes.adminDashboard.path);
                   } else if (state.login case Error(:final message)) {
                     AppToast.error(context, message);
                   }

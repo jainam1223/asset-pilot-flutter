@@ -7,6 +7,7 @@ import '../../../../../repositories/remote_repository/support/models/support_sum
 import '../../../../../repositories/remote_repository/support/models/swap_target_device_res_dm.dart';
 import '../../../../../repositories/remote_repository/support/support_repository.dart';
 import '../../../../../utilities/api_utilities/error_manager.dart';
+import '../../../../../utilities/helpers/debouncer.dart';
 import '../../../../../utilities/network/network_state.dart';
 import '../../../../../utilities/network/safe_emit.dart';
 import '../../../../../values/enumeration/statuses.dart';
@@ -25,6 +26,8 @@ class SupportListCubit extends Cubit<SupportListState> {
   SupportListCubit() : super(const SupportListState());
 
   List<SupportSummaryResDm> _allTickets = [];
+
+  final _searchDebouncer = Debouncer();
 
   Future<void> loadTickets() async {
     safeEmit(state.copyWith(tickets: const Loading()));
@@ -66,7 +69,7 @@ class SupportListCubit extends Cubit<SupportListState> {
 
   void setSearchQuery(String searchQuery) {
     safeEmit(state.copyWith(searchQuery: searchQuery, currentPage: 1));
-    _reapplyFilters();
+    _searchDebouncer.run(_reapplyFilters);
   }
 
   void setPage(int page) {
@@ -189,5 +192,11 @@ class SupportListCubit extends Cubit<SupportListState> {
         state.copyWith(resolving: Error(errorManager.handle(e, st).message)),
       );
     }
+  }
+
+  @override
+  Future<void> close() {
+    _searchDebouncer.dispose();
+    return super.close();
   }
 }

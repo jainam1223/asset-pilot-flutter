@@ -102,46 +102,43 @@ class _FiltersRowState extends State<_FiltersRow> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RequestListCubit, RequestListState>(
-      builder: (context, state) {
-        final cubit = context.read<RequestListCubit>();
-        return Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            FilterDropdownChip(
-              key: _priorityChipKey,
-              label: context.l10n.requestFilterPriority,
-              valueLabel: state.priorityFilter?.label ?? context.l10n.requestFilterAll,
-              onTap: () => _showPriorityMenu(context, cubit),
-            ),
-            // TODO(category-filter): category filtering by id needs the
-            // categories dropdown endpoint wired to a picker; stubbed as
-            // display-only until that UI exists.
-            FilterDropdownChip(
-              key: _categoryChipKey,
-              label: context.l10n.requestFilterCategory,
-              valueLabel: context.l10n.requestFilterAll,
-              onTap: () => AppToast.info(context, context.l10n.comingSoon),
-            ),
-            // TODO(date-range): no date-range picker widget exists yet in the
-            // shared library — this trigger is a display-only stub for now.
-            FilterDropdownChip(
-              label: context.l10n.requestFilterDateRange,
-              valueLabel: context.l10n.requestFilterAll,
-              onTap: () => AppToast.info(context, context.l10n.comingSoon),
-            ),
-            SizedBox(
-              width: 260,
-              child: AppSearchField(
-                hintText: context.l10n.requestSearchHint,
-                onChanged: cubit.setSearchQuery,
-              ),
-            ),
-          ],
-        );
-      },
+    final cubit = context.read<RequestListCubit>();
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        // Only the priority chip depends on cubit state, so scope the rebuild
+        // to it to avoid reflowing the whole row.
+        BlocBuilder<RequestListCubit, RequestListState>(
+          buildWhen: (prev, curr) => prev.priorityFilter != curr.priorityFilter,
+          builder: (context, state) => FilterDropdownChip(
+            key: _priorityChipKey,
+            label: context.l10n.requestFilterPriority,
+            valueLabel:
+                state.priorityFilter?.label ?? context.l10n.requestFilterAll,
+            onTap: () => _showPriorityMenu(context, cubit),
+          ),
+        ),
+        // TODO(category-filter): category filtering by id needs the
+        // categories dropdown endpoint wired to a picker; stubbed as
+        // display-only until that UI exists.
+        FilterDropdownChip(
+          key: _categoryChipKey,
+          label: context.l10n.requestFilterCategory,
+          valueLabel: context.l10n.requestFilterAll,
+          onTap: () => AppToast.info(context, context.l10n.comingSoon),
+        ),
+        // TODO(date-range): no date-range picker widget exists yet in the
+        // shared library — this trigger is a display-only stub for now.
+        FilterDropdownChip(
+          label: context.l10n.requestFilterDateRange,
+          valueLabel: context.l10n.requestFilterAll,
+          onTap: () => AppToast.info(context, context.l10n.comingSoon),
+        ),
+        // TODO(search): the requests search endpoint isn't wired to the mock
+        // backend yet, so the field is removed until it filters for real.
+      ],
     );
   }
 

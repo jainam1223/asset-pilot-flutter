@@ -13,6 +13,10 @@ abstract final class AdminSession {
   static String? managerId;
   static bool isActive = true;
 
+  /// Whether an IT Admin is currently signed in. Populated on login, cleared
+  /// on logout — used as the synchronous auth signal for the router redirect.
+  static bool get isLoggedIn => id.isNotEmpty;
+
   static void set({
     required String id,
     required String name,

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../repositories/remote_repository/inventory/inventory_repository.dart';
 import '../../../../../repositories/remote_repository/inventory/models/inventory_item_res_dm.dart';
 import '../../../../../utilities/api_utilities/error_manager.dart';
+import '../../../../../utilities/helpers/debouncer.dart';
 import '../../../../../utilities/network/network_state.dart';
 import '../../../../../utilities/network/safe_emit.dart';
 import '../../../../../values/enumeration/statuses.dart';
@@ -21,8 +22,17 @@ const int kInventoryListPageSize = 10;
 class InventoryListCubit extends Cubit<InventoryListState> {
   InventoryListCubit() : super(const InventoryListState());
 
-  Future<void> loadInventory() async {
-    safeEmit(state.copyWith(items: const Loading()));
+  final _searchDebouncer = Debouncer();
+
+  /// Loads a page of inventory. When [keepData] is true (filter/search/page
+  /// changes that already have a table on screen), the current [Success] rows
+  /// stay visible during the fetch instead of collapsing to a centered
+  /// spinner — this avoids the table "jumping" to a loader and back. A full
+  /// [Loading] is only shown on the first load when there's nothing to keep.
+  Future<void> loadInventory({bool keepData = false}) async {
+    if (!keepData || state.items.dataOrNull == null) {
+      safeEmit(state.copyWith(items: const Loading()));
+    }
     try {
       final result = await InventoryRepository.instance.fetchInventory(
         status: _statusFromFilter(state.statusFilter),
@@ -56,21 +66,27 @@ class InventoryListCubit extends Cubit<InventoryListState> {
 
   void setStatusFilter(String statusFilter) {
     safeEmit(state.copyWith(statusFilter: statusFilter, currentPage: 1));
-    loadInventory();
+    loadInventory(keepData: true);
   }
 
   void setCategoryFilter(String categoryFilter) {
     safeEmit(state.copyWith(categoryFilter: categoryFilter, currentPage: 1));
-    loadInventory();
+    loadInventory(keepData: true);
   }
 
   void setSearchQuery(String searchQuery) {
     safeEmit(state.copyWith(searchQuery: searchQuery, currentPage: 1));
-    loadInventory();
+    _searchDebouncer.run(() => loadInventory(keepData: true));
   }
 
   void setPage(int page) {
     safeEmit(state.copyWith(currentPage: page));
-    loadInventory();
+    loadInventory(keepData: true);
+  }
+
+  @override
+  Future<void> close() {
+    _searchDebouncer.dispose();
+    return super.close();
   }
 }
