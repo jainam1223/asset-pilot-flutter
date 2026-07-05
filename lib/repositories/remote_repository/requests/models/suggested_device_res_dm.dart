@@ -11,7 +11,7 @@ part 'suggested_device_res_dm.g.dart';
 @freezed
 abstract class SuggestedDeviceResDm with _$SuggestedDeviceResDm {
   const factory SuggestedDeviceResDm({
-    @JsonKey(name: 'item_id') @Default('') String itemId,
+    @Default('') String id,
     @Default('') String name,
     @JsonKey(name: 'serial_no') @Default('') String serialNo,
     @JsonKey(name: 'active_bookings_count')

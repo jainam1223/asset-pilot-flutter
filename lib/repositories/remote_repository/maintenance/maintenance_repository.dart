@@ -30,7 +30,7 @@ class MaintenanceRepository extends Repository {
   /// Maintenance queue (A10).
   Future<ApiResult<List<MaintenanceItemResDm>>> fetchMaintenanceQueue() async {
     final underRepairResult = await apiService.fetchItems(
-      status: DeviceStatus.underRepair,
+      status: DeviceStatus.underRepair.toJson(),
       pageSize: 100,
     );
     final List<InventoryItemResDm> underRepairItems;
@@ -42,7 +42,7 @@ class MaintenanceRepository extends Repository {
     }
 
     final maintenanceResult = await apiService.fetchItems(
-      status: DeviceStatus.maintenance,
+      status: DeviceStatus.maintenance.toJson(),
       pageSize: 100,
     );
     final List<InventoryItemResDm> maintenanceItems;

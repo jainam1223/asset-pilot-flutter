@@ -4,8 +4,6 @@ import 'package:retrofit/retrofit.dart';
 import '../../../models/api_response/api_result.dart';
 import '../../../models/api_response/paginated_res_dm.dart';
 import '../../../utilities/api_utilities/my_call_adapter.dart';
-import '../../../values/enumeration/statuses.dart';
-import '../../../values/enumeration/user_role.dart';
 import '../auth/models/login_req_dm.dart';
 import '../auth/models/login_res_dm.dart';
 import '../auth/models/refresh_req_dm.dart';
@@ -152,9 +150,9 @@ abstract class ApiService {
   /// server-side paginated + filtered.
   @GET('admin/requests')
   Future<ApiResult<PaginatedResDm<RequestSummaryResDm>>> fetchRequests({
-    @Query('status') RequestStatus? status,
+    @Query('status') String? status,
     @Query('category_id') String? categoryId,
-    @Query('priority') RequestPriority? priority,
+    @Query('priority') String? priority,
     @Query('requested_from') DateTime? requestedFrom,
     @Query('requested_to') DateTime? requestedTo,
     @Query('search') String? search,
@@ -253,8 +251,8 @@ abstract class ApiService {
   @GET('admin/items')
   Future<ApiResult<PaginatedResDm<InventoryItemResDm>>> fetchItems({
     @Query('category_id') String? categoryId,
-    @Query('status') DeviceStatus? status,
-    @Query('owner_type') OwnerType? ownerType,
+    @Query('status') String? status,
+    @Query('owner_type') String? ownerType,
     @Query('search') String? search,
     @Query('page') int? page,
     @Query('page_size') int? pageSize,
@@ -299,8 +297,8 @@ abstract class ApiService {
 
   @GET('admin/support-requests')
   Future<ApiResult<List<SupportRequestResDm>>> fetchSupportRequests({
-    @Query('status') SupportStatus? status,
-    @Query('type') SupportType? type,
+    @Query('status') String? status,
+    @Query('type') String? type,
     @Query('item_id') String? itemId,
   });
 
@@ -363,7 +361,7 @@ abstract class ApiService {
 
   @GET('admin/extension-requests')
   Future<ApiResult<List<ExtensionRequestSummaryResDm>>> fetchExtensionRequests({
-    @Query('status') ExtensionStatus? status,
+    @Query('status') String? status,
   });
 
   @GET('admin/extension-requests/{id}')
@@ -389,7 +387,7 @@ abstract class ApiService {
 
   @GET('admin/handover-requests')
   Future<ApiResult<List<HandoverRequestResDm>>> fetchHandoverRequests({
-    @Query('status') HandoverStatus? status,
+    @Query('status') String? status,
     @Query('item_id') String? itemId,
   });
 
@@ -399,7 +397,7 @@ abstract class ApiService {
 
   @GET('admin/users')
   Future<ApiResult<PaginatedResDm<UserResDm>>> fetchUsers({
-    @Query('role') UserRole? role,
+    @Query('role') String? role,
     @Query('is_active') bool? isActive,
     @Query('search') String? search,
     @Query('page') int? page,

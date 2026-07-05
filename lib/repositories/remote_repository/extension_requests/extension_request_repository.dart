@@ -18,7 +18,7 @@ class ExtensionRequestRepository extends Repository {
   Future<ApiResult<List<ExtensionRequestSummaryResDm>>> fetchExtensionRequests({
     ExtensionStatus? status,
   }) {
-    return apiService.fetchExtensionRequests(status: status);
+    return apiService.fetchExtensionRequests(status: status?.toJson());
   }
 
   Future<ApiResult<ExtensionRequestDetailResDm>> fetchExtensionRequestDetail(

@@ -23,7 +23,7 @@ class UserRepository extends Repository {
     int pageSize = 10,
   }) {
     return apiService.fetchUsers(
-      role: role,
+      role: role?.toJson(),
       isActive: isActive,
       search: search,
       page: page,

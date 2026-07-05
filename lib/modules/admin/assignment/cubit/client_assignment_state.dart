@@ -8,8 +8,8 @@ class ClientAssignmentState extends Equatable {
     this.selectedDeviceId,
     this.selectedEmployeeId,
     this.selectedEmployeeName,
-    this.assignedFrom = '',
-    this.assignedTo = '',
+    this.assignedFrom,
+    this.assignedTo,
     this.notes = '',
     this.submission = const Idle(),
   });
@@ -19,8 +19,8 @@ class ClientAssignmentState extends Equatable {
   final String? selectedDeviceId;
   final String? selectedEmployeeId;
   final String? selectedEmployeeName;
-  final String assignedFrom;
-  final String assignedTo;
+  final DateTime? assignedFrom;
+  final DateTime? assignedTo;
   final String notes;
   final NetworkState<void> submission;
 
@@ -30,8 +30,8 @@ class ClientAssignmentState extends Equatable {
     String? selectedDeviceId,
     String? selectedEmployeeId,
     String? selectedEmployeeName,
-    String? assignedFrom,
-    String? assignedTo,
+    DateTime? assignedFrom,
+    DateTime? assignedTo,
     String? notes,
     NetworkState<void>? submission,
   }) {

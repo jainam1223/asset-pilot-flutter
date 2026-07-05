@@ -41,8 +41,8 @@ class InventoryRepository extends Repository {
   }) {
     return apiService.fetchItems(
       categoryId: categoryId,
-      status: status,
-      ownerType: ownerType,
+      status: status?.toJson(),
+      ownerType: ownerType?.toJson(),
       search: search,
       page: page,
       pageSize: pageSize,

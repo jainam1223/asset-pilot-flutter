@@ -235,8 +235,8 @@ class _SuggestionsPanel extends StatelessWidget {
                     title: '${suggestion.name} · SN ${suggestion.serialNo}',
                     subtitle: subtitle,
                     selectLabel: context.l10n.suggestionSelect,
-                    recommended: suggestion.itemId == state.selectedDeviceId,
-                    onSelect: () => cubit.selectDevice(suggestion.itemId),
+                    recommended: suggestion.id == state.selectedDeviceId,
+                    onSelect: () => cubit.selectDevice(suggestion.id),
                   );
                 },
               ),

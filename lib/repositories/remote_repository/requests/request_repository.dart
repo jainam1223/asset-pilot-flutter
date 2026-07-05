@@ -34,9 +34,9 @@ class RequestRepository extends Repository {
     int pageSize = 10,
   }) {
     return apiService.fetchRequests(
-      status: status,
+      status: status?.toJson(),
       categoryId: categoryId,
-      priority: priority,
+      priority: priority?.toJson(),
       requestedFrom: requestedFrom,
       requestedTo: requestedTo,
       search: search,
