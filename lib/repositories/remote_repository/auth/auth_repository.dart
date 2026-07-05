@@ -5,6 +5,7 @@ import '../api_repository/api_repository.dart';
 import '../common/models/user_res_dm.dart';
 import 'models/login_req_dm.dart';
 import 'models/login_res_dm.dart';
+import 'models/login_req_dm.dart';
 
 /// Repository for authentication.
 ///
@@ -12,6 +13,7 @@ import 'models/login_res_dm.dart';
 /// ([login], email-only, backend resolves role) and the IT Admin flow
 /// ([adminLogin], email + password with real bearer-token auth).
 ///
+/// Singleton via a private constructor + [instance], per convention.
 /// Singleton via a private constructor + [instance], per convention.
 class AuthRepository extends Repository {
   AuthRepository._();
@@ -63,5 +65,9 @@ class AuthRepository extends Repository {
   Future<void> logout() async {
     await SecureStorage.instance.clear();
     AdminSession.clear();
+  /// Log in with [email]. The backend resolves role/manager from the user
+  /// row — there's no client-supplied role flag.
+  Future<ApiResult<UserResDm>> login({required String email}) {
+    return apiService.login(LoginReqDm(email: email));
   }
 }

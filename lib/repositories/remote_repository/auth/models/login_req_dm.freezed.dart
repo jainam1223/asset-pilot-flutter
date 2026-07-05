@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginReqDm {
 
- String get email; String? get password;
+ String get email;
 /// Create a copy of LoginReqDm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $LoginReqDmCopyWith<LoginReqDm> get copyWith => _$LoginReqDmCopyWithImpl<LoginRe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginReqDm&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginReqDm&&(identical(other.email, email) || other.email == email));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,email,password);
+int get hashCode => Object.hash(runtimeType,email);
 
 @override
 String toString() {
-  return 'LoginReqDm(email: $email, password: $password)';
+  return 'LoginReqDm(email: $email)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $LoginReqDmCopyWith<$Res>  {
   factory $LoginReqDmCopyWith(LoginReqDm value, $Res Function(LoginReqDm) _then) = _$LoginReqDmCopyWithImpl;
 @useResult
 $Res call({
- String email, String? password
+ String email
 });
 
 
@@ -65,11 +65,10 @@ class _$LoginReqDmCopyWithImpl<$Res>
 
 /// Create a copy of LoginReqDm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? password = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? email = null,}) {
   return _then(_self.copyWith(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,password: freezed == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,
   ));
 }
 
@@ -154,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email,  String? password)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoginReqDm() when $default != null:
-return $default(_that.email,_that.password);case _:
+return $default(_that.email);case _:
   return orElse();
 
 }
@@ -175,10 +174,10 @@ return $default(_that.email,_that.password);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email,  String? password)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email)  $default,) {final _that = this;
 switch (_that) {
 case _LoginReqDm():
-return $default(_that.email,_that.password);case _:
+return $default(_that.email);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +194,10 @@ return $default(_that.email,_that.password);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email,  String? password)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email)?  $default,) {final _that = this;
 switch (_that) {
 case _LoginReqDm() when $default != null:
-return $default(_that.email,_that.password);case _:
+return $default(_that.email);case _:
   return null;
 
 }
@@ -210,11 +209,10 @@ return $default(_that.email,_that.password);case _:
 
 @JsonSerializable(includeIfNull: false)
 class _LoginReqDm implements LoginReqDm {
-  const _LoginReqDm({required this.email, this.password});
+  const _LoginReqDm({required this.email});
   factory _LoginReqDm.fromJson(Map<String, dynamic> json) => _$LoginReqDmFromJson(json);
 
 @override final  String email;
-@override final  String? password;
 
 /// Create a copy of LoginReqDm
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +227,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginReqDm&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginReqDm&&(identical(other.email, email) || other.email == email));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,email,password);
+int get hashCode => Object.hash(runtimeType,email);
 
 @override
 String toString() {
-  return 'LoginReqDm(email: $email, password: $password)';
+  return 'LoginReqDm(email: $email)';
 }
 
 
@@ -249,7 +247,7 @@ abstract mixin class _$LoginReqDmCopyWith<$Res> implements $LoginReqDmCopyWith<$
   factory _$LoginReqDmCopyWith(_LoginReqDm value, $Res Function(_LoginReqDm) _then) = __$LoginReqDmCopyWithImpl;
 @override @useResult
 $Res call({
- String email, String? password
+ String email
 });
 
 
@@ -266,11 +264,10 @@ class __$LoginReqDmCopyWithImpl<$Res>
 
 /// Create a copy of LoginReqDm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? email = null,}) {
   return _then(_LoginReqDm(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,password: freezed == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,
   ));
 }
 

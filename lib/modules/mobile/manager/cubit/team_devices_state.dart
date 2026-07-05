@@ -4,9 +4,9 @@ part of 'team_devices_cubit.dart';
 class TeamDevicesState extends Equatable {
   const TeamDevicesState({this.members = const Idle()});
 
-  final NetworkState<List<TeamMemberResDm>> members;
+  final NetworkState<List<EmployeeDeviceResDm>> members;
 
-  TeamDevicesState copyWith({NetworkState<List<TeamMemberResDm>>? members}) {
+  TeamDevicesState copyWith({NetworkState<List<EmployeeDeviceResDm>>? members}) {
     return TeamDevicesState(members: members ?? this.members);
   }
 

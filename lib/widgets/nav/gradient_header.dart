@@ -14,6 +14,7 @@ class GradientHeader extends StatelessWidget {
     required this.title,
     this.trailing,
     this.contentHeight = 110,
+    this.includeTopInset = true,
   });
 
   final String greeting;
@@ -24,19 +25,18 @@ class GradientHeader extends StatelessWidget {
   /// size to content (the mockup's default).
   final double? contentHeight;
 
+  /// Whether to pad for the top safe-area inset. Set `false` when this
+  /// header isn't the topmost widget under the status bar (e.g. a tab bar
+  /// already claims that inset above it).
+  final bool includeTopInset;
+
   @override
   Widget build(BuildContext context) {
+    final topInset = includeTopInset ? MediaQuery.paddingOf(context).top : 0.0;
     return Container(
       width: double.infinity,
-      height: contentHeight == null
-          ? null
-          : MediaQuery.paddingOf(context).top + contentHeight!,
-      padding: EdgeInsets.fromLTRB(
-        20,
-        MediaQuery.paddingOf(context).top + 12,
-        20,
-        20,
-      ),
+      height: contentHeight == null ? null : topInset + contentHeight!,
+      padding: EdgeInsets.fromLTRB(20, topInset + 12, 20, 20),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment(-0.5, -0.87),

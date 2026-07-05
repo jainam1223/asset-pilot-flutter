@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
+import '../../../repositories/remote_repository/common/models/request_res_dm.dart';
 import '../../../repositories/remote_repository/manager/manager_repository.dart';
-import '../../../repositories/remote_repository/manager/models/pending_approval_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/api_utilities/error_manager.dart';
 import '../../../values/enumeration/statuses.dart';
@@ -15,7 +16,7 @@ import '../requests/request_status_x.dart';
 class ApprovalDetailScreen extends StatefulWidget {
   const ApprovalDetailScreen({super.key, required this.data});
 
-  final PendingApprovalResDm data;
+  final RequestResDm data;
 
   @override
   State<ApprovalDetailScreen> createState() => _ApprovalDetailScreenState();
@@ -24,6 +25,8 @@ class ApprovalDetailScreen extends StatefulWidget {
 class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
   String _decisionNote = '';
   bool _submitting = false;
+
+  static final _dateFormat = DateFormat('dd MMM yyyy');
 
   Future<void> _decide(MgrApprovalStatus decision) async {
     setState(() => _submitting = true);
@@ -54,6 +57,12 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final approval = widget.data;
+    final employeeName = approval.requester?.name ?? '';
+    final categoryName = approval.category?.name ?? '';
+    final priority = requestPriorityFromWire(approval.priority);
+    final requestedFrom = approval.requestedFrom;
+    final requestedTo = approval.requestedTo;
+    final note = approval.note;
     return Scaffold(
       backgroundColor: context.appColors.scaffoldAlt,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -66,10 +75,10 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
                 padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
                 children: [
                   RequestCard(
-                    avatarName: approval.employeeName,
-                    title: approval.employeeName,
+                    avatarName: employeeName,
+                    title: employeeName,
                     metaLine: context.l10n.approvalDetailRequestsCategory(
-                      approval.category,
+                      categoryName,
                     ),
                   ),
                   const SizedBox(height: 14),
@@ -78,32 +87,34 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
                       InfoRow(
                         label: context.l10n.approvalDetailPriority,
                         value: PriorityTag(
-                          semantic: approval.priority.semantic,
-                          label: approval.priority.label,
+                          semantic: priority.semantic,
+                          label: priority.label,
                         ),
                       ),
                       InfoRow(
                         label: context.l10n.approvalDetailDates,
                         value: Text(
-                          '${approval.requestedFrom} – '
-                          '${approval.requestedTo}',
+                          requestedFrom != null && requestedTo != null
+                              ? '${_dateFormat.format(requestedFrom)} – '
+                                  '${_dateFormat.format(requestedTo)}'
+                              : '',
                           style: context.appTextStyles.labelXLarge,
                         ),
                       ),
                       InfoRow(
                         label: context.l10n.approvalDetailCategory,
                         value: Text(
-                          approval.category,
+                          categoryName,
                           style: context.appTextStyles.labelXLarge,
                         ),
                       ),
                     ],
                   ),
-                  if (approval.note.isNotEmpty) ...[
+                  if (note != null && note.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     _NoteCard(
                       label: context.l10n.approvalDetailEmployeeNote,
-                      note: approval.note,
+                      note: note,
                     ),
                   ],
                   const SizedBox(height: 16),

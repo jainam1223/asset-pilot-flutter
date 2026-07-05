@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'item_category_res_dm.dart';
 import 'item_res_dm.dart';
+import 'user_res_dm.dart';
 
 part 'request_res_dm.freezed.dart';
 part 'request_res_dm.g.dart';
@@ -9,9 +10,10 @@ part 'request_res_dm.g.dart';
 /// Full `request` row — every column, regardless of which endpoint returns
 /// it. Callers (list vs detail screens) read only the subset they need.
 ///
-/// [category]/[assignedItem] are not `request` table columns — some
-/// endpoints (e.g. `GET /me/devices`) join and nest the full category/item
-/// rows instead of just their ids; null when the endpoint doesn't join them.
+/// [category]/[assignedItem]/[requester]/[manager] are not `request` table
+/// columns — some endpoints (e.g. `GET /manager/approvals`) join and nest
+/// the full category/item/user rows instead of just their ids; null when
+/// the endpoint doesn't join them.
 @freezed
 abstract class RequestResDm with _$RequestResDm {
   const factory RequestResDm({
@@ -62,6 +64,8 @@ abstract class RequestResDm with _$RequestResDm {
 
     ItemCategoryResDm? category,
     ItemResDm? assignedItem,
+    UserResDm? requester,
+    UserResDm? manager,
   }) = _RequestResDm;
 
   factory RequestResDm.fromJson(Map<String, dynamic> json) =>

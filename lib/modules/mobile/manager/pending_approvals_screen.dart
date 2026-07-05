@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
-import '../../../repositories/remote_repository/manager/models/pending_approval_res_dm.dart';
+import '../../../repositories/remote_repository/common/models/request_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/navigation/app_routes.dart';
 import '../../../utilities/network/network_state.dart';
@@ -31,7 +32,7 @@ class PendingApprovalsScreen extends StatelessWidget {
                 _ => 0,
               };
               return GradientHeader(
-                greeting: context.l10n.managerGreeting(CurrentUser.managerName),
+                greeting: context.l10n.managerGreeting(CurrentUser.name),
                 title: context.l10n.pendingApprovalsTitle,
                 trailing: _CountBadge(count: count),
               );
@@ -101,7 +102,7 @@ class _CountBadge extends StatelessWidget {
 class _ApprovalListSliver extends StatelessWidget {
   const _ApprovalListSliver({required this.approvals});
 
-  final List<PendingApprovalResDm> approvals;
+  final List<RequestResDm> approvals;
 
   @override
   Widget build(BuildContext context) {
@@ -130,20 +131,29 @@ class _ApprovalListSliver extends StatelessWidget {
 class _ApprovalCard extends StatelessWidget {
   const _ApprovalCard({required this.approval});
 
-  final PendingApprovalResDm approval;
+  final RequestResDm approval;
+
+  static final _dateFormat = DateFormat('dd MMM yyyy');
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<PendingApprovalsCubit>();
+    final employeeName = approval.requester?.name ?? '';
+    final priority = requestPriorityFromWire(approval.priority);
+    final requestedFrom = approval.requestedFrom;
+    final requestedTo = approval.requestedTo;
     return RequestCard(
-      avatarName: approval.employeeName,
-      title: approval.employeeName,
+      avatarName: employeeName,
+      title: employeeName,
       statusBadge: PriorityTag(
-        semantic: approval.priority.semantic,
-        label: approval.priority.label,
+        semantic: priority.semantic,
+        label: priority.label,
       ),
-      metaLine: '${approval.requestedFrom} – ${approval.requestedTo}',
-      note: approval.note.isEmpty ? null : approval.note,
+      metaLine: requestedFrom != null && requestedTo != null
+          ? '${_dateFormat.format(requestedFrom)} – '
+              '${_dateFormat.format(requestedTo)}'
+          : '',
+      note: approval.note,
       actions: [
         AppButton(
           label: context.l10n.approvalActionReject,

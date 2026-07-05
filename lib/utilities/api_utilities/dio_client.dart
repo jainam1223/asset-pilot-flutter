@@ -57,8 +57,7 @@ class DioClient {
             // `PaginatedResDm` can deserialize. Non-paginated responses keep
             // the plain `data` unwrap.
             final meta = body['meta'];
-            final pagination =
-                meta is Map ? meta['pagination'] : null;
+            final pagination = meta is Map ? meta['pagination'] : null;
             if (pagination != null) {
               response.data = <String, dynamic>{
                 'items': body['data'],

@@ -4,10 +4,10 @@ part of 'pending_approvals_cubit.dart';
 class PendingApprovalsState extends Equatable {
   const PendingApprovalsState({this.approvals = const Idle()});
 
-  final NetworkState<List<PendingApprovalResDm>> approvals;
+  final NetworkState<List<RequestResDm>> approvals;
 
   PendingApprovalsState copyWith({
-    NetworkState<List<PendingApprovalResDm>>? approvals,
+    NetworkState<List<RequestResDm>>? approvals,
   }) {
     return PendingApprovalsState(approvals: approvals ?? this.approvals);
   }

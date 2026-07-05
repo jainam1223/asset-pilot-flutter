@@ -33,6 +33,9 @@ import '../inventory/models/inventory_item_res_dm.dart';
 import '../inventory/models/item_booking_res_dm.dart';
 import '../inventory/models/item_detail_raw_res_dm.dart';
 import '../inventory/models/update_item_req_dm.dart';
+import '../manager/models/approve_request_req_dm.dart';
+import '../manager/models/employee_device_res_dm.dart';
+import '../manager/models/reject_manager_request_req_dm.dart';
 import '../request/models/create_request_req_dm.dart';
 import '../requests/models/assign_device_req_dm.dart';
 import '../requests/models/booking_range_req_dm.dart';
@@ -81,6 +84,8 @@ abstract class ApiService {
 
   /// Mobile authentication with email. The backend resolves role/manager
   /// from the user row — there's no client-supplied role flag.
+  @POST('/login')
+  /// Authenticate a user with email.
   @POST('/login')
   Future<ApiResult<UserResDm>> login(@Body() LoginReqDm body);
 
@@ -265,9 +270,7 @@ abstract class ApiService {
   /// Fetch full nested detail for a single device (A05) — `{ item, category,
   /// current_owner, current_request, open_support[], active_handover }`.
   @GET('admin/items/{id}')
-  Future<ApiResult<ItemDetailRawResDm>> fetchItemDetail(
-    @Path('id') String id,
-  );
+  Future<ApiResult<ItemDetailRawResDm>> fetchItemDetail(@Path('id') String id);
 
   @PATCH('admin/items/{id}')
   Future<ApiResult<InventoryItemResDm>> updateItem(
@@ -359,8 +362,7 @@ abstract class ApiService {
   // ---------------------------------------------------------------------
 
   @GET('admin/extension-requests')
-  Future<ApiResult<List<ExtensionRequestSummaryResDm>>>
-      fetchExtensionRequests({
+  Future<ApiResult<List<ExtensionRequestSummaryResDm>>> fetchExtensionRequests({
     @Query('status') ExtensionStatus? status,
   });
 
@@ -433,4 +435,29 @@ abstract class ApiService {
 
   @GET('admin/dropdowns/employees')
   Future<ApiResult<List<DropdownOptionResDm>>> fetchEmployeeDropdown();
+
+  /// List `request` rows awaiting this manager's decision (Manager Pending
+  /// Approvals, mockup M01). Auth headers (`x-user-id`/`x-manager-id`/etc.)
+  /// are injected globally by [DioClient]'s interceptor, not per-call.
+  @GET('/manager/approvals')
+  Future<ApiResult<List<RequestResDm>>> getPendingApprovals();
+
+  /// Approve a pending request (Approval Detail, mockup M02 "Approve").
+  @PATCH('/manager/requests/{requestId}/approve')
+  Future<ApiResult<RequestResDm>> approveRequest(
+    @Path('requestId') String requestId,
+    @Body() ApproveRequestReqDm body,
+  );
+
+  /// Reject a pending request (Approval Detail, mockup M02 "Reject").
+  @PATCH('/manager/requests/{requestId}/reject')
+  Future<ApiResult<RequestResDm>> rejectManagerRequest(
+    @Path('requestId') String requestId,
+    @Body() RejectManagerRequestReqDm body,
+  );
+
+  /// Every active direct report under the authenticated manager, with all
+  /// of their requests across every status (Team Devices, mockup M04).
+  @GET('/manager/employee-devices')
+  Future<ApiResult<List<EmployeeDeviceResDm>>> getEmployeeDevices();
 }

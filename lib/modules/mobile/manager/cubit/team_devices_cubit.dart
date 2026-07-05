@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../repositories/remote_repository/manager/manager_repository.dart';
-import '../../../../repositories/remote_repository/manager/models/team_device_res_dm.dart';
+import '../../../../repositories/remote_repository/manager/models/employee_device_res_dm.dart';
 import '../../../../utilities/api_utilities/error_manager.dart';
 import '../../../../utilities/network/network_state.dart';
 import '../../../../utilities/network/safe_emit.dart';

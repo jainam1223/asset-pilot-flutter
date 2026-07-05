@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../repositories/remote_repository/manager/models/team_device_res_dm.dart';
+import '../../../repositories/remote_repository/common/models/request_res_dm.dart';
+import '../../../repositories/remote_repository/manager/models/employee_device_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/network/network_state.dart';
 import '../../../widgets/widgets.dart';
+import '../my_devices/device_status_x.dart';
 import 'cubit/team_devices_cubit.dart';
-import 'manager_status_x.dart';
 
 /// Manager's read-only Team Devices list (mockup M04) — every device
 /// currently assigned to each direct report.
@@ -18,68 +19,53 @@ class TeamDevicesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
-      child: Scaffold(
-        backgroundColor: context.appColors.scaffoldAlt,
-        appBar: AppBar(
-          backgroundColor: context.appColors.surface,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          automaticallyImplyLeading: false,
-          titleSpacing: 20,
-          title: BlocBuilder<TeamDevicesCubit, TeamDevicesState>(
+      child: Column(
+        children: [
+          BlocBuilder<TeamDevicesCubit, TeamDevicesState>(
             builder: (context, state) {
               final count = switch (state.members) {
                 Success(:final data) => data.length,
                 _ => 0,
               };
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    context.l10n.teamDevicesTitle,
-                    style: context.appTextStyles.h2,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    context.l10n.teamDevicesSubtitle(count),
-                    style: context.appTextStyles.bodyXSmall.copyWith(
-                      color: context.appColors.textTertiary,
-                    ),
-                  ),
-                ],
+              return GradientHeader(
+                greeting: context.l10n.teamDevicesSubtitle(count),
+                title: context.l10n.teamDevicesTitle,
               );
             },
           ),
-          toolbarHeight: 66,
-        ),
-        body: BlocBuilder<TeamDevicesCubit, TeamDevicesState>(
-          builder: (context, state) {
-            return RefreshIndicator(
-              onRefresh: () =>
-                  context.read<TeamDevicesCubit>().fetchTeamDevices(),
-              child: CustomScrollView(
-                slivers: [
-                  switch (state.members) {
-                    Idle() || Loading() => SliverSkeletonList(
-                      itemBuilder: (_) => const ListItemCardSkeleton(),
-                    ),
-                    Error(:final message) => SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: ErrorStateView(
-                        title: context.l10n.somethingWentWrong,
-                        message: message,
-                        onRetry: () =>
-                            context.read<TeamDevicesCubit>().fetchTeamDevices(),
-                      ),
-                    ),
-                    Success(:final data) => _TeamListSliver(members: data),
-                  },
-                ],
-              ),
-            );
-          },
-        ),
+          Expanded(
+            child: BlocBuilder<TeamDevicesCubit, TeamDevicesState>(
+              builder: (context, state) {
+                return RefreshIndicator(
+                  onRefresh: () =>
+                      context.read<TeamDevicesCubit>().fetchTeamDevices(),
+                  child: CustomScrollView(
+                    slivers: [
+                      switch (state.members) {
+                        Idle() || Loading() => SliverSkeletonList(
+                          itemBuilder: (_) => const ListItemCardSkeleton(),
+                        ),
+                        Error(:final message) => SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: ErrorStateView(
+                            title: context.l10n.somethingWentWrong,
+                            message: message,
+                            onRetry: () => context
+                                .read<TeamDevicesCubit>()
+                                .fetchTeamDevices(),
+                          ),
+                        ),
+                        Success(:final data) => _TeamListSliver(
+                          members: data,
+                        ),
+                      },
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -88,11 +74,22 @@ class TeamDevicesScreen extends StatelessWidget {
 class _TeamListSliver extends StatelessWidget {
   const _TeamListSliver({required this.members});
 
-  final List<TeamMemberResDm> members;
+  final List<EmployeeDeviceResDm> members;
 
   @override
   Widget build(BuildContext context) {
-    if (members.isEmpty) {
+    final withDevices = members
+        .map(
+          (m) => (
+            member: m,
+            assigned: m.requests.where((r) => r.assignedItem != null).toList(
+              growable: false,
+            ),
+          ),
+        )
+        .where((m) => m.assigned.isNotEmpty)
+        .toList(growable: false);
+    if (withDevices.isEmpty) {
       return SliverFillRemaining(
         hasScrollBody: false,
         child: EmptyStateView(
@@ -105,18 +102,22 @@ class _TeamListSliver extends StatelessWidget {
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
       sliver: SliverList.separated(
-        itemCount: members.length,
+        itemCount: withDevices.length,
         separatorBuilder: (_, _) => const SizedBox(height: 16),
-        itemBuilder: (context, index) => _MemberSection(member: members[index]),
+        itemBuilder: (context, index) => _MemberSection(
+          name: withDevices[index].member.name,
+          assignedRequests: withDevices[index].assigned,
+        ),
       ),
     );
   }
 }
 
 class _MemberSection extends StatelessWidget {
-  const _MemberSection({required this.member});
+  const _MemberSection({required this.name, required this.assignedRequests});
 
-  final TeamMemberResDm member;
+  final String name;
+  final List<RequestResDm> assignedRequests;
 
   @override
   Widget build(BuildContext context) {
@@ -125,10 +126,10 @@ class _MemberSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            AppAvatar(name: member.name, size: AppAvatarSize.xs),
+            AppAvatar(name: name, size: AppAvatarSize.xs),
             const SizedBox(width: 9),
             Text(
-              member.name,
+              name,
               style: context.appTextStyles.labelLarge.copyWith(
                 color: context.appColors.textPrimary,
               ),
@@ -138,9 +139,9 @@ class _MemberSection extends StatelessWidget {
         const SizedBox(height: 10),
         Column(
           children: [
-            for (var i = 0; i < member.devices.length; i++) ...[
+            for (var i = 0; i < assignedRequests.length; i++) ...[
               if (i > 0) const SizedBox(height: 8),
-              _DeviceRow(device: member.devices[i]),
+              _DeviceRow(request: assignedRequests[i]),
             ],
           ],
         ),
@@ -150,24 +151,37 @@ class _MemberSection extends StatelessWidget {
 }
 
 class _DeviceRow extends StatelessWidget {
-  const _DeviceRow({required this.device});
+  const _DeviceRow({required this.request});
 
-  final TeamDeviceResDm device;
+  final RequestResDm request;
 
   @override
   Widget build(BuildContext context) {
+    final item = request.assignedItem!;
+    final categoryName = request.category?.name ?? '';
+    final status = deviceStatusFromWire(item.status);
     return ListItemCard(
       leading: IconBox(
-        icon: Icons.laptop_mac_outlined,
-        semantic: device.status.teamDeviceSemantic,
+        icon: _categoryIcon(categoryName),
+        semantic: status.semantic,
       ),
-      title: device.deviceName,
-      subtitle: device.category,
+      title: item.name,
+      subtitle: categoryName,
       trailing: StatusPill(
-        semantic: device.status.teamDeviceSemantic,
-        label: device.status.teamDeviceLabel,
+        semantic: status.semantic,
+        label: status.label,
         dense: true,
       ),
     );
+  }
+
+  IconData _categoryIcon(String categoryName) {
+    final normalized = categoryName.toLowerCase();
+    if (normalized.contains('laptop')) return Icons.laptop_mac_outlined;
+    if (normalized.contains('mobile') || normalized.contains('phone')) {
+      return Icons.phone_iphone_outlined;
+    }
+    if (normalized.contains('monitor')) return Icons.desktop_windows_outlined;
+    return Icons.devices_other_outlined;
   }
 }
