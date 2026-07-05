@@ -1,7 +1,9 @@
 import '../../../models/api_response/api_result.dart';
 import '../../../values/app_global/current_user.dart';
+import '../../../values/enumeration/statuses.dart';
 import '../api_repository/api_repository.dart';
 import '../common/models/item_res_dm.dart';
+import 'models/file_support_request_req_dm.dart';
 import 'models/return_device_non_wfh_req_dm.dart';
 import 'models/return_device_req_dm.dart';
 
@@ -34,6 +36,20 @@ class DeviceRepository extends Repository {
       CurrentUser.id,
       itemId,
       ReturnDeviceNonWfhReqDm(itemId: itemId),
+    );
+  }
+
+  /// File a support ticket against an owned device (File Support Request
+  /// screen).
+  Future<ApiResult<void>> fileSupportRequest(
+    String itemId,
+    SupportType type,
+    String description,
+  ) {
+    return apiService.fileSupportRequest(
+      CurrentUser.id,
+      itemId,
+      FileSupportRequestReqDm(type: type, description: description),
     );
   }
 }

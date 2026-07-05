@@ -15,6 +15,7 @@ enum Routes {
   requestDetail(path: '/requests/:id', name: 'requestDetail'),
   deviceDetail(path: '/devices/:id', name: 'deviceDetail'),
   returnDevice(path: '/devices/return', name: 'returnDevice'),
+  fileSupportRequest(path: '/devices/:id/support', name: 'fileSupportRequest'),
   handoverDetail(path: '/handover', name: 'handoverDetail'),
   handoverScan(path: '/handover/scan', name: 'handoverScan'),
   requestHandover(path: '/handover/new', name: 'requestHandover'),

@@ -16,6 +16,7 @@ import '../common/models/user_res_dm.dart';
 import '../dashboard/models/dashboard_summary_res_dm.dart';
 import '../dashboard/models/open_support_snapshot_res_dm.dart';
 import '../dashboard/models/recent_request_res_dm.dart';
+import '../device/models/file_support_request_req_dm.dart';
 import '../device/models/return_device_non_wfh_req_dm.dart';
 import '../device/models/return_device_req_dm.dart';
 import '../dropdowns/models/dropdown_option_res_dm.dart';
@@ -117,6 +118,15 @@ abstract class ApiService {
     @Header('X-User-Id') String userId,
     @Path('itemId') String itemId,
     @Body() ReturnDeviceNonWfhReqDm body,
+  );
+
+  /// File a support ticket against an owned device (File Support Request
+  /// screen).
+  @POST('/me/devices/{itemId}/support-requests')
+  Future<ApiResult<void>> fileSupportRequest(
+    @Header('X-User-Id') String userId,
+    @Path('itemId') String itemId,
+    @Body() FileSupportRequestReqDm body,
   );
 
   /// The signed-in employee's `request` rows — every request they've raised,
