@@ -25,15 +25,18 @@ abstract final class FlavorConfig {
   // prefix is baked in here so endpoint paths in `ApiService` read as
   // `admin/...` / `auth/...` without repeating the version segment.
   static const Map<Flavor, String> _adminBaseUrls = {
-    Flavor.dev: 'https://gigahertz-superior-cupbearer.ngrok-free.dev/api/v1/',
-    Flavor.uat: 'https://gigahertz-superior-cupbearer.ngrok-free.dev/api/v1/',
-    Flavor.prod: 'https://gigahertz-superior-cupbearer.ngrok-free.dev/api/v1/',
+    Flavor.dev:
+        'https://asset-pilot-fastapi-app-prod.azurewebsites.net/api/v1/',
+    Flavor.uat:
+        'https://asset-pilot-fastapi-app-prod.azurewebsites.net/api/v1/',
+    Flavor.prod:
+        'https://asset-pilot-fastapi-app-prod.azurewebsites.net/api/v1/',
   };
 
   static const Map<Flavor, String> _mobileBaseUrls = {
-    Flavor.dev: 'http://172.16.5.165:3000/',
-    Flavor.uat: 'http://172.16.5.165:3000/',
-    Flavor.prod: 'http://172.16.5.165:3000/',
+    Flavor.dev: 'https://app-asset-pilot.azurewebsites.net/',
+    Flavor.uat: 'https://app-asset-pilot.azurewebsites.net/',
+    Flavor.prod: 'https://app-asset-pilot.azurewebsites.net/',
   };
 
   static String get adminBaseUrl => _adminBaseUrls[flavor]!;
@@ -48,7 +51,8 @@ abstract final class FlavorConfig {
 
   // Direct base URL for the AI chatbot service (independent of the main API).
   // TODO(Vasu): CHANGE WITH ACTUAL AI CHATBOT BASE URL.
-  static const String _chatDirectUrl = 'http://172.16.5.71:8000/';
+  static const String _chatDirectUrl =
+      'https://app-asset-pilot-ai.azurewebsites.net/';
 
   // Local dev CORS proxy (see tool/chat_cors_proxy.dart). The browser blocks
   // direct cross-origin calls to the chat backend (no CORS headers), so on web
