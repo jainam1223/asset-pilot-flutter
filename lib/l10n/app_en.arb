@@ -253,6 +253,10 @@
   "@inventoryFieldPurchaseDate": {},
   "inventoryFieldQrToken": "QR token",
   "@inventoryFieldQrToken": {},
+  "inventoryFieldClientName": "Client name",
+  "@inventoryFieldClientName": {},
+  "inventoryAddDeviceSuccess": "Device added to inventory.",
+  "@inventoryAddDeviceSuccess": {},
   "inventoryOwnerTypeClient": "Client · {clientName}",
   "@inventoryOwnerTypeClient": {
     "placeholders": {
@@ -303,12 +307,15 @@
   "@comingSoon": {},
   "searchNoResults": "No matches found",
   "@searchNoResults": {},
-  "requestDetailTitle": "Request {requestId} · Assign Device",
+  "requestDetailTitle": "Request {requestId} · {statusLabel}",
   "@requestDetailTitle": {
     "placeholders": {
-      "requestId": {"type": "String"}
+      "requestId": {"type": "String"},
+      "statusLabel": {"type": "String"}
     }
   },
+  "requestDetailTitleLoading": "Loading…",
+  "@requestDetailTitleLoading": {},
   "requestUpdatedSuccess": "Request updated.",
   "@requestUpdatedSuccess": {},
   "requestInfoTitle": "Request Info",
@@ -343,6 +350,14 @@
   "@requestAssignDevice": {},
   "requestReject": "Reject",
   "@requestReject": {},
+  "requestAssignNotAvailable": "This request can't be assigned right now because it is {status}.",
+  "@requestAssignNotAvailable": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
   "requestBookingCalendarTitle": "Booking Calendar",
   "@requestBookingCalendarTitle": {},
   "requestBookingCalendarSubtitle": "Existing bookings · static preview",

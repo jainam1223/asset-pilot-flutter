@@ -7,11 +7,12 @@ import '../../modules/admin/dashboard/cubit/dashboard_cubit.dart';
 import '../../modules/admin/dashboard/dashboard_screen.dart';
 import '../../modules/admin/extension_requests/list/cubit/extension_request_list_cubit.dart';
 import '../../modules/admin/extension_requests/list/extension_request_list_screen.dart';
+import '../../modules/admin/inventory/add/add_device_screen.dart';
+import '../../modules/admin/inventory/add/cubit/add_device_cubit.dart';
 import '../../modules/admin/inventory/detail/cubit/inventory_detail_cubit.dart';
 import '../../modules/admin/inventory/detail/inventory_detail_screen.dart';
 import '../../modules/admin/inventory/list/cubit/inventory_list_cubit.dart';
 import '../../modules/admin/inventory/list/inventory_list_screen.dart';
-import '../../modules/admin/chatbot/floating_chatbot.dart';
 import '../../modules/admin/inventory/timeline/cubit/inventory_timeline_cubit.dart';
 import '../../modules/admin/inventory/timeline/inventory_timeline_screen.dart';
 import '../../modules/admin/login/cubit/login_cubit.dart';
@@ -50,18 +51,10 @@ GoRouter buildAdminRouter() {
       ShellRoute(
         builder: (context, state, child) => Scaffold(
           backgroundColor: context.appColors.adminCanvas,
-          // The floating chatbot is overlaid on top of the whole shell via a
-          // Stack, so it stays fixed on the right and is independent of which
-          // dashboard page the router swaps into `child`.
-          body: Stack(
+          body: Row(
             children: [
-              Row(
-                children: [
-                  const AdminNavRail(),
-                  Expanded(child: child),
-                ],
-              ),
-              const FloatingChatbot(),
+              const AdminNavRail(),
+              Expanded(child: child),
             ],
           ),
         ),
@@ -102,6 +95,15 @@ GoRouter buildAdminRouter() {
             pageBuilder: (context, state) => NoTransitionPage(
               child: const InventoryListScreen().withProvider(
                 (_) => InventoryListCubit(),
+              ),
+            ),
+          ),
+          GoRoute(
+            path: Routes.adminInventoryAdd.path,
+            name: Routes.adminInventoryAdd.name,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: const AddDeviceScreen().withProvider(
+                (_) => AddDeviceCubit(),
               ),
             ),
           ),

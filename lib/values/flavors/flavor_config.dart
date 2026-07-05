@@ -54,14 +54,8 @@ abstract final class FlavorConfig {
   static const String _chatDirectUrl =
       'https://app-asset-pilot-ai.azurewebsites.net/';
 
-  // Local dev CORS proxy (see tool/chat_cors_proxy.dart). The browser blocks
-  // direct cross-origin calls to the chat backend (no CORS headers), so on web
-  // we route through the proxy; native platforms hit the backend directly.
-  static const String _chatWebProxyUrl = 'http://localhost:8080/';
-
-  /// Base URL the chatbot posts `/chat` to. On web this is the CORS proxy; on
-  /// desktop/mobile it's the backend directly. Override the web value once the
-  /// backend sends proper CORS headers.
+  /// Base URL the chatbot posts `/chat` to. The backend now sends proper CORS
+  /// headers, so web and native both hit it directly.
   static String get chatBaseUrl => _chatDirectUrl;
 
   // Direct base URL for the mobile AI chatbot service (independent of the main API).
@@ -69,10 +63,10 @@ abstract final class FlavorConfig {
   static const String _mobileChatDirectUrl = 'https://app-asset-pilot-ai.azurewebsites.net/';
 
   // Local dev CORS proxy for mobile chatbot.
-  static const String _mobileChatWebProxyUrl = 'https://app-asset-pilot-ai.azure websites.net/';
+  static const String _mobileChatWebProxyUrl = 'https://app-asset-pilot-ai.azurewebsites.net/';
 
   /// Base URL the mobile chatbot posts `/chat` to.
-  static String get mobileChatBaseUrl => _mobileChatDirectUrl;
+  static String get mobileChatBaseUrl => kIsWeb ? _mobileChatWebProxyUrl : _mobileChatDirectUrl;
 
   static void apply(Flavor flavor) => FlavorConfig.flavor = flavor;
 }

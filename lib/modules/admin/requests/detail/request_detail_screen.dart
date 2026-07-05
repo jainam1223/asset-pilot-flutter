@@ -37,26 +37,31 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AdminShell(
-      title: context.l10n.requestDetailTitle(
-        context.read<RequestDetailCubit>().requestId,
-      ),
-      child: BlocConsumer<RequestDetailCubit, RequestDetailState>(
-        listenWhen: (previous, current) =>
-            previous.submission != current.submission,
-        listener: (context, state) {
-          switch (state.submission) {
-            case Success():
-              AppToast.success(context, context.l10n.requestUpdatedSuccess);
-              context.go(Routes.adminRequests.path);
-            case Error(:final message):
-              AppToast.error(context, message);
-            case Idle() || Loading():
-              break;
-          }
-        },
-        builder: (context, state) {
-          return NetworkStateView<RequestDetailResDm>(
+    return BlocConsumer<RequestDetailCubit, RequestDetailState>(
+      listenWhen: (previous, current) =>
+          previous.submission != current.submission,
+      listener: (context, state) {
+        switch (state.submission) {
+          case Success():
+            AppToast.success(context, context.l10n.requestUpdatedSuccess);
+            context.go(Routes.adminRequests.path);
+          case Error(:final message):
+            AppToast.error(context, message);
+          case Idle() || Loading():
+            break;
+        }
+      },
+      builder: (context, state) {
+        final statusLabel = switch (state.detail) {
+          Success(:final data) => data.status.label,
+          _ => context.l10n.requestDetailTitleLoading,
+        };
+        return AdminShell(
+          title: context.l10n.requestDetailTitle(
+            context.read<RequestDetailCubit>().requestId,
+            statusLabel,
+          ),
+          child: NetworkStateView<RequestDetailResDm>(
             state: state.detail,
             onData: (context, detail) => Padding(
               padding: const EdgeInsets.all(AppConstants.screenPadding),
@@ -68,7 +73,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                     child: _RequestInfoPanel(detail: detail),
                   ),
                   const Gap(18),
-                  Expanded(child: _SuggestionsPanel(state: state)),
+                  Expanded(
+                    child: _SuggestionsPanel(state: state, detail: detail),
+                  ),
                   const Gap(18),
                   SizedBox(
                     width: 320,
@@ -77,9 +84,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                 ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -196,13 +203,15 @@ Future<void> _pickAssignedDate({
 }
 
 class _SuggestionsPanel extends StatelessWidget {
-  const _SuggestionsPanel({required this.state});
+  const _SuggestionsPanel({required this.state, required this.detail});
 
   final RequestDetailState state;
+  final RequestDetailResDm detail;
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<RequestDetailCubit>();
+    final canAssign = detail.status == RequestStatus.pendingItApproval;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -284,13 +293,22 @@ class _SuggestionsPanel extends StatelessWidget {
               ),
             ],
           ),
+          if (!canAssign) ...[
+            const Gap(16),
+            InlineAlert(
+              semantic: AppSemantic.warning,
+              message: context.l10n.requestAssignNotAvailable(
+                detail.status.label,
+              ),
+            ),
+          ],
           const Gap(16),
           Row(
             children: [
               Expanded(
                 child: AppButton(
                   label: context.l10n.requestAssignDevice,
-                  onPressed: state.selectedDeviceId == null
+                  onPressed: !canAssign || state.selectedDeviceId == null
                       ? null
                       : (state.submission is Loading ? null : cubit.assign),
                   isLoading: state.submission is Loading,
@@ -301,7 +319,7 @@ class _SuggestionsPanel extends StatelessWidget {
               AppButton(
                 label: context.l10n.requestReject,
                 variant: AppButtonVariant.secondary,
-                onPressed: state.submission is Loading
+                onPressed: !canAssign || state.submission is Loading
                     ? null
                     : () => cubit.reject(),
               ),

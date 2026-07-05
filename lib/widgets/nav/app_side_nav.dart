@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../generated/assets.gen.dart';
 import '../../utilities/extensions/context_extensions.dart';
 import '../../values/constants/app_constants.dart';
 import 'nav_item.dart';
@@ -16,6 +17,7 @@ class AppSideNav extends StatelessWidget {
     required this.onSelected,
     required this.brandLabel,
     this.expanded = true,
+    this.footer,
   });
 
   final List<NavItem> items;
@@ -28,6 +30,11 @@ class AppSideNav extends StatelessWidget {
   final String brandLabel;
   final bool expanded;
 
+  /// Optional widget pinned to the bottom of the rail, below the nav items
+  /// (e.g. a launcher button). Domain-blind: the caller supplies content, the
+  /// rail only positions it.
+  final Widget? footer;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,13 +46,15 @@ class AppSideNav extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 22),
-            child: Text(
-              expanded ? brandLabel : brandLabel.substring(0, 1),
-              style: context.appTextStyles.h3.copyWith(
-                color: Colors.white,
-                letterSpacing: 1.4,
-              ),
-            ),
+            child: expanded
+                ? Assets.images.adminLogo.image(height: 32, fit: BoxFit.contain)
+                : Text(
+                    brandLabel.substring(0, 1),
+                    style: context.appTextStyles.h3.copyWith(
+                      color: Colors.white,
+                      letterSpacing: 1.4,
+                    ),
+                  ),
           ),
           for (final item in items)
             _SideNavItem(
@@ -54,6 +63,7 @@ class AppSideNav extends StatelessWidget {
               selected: item.id == selectedId,
               onTap: () => onSelected(item.id),
             ),
+          if (footer != null) ...[const Spacer(), footer!],
         ],
       ),
     );

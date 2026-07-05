@@ -26,6 +26,7 @@ enum Routes {
   adminRequests(path: '/requests', name: 'adminRequests'),
   adminRequestDetail(path: '/requests/:id', name: 'adminRequestDetail'),
   adminInventory(path: '/inventory', name: 'adminInventory'),
+  adminInventoryAdd(path: '/inventory/add', name: 'adminInventoryAdd'),
   adminInventoryDetail(path: '/inventory/:id', name: 'adminInventoryDetail'),
   adminInventoryTimeline(
     path: '/inventory/:id/timeline',

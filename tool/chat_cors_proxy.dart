@@ -23,7 +23,7 @@ Future<void> main() async {
       ) ??
       8080;
   final target = Uri.parse(
-    Platform.environment['CHAT_TARGET_URL'] ?? 'http://172.16.5.71:8000',
+    Platform.environment['CHAT_TARGET_URL'] ?? 'https://app-asset-pilot-ai.azurewebsites.net',
   );
 
   final client = HttpClient();

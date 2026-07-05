@@ -76,9 +76,7 @@ class _ToolbarRow extends StatelessWidget {
           label: context.l10n.inventoryAddDevice,
           leadingIcon: Icons.add,
           size: AppButtonSize.medium,
-          // TODO: wire to real Add Device form when backend + design are
-          // ready.
-          onPressed: () => AppToast.info(context, context.l10n.comingSoon),
+          onPressed: () => context.go(Routes.adminInventoryAdd.path),
         ),
       ],
     );
