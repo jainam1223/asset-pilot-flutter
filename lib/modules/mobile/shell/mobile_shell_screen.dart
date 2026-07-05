@@ -8,6 +8,8 @@ import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/navigation/app_routes.dart';
 import '../../../widgets/nav/app_bottom_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
+import '../handover/cubit/handover_list_cubit.dart';
+import '../handover/handover_detail_screen.dart';
 import '../manager/manager_home_screen.dart';
 import '../my_devices/cubit/my_devices_cubit.dart';
 import '../my_devices/my_devices_screen.dart';
@@ -82,6 +84,10 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
         _requestsTabIndex => BlocProvider(
           create: (_) => RequestsCubit(),
           child: const RequestsScreen(),
+        ),
+        _handoverTabIndex => BlocProvider(
+          create: (_) => HandoverListCubit(),
+          child: const HandoverDetailsScreen(),
         ),
         _profileTabIndex => ProfileScreen(user: widget.user),
         _approvalsTabIndex => const ManagerHomeScreen(),

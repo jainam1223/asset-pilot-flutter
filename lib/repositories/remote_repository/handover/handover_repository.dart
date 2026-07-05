@@ -28,4 +28,32 @@ class HandoverRepository extends Repository {
   ) async {
     return apiService.createHandoverRequest(CurrentUser.id, body);
   }
+
+  /// My handover requests, as either [asBorrower] or the owner
+  /// (My Handovers, mockup E14).
+  Future<ApiResult<List<HandoverRequestResDm>>> listMyHandoverRequests({
+    required bool asBorrower,
+  }) async {
+    return apiService.listMyHandoverRequests(asBorrower ? 'borrower' : 'owner');
+  }
+
+  /// Owner accepts a `requested` handover.
+  Future<ApiResult<HandoverRequestResDm>> acceptHandoverRequest(String id) {
+    return apiService.acceptHandoverRequest(id);
+  }
+
+  /// Owner rejects a `requested` handover.
+  Future<ApiResult<HandoverRequestResDm>> rejectHandoverRequest(String id) {
+    return apiService.rejectHandoverRequest(id);
+  }
+
+  /// Borrower cancels a `requested` handover.
+  Future<ApiResult<HandoverRequestResDm>> cancelHandoverRequest(String id) {
+    return apiService.cancelHandoverRequest(id);
+  }
+
+  /// Owner marks an `accepted` handover complete.
+  Future<ApiResult<HandoverRequestResDm>> completeHandoverRequest(String id) {
+    return apiService.completeHandoverRequest(id);
+  }
 }

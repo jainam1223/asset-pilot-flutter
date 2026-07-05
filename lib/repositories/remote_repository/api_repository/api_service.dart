@@ -16,6 +16,7 @@ import '../common/models/user_res_dm.dart';
 import '../dashboard/models/dashboard_summary_res_dm.dart';
 import '../dashboard/models/open_support_snapshot_res_dm.dart';
 import '../dashboard/models/recent_request_res_dm.dart';
+import '../device/models/return_device_req_dm.dart';
 import '../dropdowns/models/dropdown_option_res_dm.dart';
 import '../extension_requests/models/decide_extension_req_dm.dart';
 import '../extension_requests/models/extension_request_detail_res_dm.dart';
@@ -98,6 +99,19 @@ abstract class ApiService {
   Future<ApiResult<List<ItemResDm>>> getMyDevices(
     @Header('X-User-Id') String userId,
   );
+
+  /// Initiate a WFH return — the device stays assigned to the employee
+  /// until IT confirms receipt (Return Device mockup E09).
+  @POST('/me/devices/{itemId}/return')
+  Future<ApiResult<void>> returnDevice(
+    @Path('itemId') String itemId,
+    @Body() ReturnDeviceReqDm body,
+  );
+
+  /// Instantly complete a non-WFH (office-based) return — no tracking URL,
+  /// device goes straight back to available (Device Detail mockup E03).
+  @POST('/me/devices/{itemId}/return-non-wfh')
+  Future<ApiResult<void>> returnDeviceNonWfh(@Path('itemId') String itemId);
 
   /// The signed-in employee's `request` rows — every request they've raised,
   /// regardless of status (My Requests list, mockup E07 list).
@@ -322,6 +336,38 @@ abstract class ApiService {
   Future<ApiResult<HandoverRequestResDm>> createHandoverRequest(
     @Header('X-User-Id') String userId,
     @Body() CreateHandoverRequestReqDm body,
+  );
+
+  /// My handover requests, as either the [as] `borrower` or `owner`
+  /// (My Handovers, mockup E14).
+  @GET('/me/handover-requests')
+  Future<ApiResult<List<HandoverRequestResDm>>> listMyHandoverRequests(
+    @Query('as') String as,
+  );
+
+  /// Owner accepts a `requested` handover (My Handovers, mockup E14).
+  @PATCH('/me/handover-requests/{id}/accept')
+  Future<ApiResult<HandoverRequestResDm>> acceptHandoverRequest(
+    @Path('id') String id,
+  );
+
+  /// Owner rejects a `requested` handover (My Handovers, mockup E14).
+  @PATCH('/me/handover-requests/{id}/reject')
+  Future<ApiResult<HandoverRequestResDm>> rejectHandoverRequest(
+    @Path('id') String id,
+  );
+
+  /// Borrower cancels a `requested` handover (My Handovers, mockup E14).
+  @PATCH('/me/handover-requests/{id}/cancel')
+  Future<ApiResult<HandoverRequestResDm>> cancelHandoverRequest(
+    @Path('id') String id,
+  );
+
+  /// Owner marks an `accepted` handover complete once the device is back
+  /// (My Handovers, mockup E14).
+  @PATCH('/me/handover-requests/{id}/complete')
+  Future<ApiResult<HandoverRequestResDm>> completeHandoverRequest(
+    @Path('id') String id,
   );
 
   @PATCH('admin/support-requests/{id}/resolve')
