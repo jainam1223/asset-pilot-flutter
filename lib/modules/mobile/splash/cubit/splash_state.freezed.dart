@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SplashState {
 
- bool get navigateToLogin;
+ bool get navigateToLogin; bool get navigateToHome;
 /// Create a copy of SplashState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $SplashStateCopyWith<SplashState> get copyWith => _$SplashStateCopyWithImpl<Spla
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SplashState&&(identical(other.navigateToLogin, navigateToLogin) || other.navigateToLogin == navigateToLogin));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SplashState&&(identical(other.navigateToLogin, navigateToLogin) || other.navigateToLogin == navigateToLogin)&&(identical(other.navigateToHome, navigateToHome) || other.navigateToHome == navigateToHome));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,navigateToLogin);
+int get hashCode => Object.hash(runtimeType,navigateToLogin,navigateToHome);
 
 @override
 String toString() {
-  return 'SplashState(navigateToLogin: $navigateToLogin)';
+  return 'SplashState(navigateToLogin: $navigateToLogin, navigateToHome: $navigateToHome)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $SplashStateCopyWith<$Res>  {
   factory $SplashStateCopyWith(SplashState value, $Res Function(SplashState) _then) = _$SplashStateCopyWithImpl;
 @useResult
 $Res call({
- bool navigateToLogin
+ bool navigateToLogin, bool navigateToHome
 });
 
 
@@ -62,9 +62,10 @@ class _$SplashStateCopyWithImpl<$Res>
 
 /// Create a copy of SplashState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? navigateToLogin = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? navigateToLogin = null,Object? navigateToHome = null,}) {
   return _then(_self.copyWith(
 navigateToLogin: null == navigateToLogin ? _self.navigateToLogin : navigateToLogin // ignore: cast_nullable_to_non_nullable
+as bool,navigateToHome: null == navigateToHome ? _self.navigateToHome : navigateToHome // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -150,10 +151,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool navigateToLogin)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool navigateToLogin,  bool navigateToHome)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SplashState() when $default != null:
-return $default(_that.navigateToLogin);case _:
+return $default(_that.navigateToLogin,_that.navigateToHome);case _:
   return orElse();
 
 }
@@ -171,10 +172,10 @@ return $default(_that.navigateToLogin);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool navigateToLogin)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool navigateToLogin,  bool navigateToHome)  $default,) {final _that = this;
 switch (_that) {
 case _SplashState():
-return $default(_that.navigateToLogin);case _:
+return $default(_that.navigateToLogin,_that.navigateToHome);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -191,10 +192,10 @@ return $default(_that.navigateToLogin);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool navigateToLogin)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool navigateToLogin,  bool navigateToHome)?  $default,) {final _that = this;
 switch (_that) {
 case _SplashState() when $default != null:
-return $default(_that.navigateToLogin);case _:
+return $default(_that.navigateToLogin,_that.navigateToHome);case _:
   return null;
 
 }
@@ -206,10 +207,11 @@ return $default(_that.navigateToLogin);case _:
 
 
 class _SplashState implements SplashState {
-  const _SplashState({this.navigateToLogin = false});
+  const _SplashState({this.navigateToLogin = false, this.navigateToHome = false});
   
 
 @override@JsonKey() final  bool navigateToLogin;
+@override@JsonKey() final  bool navigateToHome;
 
 /// Create a copy of SplashState
 /// with the given fields replaced by the non-null parameter values.
@@ -221,16 +223,16 @@ _$SplashStateCopyWith<_SplashState> get copyWith => __$SplashStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SplashState&&(identical(other.navigateToLogin, navigateToLogin) || other.navigateToLogin == navigateToLogin));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SplashState&&(identical(other.navigateToLogin, navigateToLogin) || other.navigateToLogin == navigateToLogin)&&(identical(other.navigateToHome, navigateToHome) || other.navigateToHome == navigateToHome));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,navigateToLogin);
+int get hashCode => Object.hash(runtimeType,navigateToLogin,navigateToHome);
 
 @override
 String toString() {
-  return 'SplashState(navigateToLogin: $navigateToLogin)';
+  return 'SplashState(navigateToLogin: $navigateToLogin, navigateToHome: $navigateToHome)';
 }
 
 
@@ -241,7 +243,7 @@ abstract mixin class _$SplashStateCopyWith<$Res> implements $SplashStateCopyWith
   factory _$SplashStateCopyWith(_SplashState value, $Res Function(_SplashState) _then) = __$SplashStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool navigateToLogin
+ bool navigateToLogin, bool navigateToHome
 });
 
 
@@ -258,9 +260,10 @@ class __$SplashStateCopyWithImpl<$Res>
 
 /// Create a copy of SplashState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? navigateToLogin = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? navigateToLogin = null,Object? navigateToHome = null,}) {
   return _then(_SplashState(
 navigateToLogin: null == navigateToLogin ? _self.navigateToLogin : navigateToLogin // ignore: cast_nullable_to_non_nullable
+as bool,navigateToHome: null == navigateToHome ? _self.navigateToHome : navigateToHome // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

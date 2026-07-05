@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../repositories/local_repository/shared_pref/shared_pref.dart';
 import '../../values/flavors/flavor_config.dart';
 
 /// Builds and holds the shared [Dio] instance used by all repositories.
@@ -27,7 +28,15 @@ class DioClient {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          // TODO(auth): attach bearer token from secure storage.
+          final user = SharedPref.instance.user;
+          if (user != null) {
+            options.headers['x-user-id'] = user.id;
+            options.headers['x-user-role'] = user.role;
+            options.headers['x-user-name'] = user.name;
+            if (user.managerId != null) {
+              options.headers['x-manager-id'] = user.managerId;
+            }
+          }
           handler.next(options);
         },
         onResponse: (response, handler) {

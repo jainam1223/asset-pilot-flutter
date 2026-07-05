@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../repositories/local_repository/shared_pref/shared_pref.dart';
 import '../../../repositories/remote_repository/common/models/user_res_dm.dart';
 import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/navigation/app_routes.dart';
@@ -101,7 +102,8 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
     if (confirmed == true && context.mounted) {
-      context.go(Routes.login.path);
+      await SharedPref.instance.clearUser();
+      if (context.mounted) context.go(Routes.login.path);
     }
   }
 }
@@ -165,6 +167,7 @@ class _ReportingManagerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final managerId = CurrentUser.managerId ?? '';
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -177,15 +180,9 @@ class _ReportingManagerField extends StatelessWidget {
         children: [
           Row(
             children: [
-              const AppAvatar(
-                name: CurrentUser.managerName,
-                size: AppAvatarSize.sm,
-              ),
+              AppAvatar(name: managerId, size: AppAvatarSize.sm),
               const Gap(10),
-              Text(
-                CurrentUser.managerName,
-                style: context.appTextStyles.labelXLarge,
-              ),
+              Text(managerId, style: context.appTextStyles.labelXLarge),
             ],
           ),
           Icon(

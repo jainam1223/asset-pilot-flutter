@@ -1,13 +1,10 @@
-/// Signed-in user id sent as `X-User-Id` on requests that are scoped to the
-/// current employee (e.g. `GET /me/devices`).
-///
-/// DEFERRED: there is no auth session yet — [AuthRepository]'s mocked login
-/// always returns id `u_001` (see auth_repository.dart), so that's hardcoded
-/// here too. Once a real session exists, this becomes a read of the stored
-/// logged-in user id instead of a constant.
+import '../../repositories/local_repository/shared_pref/shared_pref.dart';
+
+/// Reads the signed-in user (persisted by [SharedPref]) for call sites that
+/// need the current employee's identity, e.g. `X-User-Id` headers on
+/// `/me/*` requests.
 abstract final class CurrentUser {
-  static const String id = '86f81c34-8246-439c-92ea-f30d4e8581f5';
-  static const String name = 'Arjun Mehta';
-  static const String managerId = 'mgr_priya_n';
-  static const String managerName = 'Priya Nair';
+  static String get id => SharedPref.instance.user?.id ?? '';
+  static String get name => SharedPref.instance.user?.name ?? '';
+  static String? get managerId => SharedPref.instance.user?.managerId;
 }

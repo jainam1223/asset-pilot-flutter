@@ -377,6 +377,7 @@ class _ReportingManagerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final managerId = CurrentUser.managerId ?? '';
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
       decoration: BoxDecoration(
@@ -385,7 +386,7 @@ class _ReportingManagerCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const AppAvatar(name: CurrentUser.managerName, size: AppAvatarSize.sm),
+          AppAvatar(name: managerId, size: AppAvatarSize.sm),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -398,10 +399,7 @@ class _ReportingManagerCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 3),
-              Text(
-                CurrentUser.managerName,
-                style: context.appTextStyles.labelXLarge,
-              ),
+              Text(managerId, style: context.appTextStyles.labelXLarge),
             ],
           ),
         ],

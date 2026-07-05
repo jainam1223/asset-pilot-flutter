@@ -36,8 +36,8 @@ part 'api_service.g.dart';
 abstract class ApiService {
   factory ApiService(Dio dio, {String? baseUrl}) = _ApiService;
 
-  /// Authenticate a user with email + password.
-  @POST('/auth/login')
+  /// Authenticate a user with email.
+  @POST('/login')
   Future<ApiResult<UserResDm>> login(@Body() LoginReqDm body);
 
   /// The signed-in employee's devices — `item` rows currently owned by

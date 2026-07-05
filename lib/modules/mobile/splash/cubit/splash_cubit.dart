@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../repositories/local_repository/shared_pref/shared_pref.dart';
 import 'splash_state.dart';
 
 class SplashCubit extends Cubit<SplashState> {
@@ -10,11 +11,16 @@ class SplashCubit extends Cubit<SplashState> {
   }
 
   Future<void> loadSplashScreen() async {
-    if (state.navigateToLogin == true) {
+    if (state.navigateToLogin || state.navigateToHome) {
       return;
     }
-    //TODO(Rajvi): Initialize app with user data.
-    await Future<void>.delayed(const Duration(seconds: 2), () {});
-    emit(state.copyWith(navigateToLogin: true));
+    await Future<void>.delayed(const Duration(seconds: 2));
+    final signedIn = SharedPref.instance.user != null;
+    emit(
+      state.copyWith(
+        navigateToHome: signedIn,
+        navigateToLogin: !signedIn,
+      ),
+    );
   }
 }

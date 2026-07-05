@@ -27,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
     text: 'password',
   );
   bool _obscurePassword = true;
-  bool _isManager = false;
 
   @override
   void dispose() {
@@ -108,11 +107,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {},
                     ),
                   ),
-                  const Gap(12),
-                  _RoleSelector(
-                    isManager: _isManager,
-                    onChanged: (value) => setState(() => _isManager = value),
-                  ),
                   const Gap(26),
                   AppButton(
                     label: context.l10n.signIn,
@@ -122,8 +116,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? null
                         : () => context.read<LoginCubit>().login(
                             email: _email.text.trim(),
-                            password: _password.text,
-                            isManager: _isManager,
                           ),
                   ),
                   const Gap(30),
@@ -154,35 +146,6 @@ class _LoginLogo extends StatelessWidget {
         Text(
           context.l10n.appName,
           style: context.appTextStyles.h3.copyWith(letterSpacing: 3.4),
-        ),
-      ],
-    );
-  }
-}
-
-class _RoleSelector extends StatelessWidget {
-  const _RoleSelector({required this.isManager, required this.onChanged});
-
-  final bool isManager;
-  final ValueChanged<bool> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          context.l10n.loginAsLabel,
-          style: context.appTextStyles.emphasisSmall,
-        ),
-        const Gap(9),
-        SegmentedControl<bool>(
-          value: isManager,
-          onChanged: onChanged,
-          options: [
-            SegmentOption(value: false, label: context.l10n.roleEmployee),
-            SegmentOption(value: true, label: context.l10n.roleManager),
-          ],
         ),
       ],
     );

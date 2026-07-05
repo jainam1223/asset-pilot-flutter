@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../repositories/local_repository/shared_pref/shared_pref.dart';
 import '../../../../repositories/remote_repository/auth/auth_repository.dart';
 import '../../../../repositories/remote_repository/common/models/user_res_dm.dart';
 import '../../../../utilities/api_utilities/error_manager.dart';
@@ -10,25 +11,20 @@ import '../../../../utilities/network/safe_emit.dart';
 
 part 'login_state.dart';
 
-/// Drives the login screen. Talks to the (mocked) [AuthRepository].
+/// Drives the login screen. Talks to [AuthRepository].
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(const LoginState());
 
-  Future<void> login({
-    required String email,
-    required String password,
-    bool isManager = false,
-  }) async {
+  Future<void> login({required String email}) async {
     safeEmit(state.copyWith(login: const Loading()));
     try {
-      final result = await AuthRepository.instance.login(
-        email: email,
-        password: password,
-        isManager: isManager,
-      );
-      result.when(
-        success: (data) => safeEmit(state.copyWith(login: Success(data))),
-        failure: (error) {
+      final result = await AuthRepository.instance.login(email: email);
+      await result.when(
+        success: (data) async {
+          await SharedPref.instance.setUser(data);
+          safeEmit(state.copyWith(login: Success(data)));
+        },
+        failure: (error) async {
           errorManager.handle(error);
           safeEmit(state.copyWith(login: Error(error.message)));
         },
