@@ -50,17 +50,29 @@ class AppDataTable<T> extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final table = _buildTable(context, constraints.maxWidth);
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: constraints.maxWidth),
-                  child: table,
-                ),
-              );
-            },
+          // Fixed-size ancestors (an `Expanded` inside a Row/Column, which is
+          // how every list screen embeds this table) hand this LayoutBuilder
+          // a bounded maxHeight; a scrollable ancestor (e.g. the dashboard's
+          // outer SingleChildScrollView) hands it maxHeight == infinity.
+          // Flexible + `fit: loose` lets the body take either shape: it
+          // scrolls internally when bounded, and shrinks to its natural
+          // height when not, instead of forcing unbounded height on a
+          // bounded parent (the RenderFlex overflow this used to cause).
+          Flexible(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final table = _buildTable(context, constraints.maxWidth);
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: constraints.maxWidth,
+                    ),
+                    child: table,
+                  ),
+                );
+              },
+            ),
           ),
           if (pagination != null) _PaginationFooter(pagination: pagination!),
         ],
@@ -73,6 +85,7 @@ class AppDataTable<T> extends StatelessWidget {
       return SizedBox(
         width: minWidth,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             _HeaderRow(columns: columns),
             Padding(
@@ -87,16 +100,28 @@ class AppDataTable<T> extends StatelessWidget {
     return SizedBox(
       width: minWidth,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           _HeaderRow(columns: columns),
-          for (var i = 0; i < rows.length; i++)
-            _BodyRow<T>(
-              columns: columns,
-              row: rows[i],
-              isFirst: i == 0,
-              selected: isRowSelected?.call(rows[i]) ?? false,
-              onTap: onRowTap == null ? null : () => onRowTap!(rows[i]),
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 0; i < rows.length; i++)
+                    _BodyRow<T>(
+                      columns: columns,
+                      row: rows[i],
+                      isFirst: i == 0,
+                      selected: isRowSelected?.call(rows[i]) ?? false,
+                      onTap: onRowTap == null
+                          ? null
+                          : () => onRowTap!(rows[i]),
+                    ),
+                ],
+              ),
             ),
+          ),
         ],
       ),
     );
@@ -288,8 +313,8 @@ class _PageButton extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        width: 32,
-        height: 32,
+        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: selected
