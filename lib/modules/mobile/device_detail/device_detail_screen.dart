@@ -129,6 +129,13 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
             _ActionButtonGrid(
               isReturning: _returning,
               onReturnPressed: _onReturnPressed,
+              onRequestSupportPressed: () => context.push(
+                Routes.fileSupportRequest.path.replaceFirst(
+                  ':id',
+                  widget.item.assignedItemId,
+                ),
+                extra: (widget.item.assignedItemId, widget.item.name),
+              ),
               canReturn:
                   widget.assignedFrom != null ||
                   widget.assignedTo != null ||
@@ -333,11 +340,13 @@ class _ActionButtonGrid extends StatelessWidget {
   const _ActionButtonGrid({
     required this.isReturning,
     required this.onReturnPressed,
+    required this.onRequestSupportPressed,
     required this.canReturn,
   });
 
   final bool isReturning;
   final VoidCallback onReturnPressed;
+  final VoidCallback onRequestSupportPressed;
   final bool canReturn;
 
   @override
@@ -350,24 +359,11 @@ class _ActionButtonGrid extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: AppButton(
-                  label: context.l10n.deviceDetailRequestSupport,
-                  variant: AppButtonVariant.secondary,
-                  onPressed: () => _showComingSoon(context),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: AppButton(
-                  label: context.l10n.deviceDetailExtend,
-                  variant: AppButtonVariant.secondary,
-                  onPressed: () => _showComingSoon(context),
-                ),
-              ),
-            ],
+          AppButton(
+            label: context.l10n.deviceDetailRequestSupport,
+            variant: AppButtonVariant.secondary,
+            expand: true,
+            onPressed: onRequestSupportPressed,
           ),
           if (canReturn) ...[
             const SizedBox(height: 12),
@@ -383,9 +379,4 @@ class _ActionButtonGrid extends StatelessWidget {
       ),
     );
   }
-
-  // TODO(api): wire to real Support/Extend flows once their endpoints and
-  // screens exist.
-  void _showComingSoon(BuildContext context) =>
-      AppToast.info(context, context.l10n.comingSoon);
 }

@@ -8,8 +8,8 @@ import '../../modules/mobile/device_detail/device_detail_screen.dart';
 import '../../modules/mobile/device_detail/return_device_screen.dart';
 import '../../modules/mobile/handover/cubit/handover_list_cubit.dart';
 import '../../modules/mobile/handover/cubit/request_handover_cubit.dart';
-import '../../modules/mobile/handover/handover_scan_screen.dart';
 import '../../modules/mobile/handover/handover_detail_screen.dart';
+import '../../modules/mobile/handover/handover_scan_screen.dart';
 import '../../modules/mobile/handover/request_handover_screen.dart';
 import '../../modules/mobile/login/cubit/login_cubit.dart';
 import '../../modules/mobile/login/login_screen.dart';
@@ -21,6 +21,8 @@ import '../../modules/mobile/requests/request_detail_screen.dart';
 import '../../modules/mobile/shell/mobile_shell_screen.dart';
 import '../../modules/mobile/splash/cubit/splash_cubit.dart';
 import '../../modules/mobile/splash/splash_screen.dart';
+import '../../modules/mobile/support_request/cubit/file_support_request_cubit.dart';
+import '../../modules/mobile/support_request/file_support_request_screen.dart';
 import '../../repositories/remote_repository/common/models/user_res_dm.dart';
 import '../../values/app_global/app_global.dart';
 import '../../views/component_showcase/component_showcase_screen.dart';
@@ -68,9 +70,7 @@ GoRouter buildMobileRouter() {
         name: Routes.requestDetail.name,
         builder: (context, state) {
           final data = state.extra as RequestResDm;
-          return RequestDetailScreen(
-            data: data,
-          );
+          return RequestDetailScreen(data: data);
         },
       ),
       // NOTE: `returnDevice` (/devices/return) must be declared BEFORE
@@ -100,6 +100,16 @@ GoRouter buildMobileRouter() {
             isWfh: device.item.isWfh,
             shipTrackingUrl: device.item.shipTrackingUrl,
           );
+        },
+      ),
+      GoRoute(
+        path: Routes.fileSupportRequest.path,
+        name: Routes.fileSupportRequest.name,
+        builder: (context, state) {
+          final extra = state.extra! as (String itemId, String deviceName);
+          return FileSupportRequestScreen(
+            deviceName: extra.$2,
+          ).withProvider((_) => FileSupportRequestCubit(extra.$1));
         },
       ),
       GoRoute(
