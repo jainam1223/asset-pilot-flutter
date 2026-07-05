@@ -11,7 +11,8 @@ part 'login_req_dm.g.dart';
 @freezed
 abstract class LoginReqDm with _$LoginReqDm {
   @JsonSerializable(includeIfNull: false)
-  const factory LoginReqDm({required String email}) = _LoginReqDm;
+  const factory LoginReqDm({required String email, String? password}) =
+      _LoginReqDm;
 
   factory LoginReqDm.fromJson(Map<String, dynamic> json) =>
       _$LoginReqDmFromJson(json);

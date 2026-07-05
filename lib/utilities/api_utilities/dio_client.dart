@@ -7,8 +7,9 @@ import '../../values/flavors/flavor_config.dart';
 
 /// Builds and holds the shared [Dio] instance used by all repositories.
 ///
-/// Base URL comes from [FlavorConfig.baseUrl] (flavor-aware). Auth token
-/// injection and refresh belong in interceptors added here as the app grows.
+/// Base URL comes from [FlavorConfig.baseUrl] (flavor- and variant-aware —
+/// mobile and admin hit different hosts). Auth token injection and refresh
+/// belong in interceptors added here as the app grows.
 class DioClient {
   DioClient._();
 

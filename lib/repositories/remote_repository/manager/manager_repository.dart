@@ -7,9 +7,7 @@ import '../common/models/request_res_dm.dart';
 import '../common/models/user_res_dm.dart';
 import 'models/approve_request_req_dm.dart';
 import 'models/employee_device_res_dm.dart';
-import 'models/pending_approval_res_dm.dart';
 import 'models/reject_manager_request_req_dm.dart';
-import 'models/team_device_res_dm.dart';
 
 /// Repository backing the Manager mobile screens (mockups M01, M02, M04).
 ///

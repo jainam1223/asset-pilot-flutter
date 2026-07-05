@@ -40,13 +40,6 @@ class ProfileScreen extends StatelessWidget {
               ),
               const Gap(10),
               const _ReportingManagerField(),
-              const Gap(11),
-              AppButton(
-                label: context.l10n.profileSaveManager,
-                variant: AppButtonVariant.secondary,
-                expand: true,
-                onPressed: () {},
-              ),
               const Gap(20),
               Text(
                 context.l10n.profileChangePassword,
@@ -167,7 +160,6 @@ class _ReportingManagerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final managerId = CurrentUser.managerId ?? '';
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -180,14 +172,13 @@ class _ReportingManagerField extends StatelessWidget {
         children: [
           Row(
             children: [
-              AppAvatar(name: managerId, size: AppAvatarSize.sm),
+              AppAvatar(name: CurrentUser.managerName, size: AppAvatarSize.sm),
               const Gap(10),
-              Text(managerId, style: context.appTextStyles.labelXLarge),
+              Text(
+                CurrentUser.managerName,
+                style: context.appTextStyles.labelXLarge,
+              ),
             ],
-          ),
-          Icon(
-            Icons.keyboard_arrow_down,
-            color: context.appColors.primary,
           ),
         ],
       ),
@@ -215,9 +206,7 @@ class _StaticPasswordField extends StatelessWidget {
         children: [
           Text(
             '•' * dotsCount,
-            style: context.appTextStyles.labelXLarge.copyWith(
-              letterSpacing: 2,
-            ),
+            style: context.appTextStyles.labelXLarge.copyWith(letterSpacing: 2),
           ),
           Text(label, style: context.appTextStyles.bodyXSmall),
         ],
