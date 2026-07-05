@@ -19,6 +19,7 @@ enum Routes {
   handoverScan(path: '/handover/scan', name: 'handoverScan'),
   requestHandover(path: '/handover/new', name: 'requestHandover'),
   approvalDetail(path: '/manager/approvals/:id', name: 'approvalDetail'),
+  chatbot(path: '/chatbot', name: 'chatbot'),
 
   // Admin (IT)
   adminDashboard(path: '/dashboard', name: 'adminDashboard'),

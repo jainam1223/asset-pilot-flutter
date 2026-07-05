@@ -12,9 +12,8 @@ import '../../../../utilities/network/safe_emit.dart';
 
 part 'request_handover_state.dart';
 
-/// Fixed loan duration shown on Request Handover (mockup E13) — the field
-/// is display-only ("informational" per the mockup caption), not a form
-/// input, so there is nothing to configure here yet.
+/// Default loan duration pre-filled on Request Handover (mockup E13). The
+/// borrower can edit it in the duration field before submitting.
 const int kDefaultHandoverDurationHours = 48;
 
 /// Drives the Request Handover screen (mockup E13): loads the scanned
@@ -50,6 +49,14 @@ class RequestHandoverCubit extends Cubit<RequestHandoverState> {
 
   void setNote(String value) => safeEmit(state.copyWith(note: value));
 
+  /// Set the requested loan duration in hours. Ignores empty/invalid input,
+  /// keeping the last valid value.
+  void setDuration(String value) {
+    final hours = int.tryParse(value.trim());
+    if (hours == null || hours <= 0) return;
+    safeEmit(state.copyWith(durationHours: hours));
+  }
+
   Future<void> submit() async {
     if (state.submit.isLoading) return;
     safeEmit(state.copyWith(submit: const Loading()));
@@ -57,7 +64,7 @@ class RequestHandoverCubit extends Cubit<RequestHandoverState> {
       final result = await HandoverRepository.instance.createHandoverRequest(
         CreateHandoverRequestReqDm(
           itemId: itemId,
-          requestedDurationHours: kDefaultHandoverDurationHours,
+          requestedDurationHours: state.durationHours,
           note: state.note.trim().isEmpty ? null : state.note.trim(),
         ),
       );

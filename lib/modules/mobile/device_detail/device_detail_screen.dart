@@ -50,14 +50,14 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     if (widget.isWfh) {
       final returned = await context.push<bool>(
         Routes.returnDevice.path,
-        extra: (widget.item.id, widget.item.name),
+        extra: (widget.item.assignedItemId, widget.item.name),
       );
       if (returned == true && mounted) context.pop();
       return;
     }
     setState(() => _returning = true);
     final result = await DeviceRepository.instance.returnDeviceNonWfh(
-      widget.item.id,
+      widget.item.assignedItemId,
     );
     if (!mounted) return;
     setState(() => _returning = false);
@@ -69,6 +69,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       failure: (error) {
         errorManager.handle(error);
         AppToast.error(context, error.message);
+        if (error.statusCode == 404) context.pop();
       },
     );
   }
@@ -128,7 +129,8 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
             _ActionButtonGrid(
               isReturning: _returning,
               onReturnPressed: _onReturnPressed,
-              canReturn: widget.assignedFrom != null ||
+              canReturn:
+                  widget.assignedFrom != null ||
                   widget.assignedTo != null ||
                   widget.isWfh,
             ),
@@ -148,9 +150,7 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label.toUpperCase(),
-      style: context.appTextStyles.label.copyWith(
-          color:Colors.black
-      ),
+      style: context.appTextStyles.label.copyWith(color: Colors.black),
     );
   }
 }
@@ -199,7 +199,7 @@ class _DeviceDetailHeader extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: context.appTextStyles.labelXLarge.copyWith(
                     color: Colors.white,
-                    fontSize:20,
+                    fontSize: 20,
                   ),
                 ),
               ),
@@ -234,7 +234,7 @@ class _DeviceDetailHeader extends StatelessWidget {
                       ),
                       style: context.appTextStyles.bodySmall.copyWith(
                         color: Colors.white,
-                        fontSize:12,
+                        fontSize: 12,
                       ),
                     ),
                     const SizedBox(height: 8),

@@ -9,6 +9,7 @@ part 'return_device_req_dm.g.dart';
 abstract class ReturnDeviceReqDm with _$ReturnDeviceReqDm {
   @JsonSerializable(includeIfNull: false)
   const factory ReturnDeviceReqDm({
+    @JsonKey(name: 'item_id') required String itemId,
     @JsonKey(name: 'return_tracking_url') required String returnTrackingUrl,
   }) = _ReturnDeviceReqDm;
 

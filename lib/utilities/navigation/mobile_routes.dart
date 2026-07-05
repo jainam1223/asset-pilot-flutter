@@ -1,6 +1,8 @@
 import 'package:asset_pilot/repositories/remote_repository/common/models/request_res_dm.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../modules/mobile/chatbot/cubit/chatbot_cubit.dart';
+import '../../modules/mobile/chatbot/floating_chatbot.dart';
 import '../../modules/mobile/device_detail/cubit/return_device_cubit.dart';
 import '../../modules/mobile/device_detail/device_detail_screen.dart';
 import '../../modules/mobile/device_detail/return_device_screen.dart';
@@ -71,6 +73,20 @@ GoRouter buildMobileRouter() {
           );
         },
       ),
+      // NOTE: `returnDevice` (/devices/return) must be declared BEFORE
+      // `deviceDetail` (/devices/:id) — GoRouter matches in list order, and a
+      // `:id` param would otherwise greedily match the literal `return`
+      // segment and hand this route's tuple `extra` to DeviceDetailScreen.
+      GoRoute(
+        path: Routes.returnDevice.path,
+        name: Routes.returnDevice.name,
+        builder: (context, state) {
+          final extra = state.extra! as (String itemId, String deviceName);
+          return ReturnDeviceScreen(
+            deviceName: extra.$2,
+          ).withProvider((_) => ReturnDeviceCubit(extra.$1));
+        },
+      ),
       GoRoute(
         path: Routes.deviceDetail.path,
         name: Routes.deviceDetail.name,
@@ -84,16 +100,6 @@ GoRouter buildMobileRouter() {
             isWfh: device.item.isWfh,
             shipTrackingUrl: device.item.shipTrackingUrl,
           );
-        },
-      ),
-      GoRoute(
-        path: Routes.returnDevice.path,
-        name: Routes.returnDevice.name,
-        builder: (context, state) {
-          final extra = state.extra! as (String itemId, String deviceName);
-          return ReturnDeviceScreen(
-            deviceName: extra.$2,
-          ).withProvider((_) => ReturnDeviceCubit(extra.$1));
         },
       ),
       GoRoute(
@@ -127,6 +133,12 @@ GoRouter buildMobileRouter() {
           final data = state.extra as RequestResDm;
           return ApprovalDetailScreen(data: data);
         },
+      ),
+      GoRoute(
+        path: Routes.chatbot.path,
+        name: Routes.chatbot.name,
+        builder: (context, state) =>
+            const ChatbotScreen().withProvider((_) => ChatbotCubit()),
       ),
       GoRoute(
         path: Routes.componentShowcase.path,

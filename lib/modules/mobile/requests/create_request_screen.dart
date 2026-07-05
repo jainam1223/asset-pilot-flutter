@@ -31,7 +31,8 @@ class CreateRequestScreen extends StatelessWidget {
             switch (state.submit) {
               case Success():
                 AppToast.success(context, context.l10n.createRequestSuccessToast);
-                context.pop();
+                // Pop `true` so the list screen we came from refreshes.
+                context.pop(true);
               case Error(:final message):
                 AppToast.error(context, message);
               case Idle() || Loading():

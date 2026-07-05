@@ -45,7 +45,8 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
               ? context.l10n.approvalApprovedToast
               : context.l10n.approvalRejectedToast,
         );
-        context.pop();
+        // Pop `true` so the approvals list refreshes on return.
+        context.pop(true);
       },
       failure: (error) {
         errorManager.handle(error);
