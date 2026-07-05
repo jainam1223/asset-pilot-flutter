@@ -8,6 +8,7 @@ import '../../../utilities/extensions/context_extensions.dart';
 import '../../../utilities/navigation/app_routes.dart';
 import '../../../widgets/nav/app_bottom_nav.dart';
 import '../../../widgets/nav/nav_item.dart';
+import '../chatbot/floating_chatbot.dart';
 import '../handover/cubit/handover_list_cubit.dart';
 import '../handover/handover_detail_screen.dart';
 import '../manager/manager_home_screen.dart';
@@ -76,23 +77,32 @@ class _MobileShellScreenState extends State<MobileShellScreen> {
     ];
     return Scaffold(
       backgroundColor: context.appColors.scaffoldAlt,
-      body: switch (_index) {
-        _devicesTabIndex => BlocProvider(
-          create: (_) => MyDevicesCubit(),
-          child: const MyDevicesScreen(),
-        ),
-        _requestsTabIndex => BlocProvider(
-          create: (_) => RequestsCubit(),
-          child: const RequestsScreen(),
-        ),
-        _handoverTabIndex => BlocProvider(
-          create: (_) => HandoverListCubit(),
-          child: const HandoverDetailsScreen(),
-        ),
-        _profileTabIndex => ProfileScreen(user: widget.user),
-        _approvalsTabIndex => const ManagerHomeScreen(),
-        _ => _ComingSoon(label: items[_index].label),
-      },
+      body: Stack(
+        children: [
+          switch (_index) {
+            _devicesTabIndex => BlocProvider(
+              create: (_) => MyDevicesCubit(),
+              child: const MyDevicesScreen(),
+            ),
+            _requestsTabIndex => BlocProvider(
+              create: (_) => RequestsCubit(),
+              child: const RequestsScreen(),
+            ),
+            _handoverTabIndex => BlocProvider(
+              create: (_) => HandoverListCubit(),
+              child: const HandoverDetailsScreen(),
+            ),
+            _profileTabIndex => ProfileScreen(user: widget.user),
+            _approvalsTabIndex => const ManagerHomeScreen(),
+            _ => _ComingSoon(label: items[_index].label),
+          },
+          FloatingChatbot(
+            showAboveFab: _index == _devicesTabIndex ||
+                _index == _requestsTabIndex ||
+                _index == _handoverTabIndex,
+          ),
+        ],
+      ),
       floatingActionButton: _buildFab(context),
       bottomNavigationBar: AppBottomNav(
         items: items,
